@@ -1062,3 +1062,86 @@ body,
     display: none;
   }
 }
+
+/* ============================================================
+   COMPRESSION BAR — Text Integration Indicator
+   ============================================================ */
+.compression-bar-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.compression-bar-label {
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0.7;
+}
+
+.compression-bar-track {
+  width: 80px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.compression-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1s ease;
+}
+
+@keyframes compressionBarPulse {
+  0% { opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { opacity: 0.7; }
+}
+
+.compression-bar-pct {
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 48px;
+  color: #4ECDC4;
+}
+
+/* ============================================================
+   INTEGRATED TEXT CARD
+   ============================================================ */
+.integrated-text-card {
+  background: #f8fffe;
+  border: 1px solid #e0f5f2;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  animation: integratedTextFadeIn 0.3s ease-out;
+}
+
+@keyframes integratedTextFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.integrated-text-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.integrated-text-source {
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  background: #fafafa;
+  border-radius: 6px;
+  border-left: 3px solid #4ECDC4;
+}
+
+.integrated-text-source-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}

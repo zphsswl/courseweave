@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Tag, Tooltip, Badge, Space, Spin } from 'antd';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Button, Tag, Tooltip, Badge, Space, Spin, message } from 'antd';
 import {
   DownloadOutlined,
   ShareAltOutlined,
@@ -13,7 +13,7 @@ import {
   WarningOutlined,
   RobotOutlined,
 } from '@ant-design/icons';
-import type { RagStatus, ModelStatus, Diagnostics } from '../types';
+import type { RagStatus, ModelStatus, Diagnostics, CompressionStats } from '../types';
 import * as api from '../api/client';
 
 interface Props {
@@ -50,10 +50,55 @@ const TopBar: React.FC<Props> = ({
   modelStatus,
 }) => {
   const [diagnostics, setDiagnostics] = useState<Diagnostics | null>(null);
+  const [compressionStats, setCompressionStats] = useState<CompressionStats | null>(null);
+  const [textIntegrating, setTextIntegrating] = useState(false);
 
   useEffect(() => {
     api.getDiagnostics().then((res) => setDiagnostics(res.data)).catch(() => {});
   }, []);
+
+  const fetchCompressionStats = useCallback(async () => {
+    try {
+      const res = await api.getCompressionStats();
+      setCompressionStats(res.data);
+    } catch {
+      // Not available yet
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCompressionStats();
+  }, [fetchCompressionStats]);
+
+  // Refetch when integration completes
+  useEffect(() => {
+    if (!isIntegrating) fetchCompressionStats();
+  }, [isIntegrating, fetchCompressionStats]);
+
+  const handleTextIntegrate = async () => {
+    setTextIntegrating(true);
+    try {
+      await api.runIntegration();
+      message.success('文本整合完成');
+      setTimeout(() => {
+        fetchCompressionStats();
+      }, 3000);
+    } catch {
+      message.error('文本整合失败');
+    } finally {
+      setTextIntegrating(false);
+    }
+  };
+
+  const tc = compressionStats?.text_compression;
+  const compressionBarColor = tc
+    ? tc.ratio <= 0.3
+      ? '#4ECDC4'
+      : tc.ratio <= 0.4
+        ? '#faad14'
+        : '#f5222d'
+    : '#4ECDC4';
+
   return (
     <div className="topbar">
       <div className="topbar-left">
@@ -78,6 +123,41 @@ const TopBar: React.FC<Props> = ({
               {compressionRatio > 0 ? `${(compressionRatio * 100).toFixed(1)}%` : '--'}
             </span>
           </div>
+
+          {/* Text Integration Compression Bar */}
+          <div className="topbar-stat">
+            <Tooltip
+              title={
+                tc
+                  ? `原始字符: ${tc.original_chars.toLocaleString()} → 整合后: ${tc.integrated_chars.toLocaleString()}\n整合概念数: ${tc.integrated_concepts}`
+                  : '尚未运行文本整合'
+              }
+            >
+              <div className="compression-bar-container">
+                <FileTextOutlined className="topbar-stat-icon" />
+                <span className="compression-bar-label">整合压缩</span>
+                {tc ? (
+                  <>
+                    <div className="compression-bar-track">
+                      <div
+                        className="compression-bar-fill"
+                        style={{
+                          width: `${Math.min(tc.ratio * 100, 100)}%`,
+                          background: compressionBarColor,
+                        }}
+                      />
+                    </div>
+                    <span className="compression-bar-pct">{tc.ratio_pct}</span>
+                  </>
+                ) : (
+                  <span className="topbar-stat-value" style={{ fontSize: 11, color: '#888' }}>
+                    未运行
+                  </span>
+                )}
+              </div>
+            </Tooltip>
+          </div>
+
           <div className="topbar-stat">
             <ThunderboltOutlined className="topbar-stat-icon" />
             <span className="topbar-stat-label">RAG</span>
@@ -159,6 +239,22 @@ const TopBar: React.FC<Props> = ({
               }}
             >
               构建索引
+            </Button>
+          </Tooltip>
+
+          <Tooltip title="运行多教材文本整合（新流程）">
+            <Button
+              size="small"
+              icon={textIntegrating ? <LoadingOutlined /> : <FileTextOutlined />}
+              onClick={handleTextIntegrate}
+              loading={textIntegrating}
+              style={{
+                color: '#fff',
+                borderColor: 'rgba(255,255,255,0.25)',
+                background: 'rgba(255,255,255,0.08)',
+              }}
+            >
+              文本整合
             </Button>
           </Tooltip>
 

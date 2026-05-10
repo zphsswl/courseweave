@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Tag, Button, Space, Spin, Empty, Tooltip, message, Modal, Select, Descriptions, Divider, Typography, List } from 'antd';
 import {
   CheckCircleOutlined,
@@ -15,7 +15,8 @@ import {
   QuestionCircleOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
-import type { Decision } from '../types';
+import type { Decision, IntegrationResult } from '../types';
+import * as api from '../api/client';
 
 const { Paragraph, Text } = Typography;
 
@@ -42,6 +43,8 @@ const DecisionPanel: React.FC<Props> = ({ decisions, loading, onUpdate, onRefres
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [detailModalVisible, setDetailModalVisible] = useState(false);
   const [selectedDecision, setSelectedDecision] = useState<Decision | null>(null);
+  const [integrationResults, setIntegrationResults] = useState<IntegrationResult[]>([]);
+  const [expandedIntegration, setExpandedIntegration] = useState(false);
 
   const handleAction = async (id: string, action: string) => {
     setActionLoading(id);
@@ -59,6 +62,26 @@ const DecisionPanel: React.FC<Props> = ({ decisions, loading, onUpdate, onRefres
     setSelectedDecision(record);
     setDetailModalVisible(true);
   };
+
+  // Reset expanded state and fetch integration results when modal opens for merge decisions
+  useEffect(() => {
+    if (!detailModalVisible) {
+      setExpandedIntegration(false);
+      setIntegrationResults([]);
+    } else if (selectedDecision?.action === 'merge') {
+      api.getIntegrationResults()
+        .then(res => setIntegrationResults(res.data))
+        .catch(() => setIntegrationResults([]));
+    }
+  }, [detailModalVisible, selectedDecision]);
+
+  const matchingIntegration = selectedDecision?.action === 'merge'
+    ? integrationResults.find(r => r.result_name === selectedDecision.result_name)
+    : null;
+
+  const fullIntegrationText = matchingIntegration
+    ? (matchingIntegration.integrated_text || matchingIntegration.integrated_definition)
+    : '';
 
   const columns = [
     {
@@ -292,6 +315,66 @@ const DecisionPanel: React.FC<Props> = ({ decisions, loading, onUpdate, onRefres
             >
               {selectedDecision.reason || '无详细理由'}
             </Paragraph>
+
+            {/* Text Integration Compression for Merge Decisions */}
+            {matchingIntegration && (
+              <>
+                <Divider style={{ margin: '8px 0' }}>
+                  <Space><FileTextOutlined />文本整合压缩</Space>
+                </Divider>
+                <Descriptions column={1} size="small" bordered style={{ marginBottom: 12 }}>
+                  <Descriptions.Item label="原始字符数">
+                    {matchingIntegration.original_chars.toLocaleString()}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="整合后字符数">
+                    {matchingIntegration.integrated_chars.toLocaleString()}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="压缩比">
+                    <Tag
+                      color={
+                        matchingIntegration.compression_ratio <= 0.3
+                          ? 'green'
+                          : matchingIntegration.compression_ratio <= 0.4
+                            ? 'orange'
+                            : 'red'
+                      }
+                    >
+                      {matchingIntegration.compression_pct}
+                    </Tag>
+                  </Descriptions.Item>
+                </Descriptions>
+
+                {/* Integrated text preview */}
+                <Paragraph
+                  style={{
+                    fontSize: 12,
+                    color: '#555',
+                    background: '#f8fffe',
+                    padding: 10,
+                    borderRadius: 6,
+                    border: '1px solid #e0f5f2',
+                    lineHeight: 1.6,
+                  }}
+                >
+                  {expandedIntegration
+                    ? fullIntegrationText
+                    : fullIntegrationText.length > 150
+                      ? fullIntegrationText.substring(0, 150) + '...'
+                      : fullIntegrationText
+                  }
+                </Paragraph>
+                {fullIntegrationText.length > 150 && (
+                  <Button
+                    size="small"
+                    type="link"
+                    onClick={() => setExpandedIntegration(!expandedIntegration)}
+                    style={{ padding: 0 }}
+                  >
+                    {expandedIntegration ? '收起' : '查看完整整合文本'}
+                  </Button>
+                )}
+              </>
+            )}
 
             {/* Evidence */}
             {selectedDecision.evidence && selectedDecision.evidence.length > 0 && (

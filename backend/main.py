@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from backend.database import init_db
-from backend.api import textbooks, jobs, graph, rag, chat, report, benchmark, model_status, system
+from backend.api import textbooks, jobs, graph, rag, chat, report, benchmark, model_status, system, integration
 from backend.config import get_model_status
 import os
 
@@ -25,6 +25,7 @@ app.include_router(report.router)
 app.include_router(benchmark.router)
 app.include_router(model_status.router)
 app.include_router(system.router)
+app.include_router(integration.router)
 
 @app.on_event("startup")
 def startup():

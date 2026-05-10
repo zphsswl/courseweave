@@ -193,3 +193,48 @@ export interface Diagnostics {
     message?: string;
   }>;
 }
+
+export interface CompressionStats {
+  textbooks: number;
+  total_source_chars: number;
+  decisions: {
+    total: number;
+    merge: number;
+    keep: number;
+    remove: number;
+    integrated: number;
+  };
+  nodes: {
+    total: number;
+    merged: number;
+    compressed_pct: string;
+  };
+  text_compression: {
+    original_chars: number;
+    integrated_chars: number;
+    ratio: number;
+    ratio_pct: string;
+    integrated_concepts: number;
+  } | null;
+}
+
+export interface IntegrationResult {
+  id: string;
+  action: string;
+  result_name: string;
+  source_textbook_count: number;
+  original_chars: number;
+  integrated_chars: number;
+  compression_ratio: number;
+  compression_pct: string;
+  integrated_text: string;
+  integrated_definition: string;
+  source_texts: Array<{
+    id: string;
+    name: string;
+    textbook: string;
+    chapter: string;
+    definition: string;
+  }>;
+  confidence: number;
+}

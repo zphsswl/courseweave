@@ -12,6 +12,8 @@ import type {
   HealthStatus,
   ModelStatus,
   Diagnostics,
+  CompressionStats,
+  IntegrationResult,
 } from '../types';
 
 const api = axios.create({
@@ -115,5 +117,18 @@ export const queryNodeRag = (nodeId: string, question: string) =>
 /* ========== Diagnostics ========== */
 export const getDiagnostics = () =>
   api.get<Diagnostics>('/system/diagnostics');
+
+/* ========== Text Integration ========== */
+export const getCompressionStats = () =>
+  api.get<CompressionStats>('/integration/compression');
+
+export const runIntegration = () =>
+  api.post('/integration/run');
+
+export const integrateConcept = (id: string) =>
+  api.post(`/integration/concept/${id}`);
+
+export const getIntegrationResults = () =>
+  api.get<IntegrationResult[]>('/integration/results');
 
 export default api;

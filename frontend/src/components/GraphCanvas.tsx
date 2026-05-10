@@ -480,7 +480,7 @@ function computeLayoutOptions(mode: LayoutMode, data: GraphData | null) {
         name: 'breadthfirst' as const,
         directed: true,
         spacingFactor: 1.5,
-        animate: true,
+        animate: false,
         fit: true,
         padding: 50,
       };
@@ -490,11 +490,11 @@ function computeLayoutOptions(mode: LayoutMode, data: GraphData | null) {
       return {
         name: 'cose' as const,
         animate: true,
-        animationDuration: 500,
-        nodeRepulsion: () => 10000,
+        animationDuration: 200,
+        nodeRepulsion: () => 5000,
         idealEdgeLength: (edge: any) => 120,
         gravity: 0.25,
-        numIter: 1000,
+        numIter: 500,
         componentSpacing: 180,
         nodeOverlap: 15,
         padding: 50,
@@ -827,11 +827,13 @@ const GraphCanvas: React.FC<Props> = ({
     [layoutMode, graphData]
   );
 
-  // ---- Minimap update effect (must be after elements and layoutOptions) ----
+  // ---- Minimap update effect with RAF debounce for performance ----
   useEffect(() => {
     const cy = cyRef.current;
     const canvas = minimapCanvasRef.current;
     if (!cy || !canvas) return;
+
+    let rafId: number | null = null;
 
     function drawMinimap() {
       const curCanvas = minimapCanvasRef.current;
@@ -915,15 +917,24 @@ const GraphCanvas: React.FC<Props> = ({
       ctx.fillRect(vx2, vy1, width - vx2, vy2 - vy1);
     }
 
+    function throttledDrawMinimap() {
+      if (rafId != null) return;
+      rafId = requestAnimationFrame(() => {
+        drawMinimap();
+        rafId = null;
+      });
+    }
+
     drawMinimap();
 
-    cy.on('pan zoom position add remove', drawMinimap);
+    cy.on('pan zoom position add remove', throttledDrawMinimap);
     return () => {
-      cy.removeListener('pan', drawMinimap);
-      cy.removeListener('zoom', drawMinimap);
-      cy.removeListener('position', drawMinimap);
-      cy.removeListener('add', drawMinimap);
-      cy.removeListener('remove', drawMinimap);
+      if (rafId != null) cancelAnimationFrame(rafId);
+      cy.removeListener('pan', throttledDrawMinimap);
+      cy.removeListener('zoom', throttledDrawMinimap);
+      cy.removeListener('position', throttledDrawMinimap);
+      cy.removeListener('add', throttledDrawMinimap);
+      cy.removeListener('remove', throttledDrawMinimap);
     };
   }, [elements, layoutOptions]);
 
@@ -1446,12 +1457,15 @@ const GraphCanvas: React.FC<Props> = ({
             stylesheet={cytoscapeStylesheet}
             layout={layoutOptions}
             cy={handleCyInit}
-            wheelSensitivity={0.4}
+            wheelSensitivity={0.8}
             minZoom={0.15}
             maxZoom={5}
             autoungrabify={false}
             autounselectify={false}
             boxSelectionEnabled={false}
+            motionBlur={false}
+            hideEdgesOnViewport={true}
+            pixelRatio={1}
           />
         )}
 

@@ -100,7 +100,11 @@ def process_teacher_message(message: str) -> dict:
                 if dec:
                     response_text = f"决策 {decision_id}：{dec.action} - {dec.result_name}。理由：{dec.reason}。置信度：{dec.confidence}。{'（教师已修改）' if dec.teacher_override else ''}"
             else:
-                response_text = f"关于「{message}」，系统当前有如下相关决策：\n{decisions_text[:1000]}\n请指定具体决策ID以进行操作。"
+                # Show concise decision list
+                short_list = []
+                for d in decisions:
+                    short_list.append(f"· {d.result_name}（{d.action}，置信度{d.confidence:.0%}）")
+                response_text = f"当前相关决策：\n" + "\n".join(short_list[:6]) + "\n\n请指定决策ID或概念名进行操作，如：「拆分炎症」「保留结核病」"
         else:
             response_text = f"收到您的反馈：「{message}」。已根据教学意图更新知识图谱整合方案。{parsed.get('reason', '')}"
 

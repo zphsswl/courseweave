@@ -133,6 +133,14 @@ class IntegrationDecision(Base):
     similarity_definition = Column(Float, default=0.0)
     similarity_context = Column(Float, default=0.0)
     decision_effect = Column(Text, default="")
+    # Real text integration results
+    integrated_text = Column(Text, default="")
+    integrated_definition = Column(Text, default="")
+    source_texts = Column(JSON, default=[])
+    source_textbook_count = Column(Integer, default=0)
+    original_chars = Column(Integer, default=0)
+    integrated_chars = Column(Integer, default=0)
+    compression_ratio = Column(Float, default=0.0)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 class Job(Base):

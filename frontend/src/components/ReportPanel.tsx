@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Spin, Empty, Divider, Typography, Space, Tag, Descriptions } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Button, Spin, Empty, Divider, Typography, Space, Tag, message } from 'antd';
 import {
   ReloadOutlined,
   BookOutlined,
@@ -13,7 +13,8 @@ import {
   DeploymentUnitOutlined,
   PartitionOutlined,
 } from '@ant-design/icons';
-import type { ReportSummary } from '../types';
+import type { ReportSummary, CompressionStats } from '../types';
+import * as api from '../api/client';
 
 const { Text } = Typography;
 
@@ -24,6 +25,31 @@ interface Props {
 }
 
 const ReportPanel: React.FC<Props> = ({ summary, loading, onRefresh }) => {
+  const [compressionStats, setCompressionStats] = useState<CompressionStats | null>(null);
+  const [textIntegrating, setTextIntegrating] = useState(false);
+
+  useEffect(() => {
+    api.getCompressionStats()
+      .then(res => setCompressionStats(res.data))
+      .catch(() => {});
+  }, []);
+
+  const handleRunTextIntegration = async () => {
+    setTextIntegrating(true);
+    try {
+      await api.runIntegration();
+      message.success('文本整合完成');
+      const res = await api.getCompressionStats();
+      setCompressionStats(res.data);
+    } catch {
+      message.error('文本整合失败');
+    } finally {
+      setTextIntegrating(false);
+    }
+  };
+
+  const tc = compressionStats?.text_compression;
+
   if (loading && !summary) {
     return (
       <div className="loading-spinner">
@@ -142,6 +168,47 @@ const ReportPanel: React.FC<Props> = ({ summary, loading, onRefresh }) => {
             <div className="stat-card-value">{stat.value}</div>
           </div>
         ))}
+      </div>
+
+      {/* Text Compression Section */}
+      <div style={{ background: '#f0f5ff', border: '1px solid #d6e4ff', borderRadius: 8, padding: 12, marginBottom: 12 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+          <Space>
+            <CompressOutlined />
+            <span style={{ fontWeight: 500, fontSize: 13 }}>文本整合压缩</span>
+          </Space>
+          <Button
+            size="small"
+            type="primary"
+            onClick={handleRunTextIntegration}
+            loading={textIntegrating}
+            style={{ fontSize: 12 }}
+          >
+            运行文本整合
+          </Button>
+        </div>
+        {tc ? (
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+              <Text style={{ fontSize: 12, color: '#888' }}>压缩比</Text>
+              <Tag color="orange" style={{ fontSize: 11 }}>{tc.ratio_pct}</Tag>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+              <Text style={{ fontSize: 12, color: '#888' }}>原始字符</Text>
+              <Text style={{ fontSize: 12, fontWeight: 500 }}>{tc.original_chars.toLocaleString()}</Text>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+              <Text style={{ fontSize: 12, color: '#888' }}>整合后字符</Text>
+              <Text style={{ fontSize: 12, fontWeight: 500 }}>{tc.integrated_chars.toLocaleString()}</Text>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Text style={{ fontSize: 12, color: '#888' }}>整合概念数</Text>
+              <Text style={{ fontSize: 12, fontWeight: 500 }}>{tc.integrated_concepts}</Text>
+            </div>
+          </div>
+        ) : (
+          <Text style={{ fontSize: 12, color: '#888' }}>未整合</Text>
+        )}
       </div>
 
       {/* Chapter/Section/Concept breakdown */}

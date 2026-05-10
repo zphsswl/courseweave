@@ -17,7 +17,7 @@ import {
   LoadingOutlined,
   MessageOutlined,
 } from '@ant-design/icons';
-import type { GraphNode, Decision, QueryResult } from '../types';
+import type { GraphNode, Decision, QueryResult, IntegrationResult } from '../types';
 import * as api from '../api/client';
 
 const { Paragraph } = Typography;
@@ -64,6 +64,7 @@ const NodeDetail: React.FC<Props> = ({ node, visible, onClose, decisions = [] })
   const [nodeQueryLoading, setNodeQueryLoading] = useState(false);
   const [nodeQueryResult, setNodeQueryResult] = useState<QueryResult | null>(null);
   const [nodeQueryError, setNodeQueryError] = useState<string | null>(null);
+  const [integrationResults, setIntegrationResults] = useState<IntegrationResult[]>([]);
 
   const handleNodeQuery = async () => {
     const q = nodeQuestion.trim();
@@ -88,6 +89,17 @@ const NodeDetail: React.FC<Props> = ({ node, visible, onClose, decisions = [] })
     setNodeQueryError(null);
   }, [node?.id]);
 
+  // Fetch integration results for merged nodes
+  useEffect(() => {
+    if (visible && node?.is_merged) {
+      api.getIntegrationResults()
+        .then(res => setIntegrationResults(res.data))
+        .catch(() => setIntegrationResults([]));
+    } else {
+      setIntegrationResults([]);
+    }
+  }, [visible, node?.id, node?.is_merged]);
+
   if (!node) {
     return (
       <Drawer
@@ -108,6 +120,10 @@ const NodeDetail: React.FC<Props> = ({ node, visible, onClose, decisions = [] })
   const relatedDecisions = decisions.filter(
     (d) => d.affected_nodes?.includes(node.id)
   );
+
+  const matchedIntegration = node.is_merged
+    ? integrationResults.find(r => r.result_name === node.label)
+    : null;
 
   return (
     <Drawer
@@ -353,6 +369,40 @@ const NodeDetail: React.FC<Props> = ({ node, visible, onClose, decisions = [] })
               </List.Item>
             )}
           />
+        </>
+      )}
+
+      {/* Integrated Text Card for merged nodes */}
+      {matchedIntegration && (
+        <>
+          <Divider>跨教材整合文本</Divider>
+          <div className="integrated-text-card">
+            <div className="integrated-text-header">
+              <Tag color="green" style={{ fontSize: 10, lineHeight: '18px' }}>
+                压缩比 {matchedIntegration.compression_pct}
+              </Tag>
+              <Tag color="blue" style={{ fontSize: 10, lineHeight: '18px' }}>
+                {matchedIntegration.source_textbook_count} 本教材
+              </Tag>
+            </div>
+            <Paragraph style={{ fontSize: 13, color: '#333', lineHeight: 1.7, marginTop: 8 }}>
+              {matchedIntegration.integrated_text || matchedIntegration.integrated_definition}
+            </Paragraph>
+            <Divider style={{ margin: '8px 0', fontSize: 11, color: '#888' }}>
+              来源原文 ({matchedIntegration.source_texts.length})
+            </Divider>
+            {matchedIntegration.source_texts.map((src, i) => (
+              <div key={i} className="integrated-text-source">
+                <div className="integrated-text-source-header">
+                  <Tag color="blue" style={{ fontSize: 10, lineHeight: '16px' }}>{src.textbook}</Tag>
+                  <span style={{ fontSize: 11, color: '#888' }}>{src.chapter}</span>
+                </div>
+                <Paragraph style={{ fontSize: 12, color: '#555', margin: 0 }}>
+                  {src.definition || src.name}
+                </Paragraph>
+              </div>
+            ))}
+          </div>
         </>
       )}
 
