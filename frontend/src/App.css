@@ -1,0 +1,1064 @@
+/* ============================================================
+   MedEssence Agent · 七书归一  —  Complete Stylesheet
+   ============================================================ */
+
+/* ---------- Reset & Base ---------- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', Arial, 'Noto Sans SC', sans-serif;
+  font-size: 14px;
+  color: #1a1a2e;
+  background: #f0f2f5;
+}
+
+/* ---------- App Shell ---------- */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ============================================================
+   TOPBAR
+   ============================================================ */
+.topbar {
+  height: 48px;
+  min-height: 48px;
+  background: linear-gradient(135deg, #0f0c29 0%, #1a1a2e 40%, #16213e 70%, #0f3460 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  color: #fff;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  user-select: none;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.topbar-logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #4ECDC4, #45B7D1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.topbar-title {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.topbar-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.topbar-stats {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 12px;
+}
+
+.topbar-stat {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.topbar-stat-icon {
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.topbar-stat-label {
+  opacity: 0.6;
+}
+
+.topbar-stat-value {
+  font-weight: 600;
+  color: #4ECDC4;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================================
+   LEFT PANEL — Textbook Management
+   ============================================================ */
+.left-panel {
+  width: 300px;
+  min-width: 300px;
+  background: #fff;
+  border-right: 1px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.left-panel-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid #f0f0f0;
+  font-weight: 600;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fafafa;
+}
+
+.left-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+/* ---------- Textbook Card ---------- */
+.textbook-card {
+  padding: 10px 12px;
+  border: 1.5px solid #f0f0f0;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.textbook-card:hover {
+  border-color: #4ECDC4;
+  box-shadow: 0 2px 10px rgba(78, 205, 196, 0.12);
+}
+
+.textbook-card.active {
+  border-color: #4ECDC4;
+  background: rgba(78, 205, 196, 0.04);
+}
+
+.textbook-card-title {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.textbook-card-title-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.textbook-card-meta {
+  font-size: 11px;
+  color: #888;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.textbook-card-actions {
+  margin-top: 6px;
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   CENTER PANEL — Graph Canvas
+   ============================================================ */
+.center-panel {
+  flex: 1;
+  position: relative;
+  background: #0f0c29;
+  overflow: hidden;
+}
+
+.graph-container {
+  width: 100%;
+  height: 100%;
+}
+
+.graph-search {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  width: 320px;
+}
+
+.graph-toolbar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  display: flex;
+  gap: 6px;
+}
+
+.graph-info {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.75);
+  color: #ccc;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.graph-legend {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.75);
+  color: #ccc;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 11px;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  max-height: 220px;
+  overflow-y: auto;
+  min-width: 140px;
+}
+
+.graph-legend-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #fff;
+  font-size: 12px;
+}
+
+.graph-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+}
+
+.graph-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.graph-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #ccc;
+}
+
+.graph-empty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: #666;
+}
+
+/* ============================================================
+   RIGHT PANEL — Tabbed Panel
+   ============================================================ */
+.right-panel {
+  width: 420px;
+  min-width: 420px;
+  background: #fff;
+  border-left: 1px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.right-panel .ant-tabs {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.right-panel .ant-tabs-nav {
+  margin-bottom: 0 !important;
+  padding: 0 8px;
+  background: #fafafa;
+}
+
+.right-panel .ant-tabs-nav::before {
+  border-bottom: 1px solid #f0f0f0 !important;
+}
+
+.right-panel .ant-tabs-content-holder {
+  flex: 1;
+  overflow: hidden;
+}
+
+.right-panel .ant-tabs-content {
+  height: 100%;
+}
+
+.right-panel .ant-tabs-tabpane {
+  height: 100%;
+  overflow-y: auto;
+  padding: 12px 14px;
+}
+
+/* ---------- Panel Sections ---------- */
+.panel-section {
+  margin-bottom: 16px;
+}
+
+.panel-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1a1a2e;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.panel-section-subtitle {
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+/* ---------- Decision Card ---------- */
+.decision-card {
+  padding: 10px 12px;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+}
+
+.decision-card:hover {
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+}
+
+.decision-concept {
+  font-weight: 600;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.decision-meta {
+  font-size: 11px;
+  color: #888;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.decision-actions {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+/* ---------- Chat ---------- */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-message {
+  max-width: 85%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+.chat-message.user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, #4ECDC4, #45B7D1);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-message.assistant {
+  align-self: flex-start;
+  background: #f0f2f5;
+  color: #333;
+  border-bottom-left-radius: 4px;
+}
+
+.chat-message-time {
+  font-size: 10px;
+  opacity: 0.6;
+  margin-top: 4px;
+}
+
+.chat-input-area {
+  padding: 8px 0;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+/* ---------- Citation ---------- */
+.citation-card {
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  font-size: 12px;
+}
+
+.citation-text {
+  color: #555;
+  margin-bottom: 4px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.citation-text.expanded {
+  -webkit-line-clamp: unset;
+  display: block;
+}
+
+.citation-source {
+  color: #4ECDC4;
+  font-weight: 500;
+  font-size: 11px;
+}
+
+.citation-relevance {
+  font-size: 10px;
+  color: #888;
+}
+
+/* ---------- Report Stats ---------- */
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  padding: 14px 16px;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+}
+
+.stat-card.green {
+  background: linear-gradient(135deg, #11998e, #38ef7d);
+}
+
+.stat-card.blue {
+  background: linear-gradient(135deg, #2193b0, #6dd5ed);
+}
+
+.stat-card.orange {
+  background: linear-gradient(135deg, #fa709a, #fee140);
+}
+
+.stat-card.purple {
+  background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+}
+
+.stat-card.teal {
+  background: linear-gradient(135deg, #4ECDC4, #45B7D1);
+}
+
+.stat-card.red {
+  background: linear-gradient(135deg, #f093fb, #f5576c);
+}
+
+.stat-card-title {
+  font-size: 11px;
+  opacity: 0.8;
+  position: relative;
+  z-index: 1;
+}
+
+.stat-card-value {
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 2px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Benchmark ---------- */
+.benchmark-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.benchmark-label {
+  width: 120px;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.benchmark-bar-bg {
+  flex: 1;
+  height: 20px;
+  background: #f0f0f0;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.benchmark-bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.8s ease;
+  background: linear-gradient(90deg, #4ECDC4, #45B7D1);
+}
+
+.benchmark-score {
+  width: 40px;
+  text-align: right;
+  font-weight: 600;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+/* ---------- Misc ---------- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #999;
+  text-align: center;
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.empty-state-text {
+  font-size: 13px;
+}
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d0d0d0;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b0b0b0;
+}
+
+/* ---------- Card Upload Override ---------- */
+.upload-card .ant-upload-drag {
+  background: #fafafa !important;
+  border: 2px dashed #d9d9d9 !important;
+  border-radius: 8px !important;
+  transition: all 0.3s;
+}
+
+.upload-card .ant-upload-drag:hover {
+  border-color: #4ECDC4 !important;
+  background: rgba(78, 205, 196, 0.02) !important;
+}
+
+.upload-card .ant-upload-drag .ant-upload-text {
+  color: #555;
+  font-size: 13px;
+}
+
+.upload-card .ant-upload-drag .ant-upload-hint {
+  color: #999;
+  font-size: 11px;
+}
+
+/* ---------- Small Button for Cards ---------- */
+.action-btn {
+  font-size: 11px !important;
+  padding: 2px 8px !important;
+  height: 24px !important;
+  line-height: 1 !important;
+}
+
+/* ---------- RAG Answer ---------- */
+.rag-answer {
+  background: #f8fffe;
+  border: 1px solid #e0f5f2;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #333;
+}
+
+/* ---------- Drawer ---------- */
+.node-detail-label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 2px;
+}
+
+.node-detail-value {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+/* ---------- Responsive within tabs ---------- */
+.tab-panel-scroll {
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* ---------- Ant Design overrides for dark graph ---------- */
+.graph-toolbar .ant-btn {
+  font-size: 12px;
+  height: 28px;
+}
+
+/* Graph search on dark background */
+.graph-search .ant-select {
+  font-size: 12px;
+}
+
+.graph-search .ant-select-selector {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #ccc !important;
+  min-height: 24px !important;
+}
+
+.graph-search .ant-select-selection-placeholder,
+.graph-search .ant-select-selection-item {
+  color: #ccc !important;
+  line-height: 22px !important;
+}
+
+.graph-search .ant-select-multiple .ant-select-selection-item {
+  background: rgba(78, 205, 196, 0.2) !important;
+  border-color: rgba(78, 205, 196, 0.3) !important;
+  color: #4ECDC4 !important;
+  font-size: 11px !important;
+  height: 20px !important;
+  line-height: 18px !important;
+  margin-top: 1px !important;
+  margin-bottom: 1px !important;
+}
+
+.graph-search .ant-select-multiple .ant-select-selection-item-remove {
+  color: #4ECDC4 !important;
+}
+
+.graph-search .ant-select-arrow {
+  color: #888 !important;
+}
+
+.graph-search .ant-select-clear {
+  color: #888 !important;
+  background: transparent !important;
+}
+
+/* Switch on dark background */
+.graph-search .ant-switch {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.graph-search .ant-switch-checked {
+  background: #4ECDC4 !important;
+}
+
+/* ============================================================
+   TOOLTIP — hover over graph nodes
+   ============================================================ */
+.graph-tooltip {
+  position: absolute;
+  z-index: 1000;
+  background: rgba(15, 12, 41, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(78, 205, 196, 0.25);
+  border-radius: 8px;
+  padding: 8px 10px;
+  min-width: 160px;
+  max-width: 240px;
+  pointer-events: none;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  animation: graphTooltipFadeIn 0.15s ease-out;
+}
+
+@keyframes graphTooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.graph-tooltip-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.graph-tooltip-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.graph-tooltip-category {
+  font-size: 10px;
+  color: #999;
+}
+
+.graph-tooltip-stars {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  margin-bottom: 4px;
+}
+
+.graph-tooltip-definition {
+  font-size: 11px;
+  color: #bbb;
+  line-height: 1.4;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 4px;
+}
+
+/* ============================================================
+   MINIMAP — bottom-right graph overview
+   ============================================================ */
+.graph-minimap {
+  position: absolute;
+  bottom: 48px;
+  right: 12px;
+  z-index: 10;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  cursor: crosshair;
+}
+
+.graph-minimap-canvas {
+  display: block;
+  width: 160px;
+  height: 120px;
+}
+
+/* ============================================================
+   COLLAPSIBLE LEGEND
+   ============================================================ */
+.graph-legend-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  padding: 2px 0;
+}
+
+.graph-legend-header:hover {
+  color: #4ECDC4;
+}
+
+.graph-legend-title {
+  font-weight: 600;
+  color: #fff;
+  font-size: 12px;
+}
+
+.graph-legend-toggle {
+  font-size: 10px;
+  color: #888;
+}
+
+.graph-legend-body {
+  margin-top: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.graph-legend-section {
+  margin-bottom: 8px;
+}
+
+.graph-legend-section-title {
+  font-size: 10px;
+  color: #888;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.graph-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 3px;
+  font-size: 11px;
+  color: #ccc;
+  transition: opacity 0.2s;
+}
+
+.graph-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.graph-legend-shape-rect {
+  width: 14px;
+  height: 8px;
+  border-radius: 2px;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.graph-legend-shape-circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.graph-legend-edge-line {
+  display: inline-block;
+  width: 18px;
+  height: 0;
+  border-bottom: 2px solid;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   ENHANCED EMPTY STATES
+   ============================================================ */
+.graph-empty-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.graph-empty-icon {
+  font-size: 56px;
+  opacity: 0.2;
+  color: #4ECDC4;
+  position: relative;
+  z-index: 1;
+}
+
+.graph-empty-ring {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid rgba(78, 205, 196, 0.08);
+  animation: graphEmptyPulse 2s ease-in-out infinite;
+}
+
+@keyframes graphEmptyPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.15;
+  }
+}
+
+.graph-empty-title {
+  color: #aaa;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.graph-empty-desc {
+  color: #666;
+  font-size: 12px;
+  margin-top: 4px;
+  max-width: 300px;
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   INFO BAR BADGES
+   ============================================================ */
+.graph-info-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.graph-info-sep {
+  margin: 0 6px;
+  opacity: 0.3;
+  color: #666;
+}
+
+.graph-info-filtered {
+  color: #FFD93D;
+  font-size: 11px;
+}
+
+.graph-info-integrated {
+  color: #4ECDC4;
+  font-size: 11px;
+}
+
+.graph-info-viewmode {
+  color: #45B7D1;
+  font-size: 11px;
+}
+
+/* Graph legend on top of minimap */
+.graph-legend {
+  max-height: 360px;
+  overflow-y: auto;
+  min-width: 150px;
+}
+
+/* Scrollbar for legend */
+.graph-legend-body::-webkit-scrollbar {
+  width: 3px;
+}
+
+.graph-legend-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+
+/* ============================================================
+   RESPONSIVE — smaller graph controls on narrow screens
+   ============================================================ */
+@media (max-width: 1100px) {
+  .graph-search {
+    width: 260px;
+  }
+  .graph-minimap {
+    display: none;
+  }
+}

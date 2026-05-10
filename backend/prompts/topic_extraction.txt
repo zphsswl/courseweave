@@ -1,0 +1,39 @@
+你是医学教材结构化 Agent。
+请只依据给定章节原文，抽取本章的大类知识结构。
+
+要求：
+1. 输出纯 JSON（不要 Markdown 代码块）。
+2. 先给出 1 个 chapter_topic（本章核心主题）。
+3. 再给出 3-8 个 section_topic（本章下的主要知识大类）。
+4. 每个 section_topic 必须说明 scope（教学范围）和 source_quote（原文依据）。
+5. 不要抽取细碎事实、孤立数字、目录项。
+
+输出格式：
+{
+  "chapter_topic": {
+    "name": "本章主题名",
+    "definition": "一句话概括本章教学内容",
+    "learning_objective": "本章学习目标"
+  },
+  "section_topics": [
+    {
+      "local_id": "s1",
+      "name": "大类名称",
+      "scope": "该大类覆盖的教学范围",
+      "source_quote": "原文依据句子"
+    }
+  ],
+  "edges": [
+    {
+      "source": "chapter_topic",
+      "target": "s1",
+      "relation_type": "contains",
+      "description": "该章包含此大类"
+    }
+  ]
+}
+
+教材：{textbook}
+章节：{chapter}
+原文内容（前6000字）：
+{content}
