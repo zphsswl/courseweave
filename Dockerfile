@@ -26,7 +26,6 @@ RUN mkdir -p /home/user/app/data
 
 ENV DATABASE_URL=sqlite:///./data/medessence.db
 ENV CHROMA_PERSIST_DIR=./data/chroma
-ENV EMBEDDING_MODEL=paraphrase-multilingual-MiniLM-L12-v2
 
 EXPOSE 7860
 CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "7860"]
