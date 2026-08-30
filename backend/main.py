@@ -22,7 +22,7 @@ READ_ONLY_ALLOWED_POSTS = {"/api/rag/query", "/api/rag/node-query"}
 
 @app.middleware("http")
 async def protect_public_demo(request: Request, call_next):
-    """Keep the hosted portfolio demo useful without exposing destructive or costly writes."""
+    """Keep the hosted public demo useful without exposing destructive or costly writes."""
     if (
         PUBLIC_DEMO_READ_ONLY
         and request.method in {"POST", "PATCH", "PUT", "DELETE"}
@@ -30,7 +30,7 @@ async def protect_public_demo(request: Request, call_next):
     ):
         return JSONResponse(
             status_code=403,
-            content={"detail": "在线作品为只读演示；请在本地运行后体验上传、抽取与审核。"},
+            content={"detail": "在线示例为只读演示；请在本地运行后体验上传、抽取与审核。"},
         )
     return await call_next(request)
 

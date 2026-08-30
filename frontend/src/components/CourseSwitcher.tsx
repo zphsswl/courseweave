@@ -118,7 +118,7 @@ const CourseSwitcher: React.FC<Props> = ({ courses, selectedCourse, onSelect, on
         ))}
         {filteredCourses.length === 0 && <div className="space-no-result">没有匹配的知识空间</div>}
       </div>
-      <div className="space-menu-foot">{readOnly ? '在线作品为只读示例，可切换查看已有空间' : '默认空间不可删除；其他空间删除前会再次确认'}</div>
+      <div className="space-menu-foot">{readOnly ? '在线示例为只读模式，可切换查看已有空间' : '默认空间不可删除；其他空间删除前会再次确认'}</div>
     </div>
   );
 

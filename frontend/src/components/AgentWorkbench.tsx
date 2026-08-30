@@ -293,7 +293,7 @@ const AgentWorkbench: React.FC<Props> = ({
           <Button className="agent-run-button" type="primary" size="large" icon={<PlayCircleOutlined />} loading={starting} disabled={readOnly || !textbooks.length} onClick={startRun} block>
             {readOnly ? '在线查看已完成示例' : '交给 Agent 生成'}
           </Button>
-          <p className="agent-guard-note"><LockOutlined /> {readOnly ? '公开作品不执行付费任务；右侧可查看完整轨迹、成果与证据。' : '章节结构和证据冲突仍由教师确认，Agent 不会自动发布。'}</p>
+          <p className="agent-guard-note"><LockOutlined /> {readOnly ? '在线示例不执行付费任务；右侧可查看完整轨迹、成果与证据。' : '章节结构和证据冲突仍由教师确认，Agent 不会自动发布。'}</p>
         </aside>
 
         <main className="agent-run-panel">

@@ -10,7 +10,7 @@ All notable changes to CourseWeave are documented in this file.
 - Added evidence-grounded knowledge trees, cross-textbook concept alignment, relation review, and source-page traceability.
 - Added hybrid RAG retrieval, teacher-oriented evaluation metrics, and a movable textbook question assistant.
 - Added a goal-driven lesson preparation Agent with tool planning, human checkpoints, execution history, and verified deliverables.
-- Added a read-only seeded portfolio deployment, automated tests, GitHub CI, dependency updates, and secret-pattern checks.
+- Added a read-only seeded public demo, automated tests, GitHub CI, dependency updates, and secret-pattern checks.
 
 ### Changed
 

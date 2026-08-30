@@ -1,4 +1,4 @@
-"""Idempotent, copyright-safe sample course for a public portfolio deployment."""
+"""Idempotent, copyright-safe sample course for a public demo deployment."""
 import hashlib
 
 from backend.database import (

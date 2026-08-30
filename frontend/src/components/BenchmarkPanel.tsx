@@ -75,7 +75,7 @@ const BenchmarkPanel: React.FC<Props> = ({ results, loading, onRefresh, onRun, r
             <p>本分数只评价可验证的检索行为，不把语言流畅度当作准确性。</p>
             {!readOnly && <Button onClick={run} loading={running}>重新评测</Button>}
           </section>
-          <div className="quality-section-title"><span>教师问题指标</span><small>面试演示重点</small></div>
+          <div className="quality-section-title"><span>教师问题指标</span><small>核心评测指标</small></div>
           <section className="quality-metric-grid">{teacherMetrics.map(metricCard)}</section>
           {!!systemMetrics.length && <>
             <div className="quality-section-title"><span>系统基础指标</span><small>数据与证据健康度</small></div>

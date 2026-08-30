@@ -143,7 +143,7 @@ const TextbookPanel: React.FC<Props> = ({
         <div className="library-upload readonly-demo-note">
           <div className="upload-inline">
             <span className="upload-icon"><BookOutlined /></span>
-            <div><strong>在线作品已加载原创示例教材</strong><small>可直接打开知识树、跨教材连接和教材问答；上传与重新解析请在本地运行。</small></div>
+            <div><strong>在线示例已加载原创教材</strong><small>可直接打开知识树、跨教材连接和教材问答；上传与重新解析请在本地运行。</small></div>
           </div>
         </div>
       ) : (

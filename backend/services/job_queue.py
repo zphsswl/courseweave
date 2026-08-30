@@ -1,4 +1,4 @@
-"""Single-worker, database-backed job queue for local and portfolio deployments."""
+"""Single-worker, database-backed job queue for local and public-demo deployments."""
 
 from __future__ import annotations
 
