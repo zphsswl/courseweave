@@ -241,6 +241,4 @@ docker run --rm -p 7860:7860 \
 ## 延伸文档
 
 - [RAG 优化与项目技术路线](./docs/RAG优化与项目技术路线.md)
-- [Agent 架构说明](./docs/Agent架构说明.md)
-- [API 接口文档](./docs/接口文档.md)
 - [版本记录](./CHANGELOG.md)
