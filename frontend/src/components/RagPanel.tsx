@@ -1,269 +1,133 @@
-import React, { useState, useRef } from 'react';
-import {
-  Input,
-  Button,
-  Card,
-  Tag,
-  Space,
-  Spin,
-  Empty,
-  Typography,
-  Tooltip,
-  Alert,
-  message,
-} from 'antd';
-import {
-  ThunderboltOutlined,
-  SendOutlined,
-  FileTextOutlined,
-  BookOutlined,
-  ReloadOutlined,
-  LoadingOutlined,
-  SearchOutlined,
-} from '@ant-design/icons';
-import type { RagStatus, QueryResult, Citation } from '../types';
+import React, { useState } from 'react';
+import { Alert, Button, Empty, Input, Radio, Select, Space, Spin, Tag, Typography, message } from 'antd';
+import { BookOutlined, BranchesOutlined, ReloadOutlined, SendOutlined } from '@ant-design/icons';
+import type { QueryResult, RagStatus, Textbook } from '../types';
 import * as api from '../api/client';
 
 const { TextArea } = Input;
-const { Text, Paragraph } = Typography;
 
 interface Props {
+  courseId: string;
+  textbooks: Textbook[];
   ragStatus: RagStatus | null;
   onBuildIndex: () => void;
   isBuilding: boolean;
+  compact?: boolean;
+  readOnly?: boolean;
 }
 
-const RagPanel: React.FC<Props> = ({ ragStatus, onBuildIndex, isBuilding }) => {
+const RagPanel: React.FC<Props> = ({ courseId, textbooks, ragStatus, onBuildIndex, isBuilding, compact = false, readOnly = false }) => {
   const [question, setQuestion] = useState('');
-  const [queryLoading, setQueryLoading] = useState(false);
-  const [queryResult, setQueryResult] = useState<QueryResult | null>(null);
-  const [expandedCitations, setExpandedCitations] = useState<Set<number>>(new Set());
-  const [error, setError] = useState<string | null>(null);
-  const resultRef = useRef<HTMLDivElement>(null);
+  const [mode, setMode] = useState<'all' | 'compare'>('all');
+  const [selectedBooks, setSelectedBooks] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<QueryResult | null>(null);
+  const [error, setError] = useState('');
 
-  const handleQuery = async () => {
-    const q = question.trim();
-    if (!q) {
-      message.warning('请输入问题');
-      return;
-    }
-    setQueryLoading(true);
-    setError(null);
-    setQueryResult(null);
+  const ask = async () => {
+    if (question.trim().length < 2) return message.warning('请输入完整问题');
+    if (mode === 'compare' && selectedBooks.length < 2) return message.warning('对比模式至少选择两本教材');
+    setLoading(true);
+    setError('');
     try {
-      const res = await api.queryRag(q);
-      setQueryResult(res.data);
-      // Scroll to result
-      setTimeout(() => {
-        resultRef.current?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    } catch (err: any) {
-      const errMsg = err?.response?.data?.detail || '查询失败，请检查 RAG 索引是否已构建';
-      setError(errMsg);
+      const response = await api.queryRag(
+        question.trim(),
+        courseId,
+        mode,
+        selectedBooks.length ? selectedBooks : undefined,
+      );
+      setResult(response.data);
+    } catch (queryError: any) {
+      setError(queryError?.response?.data?.detail || '检索失败');
     } finally {
-      setQueryLoading(false);
+      setLoading(false);
     }
   };
 
-  const toggleCitation = (idx: number) => {
-    setExpandedCitations((prev) => {
-      const next = new Set(prev);
-      if (next.has(idx)) next.delete(idx);
-      else next.add(idx);
-      return next;
-    });
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleQuery();
-    }
-  };
+  const methodLabel = ragStatus?.method === 'bm25_vector' ? 'BM25 + 向量 + 图谱' : 'BM25 + 图谱';
 
   return (
-    <div>
-      {/* RAG Status */}
-      <div className="panel-section">
-        <div className="panel-section-title">
-          <Space>
-            <ThunderboltOutlined />
-            <span>RAG 知识库状态</span>
-          </Space>
-          <Button
-            size="small"
-            icon={isBuilding ? <LoadingOutlined /> : <ReloadOutlined />}
-            onClick={onBuildIndex}
-            loading={isBuilding}
-          >
-            {isBuilding ? '构建中...' : '构建索引'}
-          </Button>
+    <div className={`evidence-rag ${compact ? 'compact-rag' : ''}`}>
+      <section className="rag-index-strip">
+        <div>
+          <span className="eyebrow">EVIDENCE RETRIEVAL</span>
+          <h3>教材证据问答</h3>
+          <p>{ragStatus?.indexed ? `${methodLabel} · ${ragStatus.chunk_count} 个知识块` : ragStatus?.message || '索引尚未构建'}</p>
         </div>
-        {ragStatus ? (
-          <Card size="small" style={{ background: '#fafafa' }}>
-            <Space direction="vertical" size={2} style={{ width: '100%' }}>
-              <Space>
-                <Tag color={ragStatus.indexed ? 'green' : 'default'}>
-                  {ragStatus.indexed ? '已索引' : '未索引'}
-                </Tag>
-                <span style={{ fontSize: 12, color: '#666' }}>
-                  文档块: {ragStatus.chunk_count ?? 0}
-                </span>
-              </Space>
-              <span style={{ fontSize: 12, color: '#666' }}>
-                RAG 知识块: {ragStatus.chunk_count ?? 0}
-              </span>
-            </Space>
-          </Card>
-        ) : (
-          <Card size="small" style={{ background: '#fafafa' }}>
-            <div style={{ textAlign: 'center', padding: '8px 0' }}>
-              <Text type="secondary" style={{ fontSize: 12 }}>
-                未检测到 RAG 索引，请先构建
-              </Text>
-            </div>
-          </Card>
-        )}
-      </div>
+        {!readOnly && <Button icon={<ReloadOutlined />} loading={isBuilding} onClick={onBuildIndex}>
+          {ragStatus?.indexed ? '重建' : '构建索引'}
+        </Button>}
+      </section>
 
-      {/* Question Input */}
-      <div className="panel-section">
-        <div className="panel-section-title">
-          <Space>
-            <SearchOutlined />
-            <span>知识问答</span>
-          </Space>
-        </div>
-        <Space direction="vertical" style={{ width: '100%' }} size={8}>
-          <TextArea
-            rows={3}
-            placeholder="请输入您的问题，例如：什么是糖尿病酮症酸中毒？"
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
-            onKeyDown={handleKeyDown}
-            disabled={queryLoading}
+      {ragStatus?.status === 'stale' && <Alert type="warning" showIcon message="教材内容已变化，请重建索引" />}
+
+      <section className="rag-compose">
+        <Radio.Group value={mode} onChange={(event) => setMode(event.target.value)} buttonStyle="solid">
+          <Radio.Button value="all"><BookOutlined /> 课程问答</Radio.Button>
+          <Radio.Button value="compare"><BranchesOutlined /> 跨教材对比</Radio.Button>
+        </Radio.Group>
+        {mode === 'compare' && (
+          <Select
+            mode="multiple"
+            maxTagCount="responsive"
+            placeholder="选择至少两本教材"
+            value={selectedBooks}
+            onChange={setSelectedBooks}
+            options={textbooks.map((book) => ({ value: book.id, label: book.title }))}
           />
-          <Button
-            type="primary"
-            icon={queryLoading ? <LoadingOutlined /> : <SendOutlined />}
-            onClick={handleQuery}
-            loading={queryLoading}
-            disabled={!ragStatus?.indexed || isBuilding}
-            block
-            style={{ background: !ragStatus?.indexed ? undefined : '#4ECDC4', borderColor: '#4ECDC4' }}
-          >
-            {queryLoading ? '查询中...' : !ragStatus?.indexed ? '请先构建索引' : '发送问题'}
-          </Button>
-        </Space>
-      </div>
-
-      {/* Error */}
-      {error && (
-        <Alert
-          message={error}
-          type="error"
-          showIcon
-          closable
-          style={{ marginBottom: 12, fontSize: 12 }}
+        )}
+        <TextArea
+          value={question}
+          onChange={(event) => setQuestion(event.target.value)}
+          onKeyDown={(event) => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); ask(); } }}
+          rows={4}
+          placeholder={mode === 'compare' ? '例：这几本教材对“形成性评价”的定义和教学建议有哪些共同点与差异？' : '输入知识点或教学问题，回答会附带教材、章节、页码与原文证据。'}
         />
+        <Button type="primary" size="large" block icon={<SendOutlined />} loading={loading} disabled={!ragStatus?.indexed} onClick={ask}>
+          {mode === 'compare' ? '生成跨教材证据对比' : '从课程教材中查找答案'}
+        </Button>
+      </section>
+
+      {error && <Alert type="error" showIcon message={error} />}
+      {loading && <div className="rag-loading"><Spin /><span>正在融合关键词、语义与知识网络证据…</span></div>}
+
+      {result && !loading && (
+        <section className="rag-result">
+          <div className="rag-result-head">
+            <span>回答</span>
+            <Space>
+              <Tag>{result.answer_method === 'llm_grounded' ? '证据约束生成' : '原文证据回退'}</Tag>
+              <Tag color="cyan">{result.citations.length} 条引用</Tag>
+            </Space>
+          </div>
+          <Typography.Paragraph className="rag-answer">{result.answer}</Typography.Paragraph>
+          <div className="rag-trace">
+            检索路径：{result.retrieval_trace?.retrievers?.join(' + ') || 'BM25'}
+            {typeof result.retrieval_trace?.graph_expansions === 'number' && ` · 图谱扩展 ${result.retrieval_trace.graph_expansions} 条`}
+          </div>
+          <div className="evidence-stack">
+            {result.citations.map((citation, index) => (
+              <article className="evidence-card" key={citation.chunk_id || index}>
+                <div className="evidence-card-head">
+                  <span className="evidence-id">{citation.source_id || `S${index + 1}`}</span>
+                  <strong>{citation.textbook}</strong>
+                  <span>{citation.chapter} · 第 {citation.page_start || citation.page}{citation.page_end && citation.page_end !== citation.page_start ? `–${citation.page_end}` : ''} 页</span>
+                </div>
+                {citation.section_path && citation.section_path.length > 1 && (
+                  <div className="evidence-path">{citation.section_path.join(' › ')}</div>
+                )}
+                <blockquote>{citation.quote || result.source_chunks[index]}</blockquote>
+                <div className="evidence-signals">
+                  {(citation.retrievers || []).map((retriever) => <Tag key={retriever}>{retriever}</Tag>)}
+                  {citation.chunk_id && <code>{citation.chunk_id}</code>}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
       )}
 
-      {/* Result */}
-      <div ref={resultRef}>
-        {queryLoading && (
-          <div className="loading-spinner">
-            <Spin />
-            <span style={{ marginLeft: 8, color: '#888', fontSize: 12 }}>正在查询知识库...</span>
-          </div>
-        )}
-
-        {queryResult && (
-          <>
-            {/* Answer */}
-            <div className="panel-section">
-              <div className="panel-section-title">
-                <Space>
-                  <FileTextOutlined />
-                  <span>回答</span>
-                </Space>
-                <Tag style={{ fontSize: 10 }}>
-                  已检索 {queryResult.citations?.length || 0} 条引用
-                </Tag>
-              </div>
-              <div className="rag-answer">{queryResult.answer}</div>
-            </div>
-
-            {/* Citations */}
-            {queryResult.citations && queryResult.citations.length > 0 && (
-              <div className="panel-section">
-                <div className="panel-section-title">
-                  <Space>
-                    <BookOutlined />
-                    <span>引用来源 ({queryResult.citations.length})</span>
-                  </Space>
-                </div>
-                {queryResult.citations.map((cit, idx) => (
-                  <div key={idx} className="citation-card">
-                    <div
-                      className={`citation-text ${expandedCitations.has(idx) ? 'expanded' : ''}`}
-                    >
-                      [{cit.textbook}, {cit.chapter}, 第{cit.page}页]
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
-                      <span className="citation-source">
-                        {cit.textbook} / {cit.chapter}
-                      </span>
-                      <Tag color="green" style={{ fontSize: 10, lineHeight: '16px' }}>
-                        相关度: {(cit.relevance_score * 100).toFixed(0)}%
-                      </Tag>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Source Chunks */}
-            {queryResult.source_chunks && queryResult.source_chunks.length > 0 && (
-              <div className="panel-section">
-                <div className="panel-section-title">
-                  <Space>
-                    <FileTextOutlined />
-                    <span>原文片段 ({queryResult.source_chunks.length})</span>
-                  </Space>
-                </div>
-                {queryResult.source_chunks.map((chunk, idx) => (
-                  <div key={idx} className="citation-card">
-                    <div
-                      className={`citation-text ${expandedCitations.has(idx + 1000) ? 'expanded' : ''}`}
-                      onClick={() => {
-                        setExpandedCitations((prev) => {
-                          const next = new Set(prev);
-                          const key = idx + 1000;
-                          if (next.has(key)) next.delete(key);
-                          else next.add(key);
-                          return next;
-                        });
-                      }}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      {chunk}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </>
-        )}
-
-        {!queryLoading && !queryResult && !error && (
-          <div className="empty-state" style={{ padding: '24px 16px' }}>
-            <SearchOutlined style={{ fontSize: 32, opacity: 0.3 }} />
-            <div className="empty-state-text" style={{ marginTop: 8 }}>
-              输入问题并发送以获取回答
-            </div>
-          </div>
-        )}
-      </div>
+      {!loading && !result && !error && <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="每条答案都可以回到教材原文" />}
     </div>
   );
 };

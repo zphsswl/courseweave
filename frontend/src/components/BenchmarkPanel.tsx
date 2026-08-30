@@ -1,220 +1,92 @@
-import React from 'react';
-import { Button, Spin, Empty, Card, Typography, Space, Tag, Tooltip, Divider, message } from 'antd';
-import {
-  ReloadOutlined,
-  ExperimentOutlined,
-  CheckCircleOutlined,
-  CloseCircleOutlined,
-  WarningOutlined,
-  InfoCircleOutlined,
-  PlayCircleOutlined,
-} from '@ant-design/icons';
-import type { BenchmarkResult } from '../types';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Button, Empty, Spin, Tag } from 'antd';
+import { CheckOutlined, ExperimentOutlined, ReloadOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
+import type { BenchmarkResult, BenchmarkSuite } from '../types';
 import * as api from '../api/client';
 
-const { Text, Title } = Typography;
 
 interface Props {
   results: BenchmarkResult[];
   loading: boolean;
   onRefresh: () => void;
   onRun: () => Promise<void>;
+  readOnly?: boolean;
 }
 
-function getScoreColor(score: number): string {
-  if (score >= 0.8) return '#52c41a';
-  if (score >= 0.6) return '#faad14';
-  return '#f5222d';
-}
+const scoreTone = (score: number) => score >= .8 ? 'good' : score >= .6 ? 'fair' : 'weak';
 
-function getScoreLabel(score: number): string {
-  if (score >= 0.9) return '优秀';
-  if (score >= 0.8) return '良好';
-  if (score >= 0.6) return '一般';
-  return '需改进';
-}
+const BenchmarkPanel: React.FC<Props> = ({ results, loading, onRefresh, onRun, readOnly = false }) => {
+  const [running, setRunning] = useState(false);
+  const [suite, setSuite] = useState<BenchmarkSuite | null>(null);
 
-function getScoreIcon(score: number) {
-  if (score >= 0.8) return <CheckCircleOutlined style={{ color: '#52c41a' }} />;
-  if (score >= 0.6) return <WarningOutlined style={{ color: '#faad14' }} />;
-  return <CloseCircleOutlined style={{ color: '#f5222d' }} />;
-}
+  useEffect(() => {
+    api.getBenchmarkSuite().then((response) => setSuite(response.data)).catch(() => setSuite(null));
+  }, []);
 
-const BenchmarkPanel: React.FC<Props> = ({ results, loading, onRefresh, onRun }) => {
-  const [running, setRunning] = React.useState(false);
+  const teacherMetrics = results.filter((item) => item.category === 'teacher_questions');
+  const systemMetrics = results.filter((item) => item.category !== 'teacher_questions');
+  const average = useMemo(() => (
+    teacherMetrics.length
+      ? teacherMetrics.reduce((sum, item) => sum + item.score, 0) / teacherMetrics.length
+      : 0
+  ), [teacherMetrics]);
 
-  const handleRun = async () => {
+  const run = async () => {
     setRunning(true);
-    try {
-      await onRun();
-    } catch {
-      message.error('Benchmark 运行失败');
-    } finally {
-      setRunning(false);
-    }
+    try { await onRun(); } finally { setRunning(false); }
   };
 
-  if (loading && results.length === 0) {
-    return (
-      <div className="loading-spinner">
-        <Spin size="large" />
+  const metricCard = (result: BenchmarkResult) => (
+    <article className={`quality-metric ${scoreTone(result.score)}`} key={result.metric}>
+      <div className="quality-metric-top">
+        <span><CheckOutlined /></span>
+        <strong>{result.metric}</strong>
+        <b>{Math.round(result.score * 100)}<small>%</small></b>
       </div>
-    );
-  }
-
-  if (!loading && results.length === 0) {
-    return (
-      <div className="empty-state">
-        <Empty
-          description="暂无 Benchmark 数据"
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-        >
-          <span style={{ fontSize: 12, color: '#888' }}>
-            点击下方按钮运行 Benchmark 评估
-          </span>
-          <div style={{ marginTop: 12 }}>
-            <Button
-              type="primary"
-              icon={<PlayCircleOutlined />}
-              onClick={handleRun}
-              loading={running}
-              style={{ background: '#4ECDC4', borderColor: '#4ECDC4' }}
-            >
-              运行 Benchmark
-            </Button>
-          </div>
-          <div style={{ marginTop: 8 }}>
-            <Button size="small" onClick={onRefresh}>
-              刷新
-            </Button>
-          </div>
-        </Empty>
-      </div>
-    );
-  }
-
-  const avgScore =
-    results.length > 0
-      ? results.reduce((sum, r) => sum + r.score, 0) / results.length
-      : 0;
+      <div className="quality-meter"><i style={{ width: `${Math.max(2, result.score * 100)}%` }} /></div>
+      <p>{result.description}</p>
+    </article>
+  );
 
   return (
-    <div>
-      <div className="panel-section">
-        <div className="panel-section-title">
-          <Space>
-            <ExperimentOutlined />
-            <span>RAG 质量评估</span>
-          </Space>
-          <Space size={4}>
-            <Button
-              size="small"
-              type="primary"
-              icon={<PlayCircleOutlined />}
-              onClick={handleRun}
-              loading={running}
-              style={{ background: '#4ECDC4', borderColor: '#4ECDC4' }}
-            >
-              运行 Benchmark
-            </Button>
-            <Button
-              size="small"
-              icon={<ReloadOutlined />}
-              onClick={onRefresh}
-              loading={loading}
-            >
-              刷新
-            </Button>
-          </Space>
+    <div className="quality-lab">
+      <header className="quality-lab-head">
+        <span><ExperimentOutlined /></span>
+        <div><small>EVIDENCE QUALITY LAB</small><h2>RAG 教师问题评测</h2><p>用固定问题集检查检索、引用、跨教材覆盖和拒答，不靠主观感受打分。</p></div>
+      </header>
+
+      <section className="quality-suite-strip">
+        <div><small>问题集</small><strong>{suite?.question_count || 45}</strong><span>道教师问题</span></div>
+        <div><small>跨教材</small><strong>{suite?.compare_count || 5}</strong><span>道对比题</span></div>
+        <div><small>拒答检测</small><strong>{suite?.rejection_count || 5}</strong><span>道域外题</span></div>
+        <Tag icon={<SafetyCertificateOutlined />} color="success">固定版本 {suite?.version || 'medical-teacher-v1'}</Tag>
+      </section>
+
+      {!results.length ? (
+        <div className="quality-empty">
+          {loading ? <Spin /> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="还没有本课程的评测结果" />}
+          <p>首次运行会读取当前课程索引，通常需要几十秒，不调用付费大模型。</p>
+          {!readOnly && <Button type="primary" onClick={run} loading={running}>运行 45 题评测</Button>}
         </div>
-        <div className="panel-section-subtitle">
-          多维度评估 RAG 问答系统的准确性与完整性
-        </div>
-      </div>
-
-      {/* Average score card */}
-      <Card
-        size="small"
-        style={{
-          marginBottom: 16,
-          background: 'linear-gradient(135deg, #667eea, #764ba2)',
-          color: '#fff',
-        }}
-      >
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 11, opacity: 0.8 }}>综合评分</div>
-          <div style={{ fontSize: 36, fontWeight: 700, margin: '4px 0' }}>
-            {(avgScore * 100).toFixed(1)}
-          </div>
-          <div style={{ fontSize: 12, opacity: 0.8 }}>
-            {getScoreLabel(avgScore)}
-          </div>
-        </div>
-      </Card>
-
-      {/* Individual metrics */}
-      <div className="panel-section">
-        <div className="panel-section-title">
-          <span>各维度评分</span>
-          <Text style={{ fontSize: 11, color: '#888' }}>{results.length} 项指标</Text>
-        </div>
-      </div>
-
-      {results.map((result, idx) => (
-        <Card
-          key={idx}
-          size="small"
-          style={{ marginBottom: 10 }}
-          bodyStyle={{ padding: '10px 14px' }}
-        >
-          <div style={{ marginBottom: 6 }}>
-            <Space>
-              {getScoreIcon(result.score)}
-              <Text style={{ fontWeight: 500, fontSize: 13 }}>{result.metric}</Text>
-              <Tooltip title={result.description}>
-                <InfoCircleOutlined style={{ color: '#bbb', fontSize: 12, cursor: 'pointer' }} />
-              </Tooltip>
-            </Space>
-          </div>
-
-          <div className="benchmark-row" style={{ marginBottom: 4 }}>
-            <div className="benchmark-bar-bg">
-              <div
-                className="benchmark-bar-fill"
-                style={{
-                  width: `${result.score * 100}%`,
-                  background: `linear-gradient(90deg, ${getScoreColor(result.score)}, ${getScoreColor(result.score)}dd)`,
-                }}
-              />
-            </div>
-            <div className="benchmark-score" style={{ color: getScoreColor(result.score) }}>
-              {(result.score * 100).toFixed(0)}
-            </div>
-          </div>
-
-          <Text type="secondary" style={{ fontSize: 11 }}>
-            {result.description}
-          </Text>
-        </Card>
-      ))}
-
-      <Divider style={{ margin: '12px 0' }} />
-
-      {/* Legend */}
-      <Space size={12} style={{ fontSize: 11, color: '#888' }}>
-        <span>
-          <CheckCircleOutlined style={{ color: '#52c41a', marginRight: 4 }} />
-          优秀 (≥80)
-        </span>
-        <span>
-          <WarningOutlined style={{ color: '#faad14', marginRight: 4 }} />
-          一般 (60-79)
-        </span>
-        <span>
-          <CloseCircleOutlined style={{ color: '#f5222d', marginRight: 4 }} />
-          需改进 (&lt;60)
-        </span>
-      </Space>
+      ) : (
+        <>
+          <section className="quality-score-hero">
+            <div><small>四项核心指标均值</small><strong>{Math.round(average * 100)}</strong><span>/ 100</span></div>
+            <p>本分数只评价可验证的检索行为，不把语言流畅度当作准确性。</p>
+            {!readOnly && <Button onClick={run} loading={running}>重新评测</Button>}
+          </section>
+          <div className="quality-section-title"><span>教师问题指标</span><small>面试演示重点</small></div>
+          <section className="quality-metric-grid">{teacherMetrics.map(metricCard)}</section>
+          {!!systemMetrics.length && <>
+            <div className="quality-section-title"><span>系统基础指标</span><small>数据与证据健康度</small></div>
+            <section className="quality-metric-grid compact">{systemMetrics.map(metricCard)}</section>
+          </>}
+        </>
+      )}
+      <footer className="quality-lab-foot">
+        <Button icon={<ReloadOutlined />} onClick={onRefresh} loading={loading}>刷新结果</Button>
+        <span>评测集不包含教材原文，可安全提交到 GitHub。</span>
+      </footer>
     </div>
   );
 };

@@ -1,513 +1,522 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Tabs, message } from 'antd';
-import TopBar from './components/TopBar';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Button, Drawer, Dropdown, Upload, message } from 'antd';
+import {
+  BookOutlined,
+  BranchesOutlined,
+  CompassOutlined,
+  MoreOutlined,
+  PlusOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
+import CourseSwitcher from './components/CourseSwitcher';
 import TextbookPanel from './components/TextbookPanel';
-import GraphCanvas from './components/GraphCanvas';
-import NodeDetail from './components/NodeDetail';
-import DecisionPanel from './components/DecisionPanel';
-import RagPanel from './components/RagPanel';
-import TeacherChatPanel from './components/TeacherChatPanel';
-import ReportPanel from './components/ReportPanel';
-import BenchmarkPanel from './components/BenchmarkPanel';
+import KnowledgeTree from './components/KnowledgeTree';
+import KnowledgeDetailDrawer from './components/KnowledgeDetailDrawer';
+import ModelAvailabilityBadge from './components/ModelAvailabilityBadge';
 import * as api from './api/client';
 import type {
-  Textbook,
+  Chapter,
+  Course,
   GraphData,
   GraphNode,
-  Decision,
-  RagStatus,
-  ReportSummary,
-  BenchmarkResult,
   Job,
+  BenchmarkResult,
   ModelStatus,
+  RagStatus,
+  Textbook,
 } from './types';
 import './App.css';
 
+const AlignmentReviewPanel = React.lazy(() => import('./components/AlignmentReviewPanel'));
+const FloatingRagAssistant = React.lazy(() => import('./components/FloatingRagAssistant'));
+const BenchmarkPanel = React.lazy(() => import('./components/BenchmarkPanel'));
+const AgentWorkbench = React.lazy(() => import('./components/AgentWorkbench'));
 const POLL_INTERVAL = 2000;
 
+type Workspace = 'library' | 'tree' | 'compare' | 'agent';
+
 const App: React.FC = () => {
-  /* =========================================================
-     State
-     ========================================================= */
-  // Textbooks
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [selectedCourseId, setSelectedCourseId] = useState('course_default');
   const [textbooks, setTextbooks] = useState<Textbook[]>([]);
-  const [selectedTextbookId, setSelectedTextbookId] = useState<string | null>(null);
   const [textbooksLoading, setTextbooksLoading] = useState(false);
-
-  // Graph
+  const [workspace, setWorkspace] = useState<Workspace>('library');
+  const [selectedTextbook, setSelectedTextbook] = useState<Textbook | null>(null);
+  const [chapters, setChapters] = useState<Chapter[]>([]);
   const [graphData, setGraphData] = useState<GraphData | null>(null);
-  const [showIntegrated, setShowIntegrated] = useState(false);
   const [graphLoading, setGraphLoading] = useState(false);
-
-  // Node detail
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
-  const [nodeDetailVisible, setNodeDetailVisible] = useState(false);
-
-  // Decisions
-  const [decisions, setDecisions] = useState<Decision[]>([]);
-  const [decisionsLoading, setDecisionsLoading] = useState(false);
-
-  // RAG
+  const [textbookJobs, setTextbookJobs] = useState<Record<string, Job>>({});
   const [ragStatus, setRagStatus] = useState<RagStatus | null>(null);
   const [ragBuilding, setRagBuilding] = useState(false);
-
-  // Report
-  const [reportSummary, setReportSummary] = useState<ReportSummary | null>(null);
-  const [reportLoading, setReportLoading] = useState(false);
-
-  // Model
+  const [integrating, setIntegrating] = useState(false);
+  const [alignmentVersion, setAlignmentVersion] = useState(0);
+  const [ragOpen, setRagOpen] = useState(false);
   const [modelStatus, setModelStatus] = useState<ModelStatus | null>(null);
-
-  // Benchmark
+  const [modelChecking, setModelChecking] = useState(false);
+  const [qualityOpen, setQualityOpen] = useState(false);
   const [benchmarkResults, setBenchmarkResults] = useState<BenchmarkResult[]>([]);
   const [benchmarkLoading, setBenchmarkLoading] = useState(false);
+  const [publicDemoReadOnly, setPublicDemoReadOnly] = useState(false);
 
-  // Jobs
-  const [textbookJobs, setTextbookJobs] = useState<Record<string, Job>>({});
-  const [integrating, setIntegrating] = useState(false);
-
-  // Active right tab
-  const [activeRightTab, setActiveRightTab] = useState('decisions');
-
-  // Computed stats
-  const totalTextbooks = textbooks.length;
-  const totalChars = textbooks.reduce(
-    (sum, tb) => sum + (tb.total_chars || 0),
-    0
+  const selectedCourse = useMemo(
+    () => courses.find((course) => course.id === selectedCourseId) || null,
+    [courses, selectedCourseId],
   );
-  const compressionRatio = reportSummary?.textbooks?.total_chars
-    ? (reportSummary?.knowledge_graph?.total_nodes || 0) / reportSummary.textbooks.total_chars
-    : 0;
 
-  /* =========================================================
-     Data Loaders
-     ========================================================= */
+  const handleCourseDeleted = useCallback((courseId: string) => {
+    setCourses((current) => {
+      const remaining = current.filter((course) => course.id !== courseId);
+      if (selectedCourseId === courseId) {
+        setSelectedCourseId(remaining.find((course) => course.id === 'course_default')?.id || remaining[0]?.id || 'course_default');
+      }
+      return remaining;
+    });
+  }, [selectedCourseId]);
+
+  const loadCourses = useCallback(async () => {
+    try {
+      const response = await api.getCourses();
+      setCourses(response.data);
+      if (response.data.length) {
+        const current = response.data.find((course) => course.id === selectedCourseId);
+        const preferred = [...response.data].sort((a, b) => b.textbook_count - a.textbook_count)[0];
+        if (!current || (current.textbook_count === 0 && preferred.textbook_count > 0)) {
+          setSelectedCourseId(preferred.id);
+        }
+      }
+    } catch {
+      message.error('课程加载失败，请刷新重试');
+    }
+  }, [selectedCourseId]);
+
   const loadTextbooks = useCallback(async () => {
     setTextbooksLoading(true);
     try {
-      const res = await api.getTextbooks();
-      setTextbooks(res.data);
+      const response = await api.getTextbooks(selectedCourseId);
+      setTextbooks(response.data);
+      setSelectedTextbook((current) => (
+        current ? response.data.find((book) => book.id === current.id) || current : current
+      ));
     } catch {
-      message.error('加载教材列表失败');
+      message.error('教材加载失败，请刷新重试');
     } finally {
       setTextbooksLoading(false);
     }
-  }, []);
-
-  const loadBookGraph = useCallback(async (bookId: string) => {
-    setGraphLoading(true);
-    try {
-      const res = await api.getBookGraph(bookId);
-      setGraphData(res.data);
-      setShowIntegrated(false);
-    } catch {
-      message.error('加载知识图谱失败');
-    } finally {
-      setGraphLoading(false);
-    }
-  }, []);
-
-  const loadIntegratedGraph = useCallback(async () => {
-    setGraphLoading(true);
-    try {
-      const res = await api.getIntegratedGraph();
-      setGraphData(res.data);
-      setShowIntegrated(true);
-    } catch {
-      message.error('加载整合图谱失败');
-    } finally {
-      setGraphLoading(false);
-    }
-  }, []);
-
-  const loadDecisions = useCallback(async () => {
-    setDecisionsLoading(true);
-    try {
-      const res = await api.getDecisions();
-      setDecisions(res.data);
-    } catch {
-      // Silent
-    } finally {
-      setDecisionsLoading(false);
-    }
-  }, []);
+  }, [selectedCourseId]);
 
   const loadRagStatus = useCallback(async () => {
     try {
-      const res = await api.getRagStatus();
-      setRagStatus(res.data);
+      const response = await api.getRagStatus(selectedCourseId);
+      setRagStatus(response.data);
     } catch {
-      // Silent
+      setRagStatus(null);
     }
-  }, []);
+  }, [selectedCourseId]);
 
-  const loadReportSummary = useCallback(async () => {
-    setReportLoading(true);
+  const loadModelStatus = useCallback(async (probe = false) => {
+    setModelChecking(probe);
     try {
-      const res = await api.getReportSummary();
-      setReportSummary(res.data);
+      const response = probe ? await api.probeModel() : await api.getModelStatus();
+      setModelStatus(response.data);
     } catch {
-      // Silent
+      setModelStatus(null);
     } finally {
-      setReportLoading(false);
+      setModelChecking(false);
     }
   }, []);
 
-  const loadBenchmark = useCallback(async () => {
+  const loadBenchmarkResults = useCallback(async () => {
     setBenchmarkLoading(true);
     try {
-      const res = await api.getBenchmarkResults();
-      // Handle both array format and older { results: [...] } object format
-      const data = res.data;
-      if (Array.isArray(data)) {
-        setBenchmarkResults(data);
-      } else if (data && typeof data === 'object' && Array.isArray((data as any).results)) {
-        setBenchmarkResults((data as any).results);
-      } else {
-        setBenchmarkResults([]);
-      }
-    } catch {
-      // Silent
+      const response = await api.getBenchmarkResults(selectedCourseId);
+      setBenchmarkResults(response.data);
     } finally {
       setBenchmarkLoading(false);
     }
-  }, []);
+  }, [selectedCourseId]);
 
-  const loadModelStatus = useCallback(async () => {
+  const runBenchmarkEvaluation = useCallback(async () => {
+    setBenchmarkLoading(true);
     try {
-      const res = await api.getModelStatus();
-      setModelStatus(res.data);
+      const response = await api.runBenchmark(selectedCourseId);
+      setBenchmarkResults(response.data);
+      message.success('教师问题评测完成');
     } catch {
-      // Silent
+      message.error('评测运行失败，请先确认课程已经建立索引');
+      throw new Error('benchmark failed');
+    } finally {
+      setBenchmarkLoading(false);
+    }
+  }, [selectedCourseId]);
+
+  const loadBookWorkspace = useCallback(async (book: Textbook) => {
+    setSelectedTextbook(book);
+    setSelectedNode(null);
+    setWorkspace('tree');
+    setGraphLoading(true);
+    try {
+      const [chapterResponse, graphResponse] = await Promise.all([
+        api.getChapters(book.id),
+        api.getBookGraph(book.id, { min_importance: 2, limit: 1200 }),
+      ]);
+      setChapters(chapterResponse.data);
+      setGraphData(graphResponse.data);
+    } catch {
+      setGraphData(null);
+      setChapters([]);
+      message.error('知识树加载失败，请确认教材已经完成解析和抽取');
+    } finally {
+      setGraphLoading(false);
     }
   }, []);
 
-  /* =========================================================
-     Polling Helper
-     ========================================================= */
-  const pollJob = useCallback(
-    (jobId: string, onComplete?: () => void): (() => void) => {
-      const interval = setInterval(async () => {
-        try {
-          const res = await api.getJobStatus(jobId);
-          setTextbookJobs((prev) => ({ ...prev, [jobId]: res.data }));
-
-          if (res.data.status === 'completed') {
-            clearInterval(interval);
-            message.success('任务完成');
-            if (onComplete) onComplete();
-          } else if (res.data.status === 'failed') {
-            clearInterval(interval);
-            message.error(`任务失败: ${res.data.message || '未知错误'}`);
-          }
-        } catch {
-          clearInterval(interval);
+  const pollJob = useCallback((jobId: string, textbookId: string, onComplete: () => void) => {
+    const timer = window.setInterval(async () => {
+      try {
+        const response = await api.getJobStatus(jobId);
+        setTextbookJobs((current) => ({ ...current, [textbookId]: response.data }));
+        if (response.data.status === 'completed') {
+          window.clearInterval(timer);
+          message.success('处理完成');
+          onComplete();
+          loadModelStatus();
+        } else if (response.data.status === 'failed') {
+          window.clearInterval(timer);
+          message.error(response.data.error || response.data.message || '处理失败，请重试');
         }
-      }, POLL_INTERVAL);
-
-      return () => clearInterval(interval);
-    },
-    []
-  );
-
-  /* =========================================================
-     Handlers
-     ========================================================= */
-  // Select textbook
-  const handleSelectTextbook = useCallback(
-    (id: string) => {
-      setSelectedTextbookId(id);
-      loadBookGraph(id);
-    },
-    [loadBookGraph]
-  );
-
-  // Upload
-  const handleUpload = useCallback(
-    async (file: File) => {
-      await api.uploadTextbook(file);
-      message.success(`教材上传成功`);
-      loadTextbooks();
-    },
-    [loadTextbooks]
-  );
-
-  // Parse
-  const handleParse = useCallback(
-    (textbookId: string, force?: boolean) => {
-      api
-        .startParseJob(textbookId, force ?? false)
-        .then((res) => {
-          message.info(force ? '重新解析任务已启动' : '解析任务已启动');
-          setTextbookJobs((prev) => ({ ...prev, [res.data.id]: res.data }));
-          const cleanup = pollJob(res.data.id, () => {
-            loadTextbooks();
-          });
-          return cleanup;
-        })
-        .catch(() => message.error('启动解析失败'));
-    },
-    [pollJob, loadTextbooks]
-  );
-
-  // Extract graph
-  const handleExtractGraph = useCallback(
-    (textbookId: string, force?: boolean) => {
-      api
-        .startExtractGraphJob(textbookId, force ?? false)
-        .then((res) => {
-          message.info(force ? '重新抽取任务已启动' : '图谱提取任务已启动');
-          setTextbookJobs((prev) => ({ ...prev, [res.data.id]: res.data }));
-          pollJob(res.data.id, () => {
-            loadBookGraph(textbookId);
-          });
-        })
-        .catch(() => message.error('启动图谱提取失败'));
-    },
-    [pollJob, loadBookGraph]
-  );
-
-  // Integrate
-  const handleIntegrate = useCallback(() => {
-    setIntegrating(true);
-    api
-      .startIntegrateJob()
-      .then((res) => {
-        message.info('整合任务已启动');
-        const jobId = res.data?.id;
-        if (!jobId) {
-          setIntegrating(false);
-          message.error('无法获取任务ID');
-          return;
-        }
-        const interval = setInterval(async () => {
-          try {
-            const jobRes = await api.getJobStatus(jobId);
-            if (jobRes.data.status === 'completed') {
-              clearInterval(interval);
-              setIntegrating(false);
-              message.success('知识整合完成');
-              loadIntegratedGraph();
-              loadDecisions();
-              loadReportSummary();
-            } else if (jobRes.data.status === 'failed') {
-              clearInterval(interval);
-              setIntegrating(false);
-              message.error(`整合失败: ${jobRes.data.message || '未知错误'}`);
-            }
-          } catch {
-            clearInterval(interval);
-            setIntegrating(false);
-          }
-        }, POLL_INTERVAL);
-      })
-      .catch(() => {
-        setIntegrating(false);
-        message.error('启动整合失败');
-      });
-  }, [loadIntegratedGraph, loadDecisions, loadReportSummary]);
-
-  // Toggle graph view (single book <-> integrated)
-  const handleToggleGraphView = useCallback(() => {
-    if (showIntegrated) {
-      if (selectedTextbookId) {
-        loadBookGraph(selectedTextbookId);
-      } else {
-        message.info('请先选择一本教材');
+      } catch {
+        window.clearInterval(timer);
       }
-    } else {
-      loadIntegratedGraph();
+    }, POLL_INTERVAL);
+  }, [loadModelStatus]);
+
+  const handleUpload = useCallback(async (file: File) => {
+    const response = await api.uploadTextbook(file, selectedCourseId);
+    message.success('教材已上传，下一步开始解析');
+    await loadTextbooks();
+    return response;
+  }, [loadTextbooks, selectedCourseId]);
+
+  const handleParse = useCallback(async (textbookId: string, force = false) => {
+    try {
+      const response = await api.startParseJob(textbookId, force);
+      setTextbookJobs((current) => ({ ...current, [textbookId]: response.data }));
+      message.info('正在解析教材，完成后可核对章节');
+      pollJob(response.data.id, textbookId, loadTextbooks);
+    } catch {
+      message.error('解析任务启动失败');
     }
-  }, [showIntegrated, selectedTextbookId, loadBookGraph, loadIntegratedGraph]);
+  }, [loadTextbooks, pollJob]);
 
-  // Node click
-  const handleNodeClick = useCallback((node: GraphNode) => {
-    setSelectedNode(node);
-    setNodeDetailVisible(true);
-  }, []);
+  const handleExtractGraph = useCallback(async (textbookId: string, force = false) => {
+    try {
+      const response = await api.startExtractGraphJob(textbookId, force);
+      setTextbookJobs((current) => ({ ...current, [textbookId]: response.data }));
+      message.info('正在生成知识树');
+      pollJob(response.data.id, textbookId, async () => {
+        await loadTextbooks();
+        const book = textbooks.find((item) => item.id === textbookId);
+        if (book && workspace === 'tree') loadBookWorkspace({ ...book, graph_status: 'completed' });
+      });
+    } catch {
+      message.error('知识树生成任务启动失败');
+    }
+  }, [loadBookWorkspace, loadTextbooks, pollJob, textbooks, workspace]);
 
-  // Decision update
-  const handleDecisionUpdate = useCallback(
-    async (id: string, data: Partial<Decision>) => {
-      await api.updateDecision(id, data);
-      message.success('决策已更新');
-      loadDecisions();
-    },
-    [loadDecisions]
-  );
+  const handleDeleteTextbook = useCallback(async (textbookId: string) => {
+    await api.deleteTextbook(textbookId);
+    setTextbookJobs((current) => {
+      const next = { ...current };
+      delete next[textbookId];
+      return next;
+    });
+    if (selectedTextbook?.id === textbookId) {
+      setSelectedTextbook(null);
+      setSelectedNode(null);
+      setGraphData(null);
+      setChapters([]);
+      setWorkspace('library');
+    }
+    await Promise.all([loadTextbooks(), loadCourses(), loadRagStatus()]);
+    message.success('教材及其知识树已删除');
+  }, [loadCourses, loadRagStatus, loadTextbooks, selectedTextbook]);
 
-  // Build RAG index
   const handleBuildRagIndex = useCallback(async () => {
     setRagBuilding(true);
     try {
-      await api.buildRagIndex();
-      message.success('RAG 索引构建完成');
+      await api.buildRagIndex(selectedCourseId);
       await loadRagStatus();
+      message.success('教材问答已经可以使用');
     } catch {
-      message.error('构建 RAG 索引失败');
+      message.error('问答索引构建失败');
     } finally {
       setRagBuilding(false);
     }
-  }, [loadRagStatus]);
+  }, [loadRagStatus, selectedCourseId]);
 
-  // Export
+  const handleBuildConnections = useCallback(async (textbookIds: string[]) => {
+    setIntegrating(true);
+    try {
+      const response = await api.startIntegrateJob(selectedCourseId, textbookIds);
+      message.info(`正在分析 ${textbookIds.length} 组教材的知识关联`);
+      await new Promise<void>((resolve, reject) => {
+        const check = async () => {
+          try {
+            const status = await api.getJobStatus(response.data.id);
+            if (status.data.status === 'completed') {
+              resolve();
+              return;
+            }
+            if (status.data.status === 'failed') {
+              reject(new Error(status.data.error || status.data.message || '关联生成失败'));
+              return;
+            }
+            window.setTimeout(check, POLL_INTERVAL);
+          } catch (error) {
+            reject(error);
+          }
+        };
+        window.setTimeout(check, POLL_INTERVAL);
+      });
+      setAlignmentVersion((current) => current + 1);
+      message.success('跨教材关联图已生成');
+    } catch (error: any) {
+      message.error(error?.response?.data?.detail || error?.message || '关联生成启动失败');
+    } finally {
+      setIntegrating(false);
+    }
+  }, [selectedCourseId]);
+
   const handleExport = useCallback(async () => {
     try {
-      const res = await api.exportReport();
-      const url = URL.createObjectURL(new Blob([res.data]));
+      const response = await api.exportReport();
+      const url = URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', 'MedEssence-整合报告.md');
-      document.body.appendChild(link);
+      link.download = 'CourseWeave-课程报告.md';
       link.click();
-      link.remove();
       URL.revokeObjectURL(url);
-      message.success('报告导出成功');
     } catch {
-      message.error('导出失败');
+      message.error('报告导出失败');
     }
   }, []);
 
-  // Tab change
-  const handleTabChange = useCallback(
-    (key: string) => {
-      setActiveRightTab(key);
-      if (key === 'decisions') loadDecisions();
-      if (key === 'report') loadReportSummary();
-      if (key === 'benchmark') loadBenchmark();
-    },
-    [loadDecisions, loadReportSummary, loadBenchmark]
-  );
-
-  /* =========================================================
-     Init
-     ========================================================= */
   useEffect(() => {
+    loadCourses();
+    api.getHealth()
+      .then((response) => setPublicDemoReadOnly(Boolean(response.data.public_demo_read_only)))
+      .catch(() => setPublicDemoReadOnly(false));
+    loadModelStatus(false);
+  }, [loadCourses, loadModelStatus]);
+
+  useEffect(() => {
+    setWorkspace('library');
+    setSelectedTextbook(null);
+    setSelectedNode(null);
+    setGraphData(null);
     loadTextbooks();
     loadRagStatus();
-    loadModelStatus();
-  }, [loadTextbooks, loadRagStatus, loadModelStatus]);
+  }, [selectedCourseId, loadRagStatus, loadTextbooks]);
 
-  /* =========================================================
-     Render
-     ========================================================= */
+  const openLibrary = () => {
+    setWorkspace('library');
+    setSelectedNode(null);
+  };
+
+  const uploadRequest = async ({ file, onSuccess, onError }: any) => {
+    try {
+      await handleUpload(file as File);
+      onSuccess?.({});
+    } catch (error) {
+      onError?.(error);
+    }
+  };
+
+  const moreItems = [
+    ...(!publicDemoReadOnly ? [
+      {
+        key: 'index',
+        label: ragStatus?.indexed ? '重建问答索引' : '构建问答索引',
+        onClick: handleBuildRagIndex,
+      },
+      { key: 'export', label: '导出课程报告', onClick: handleExport },
+    ] : []),
+    {
+      key: 'quality',
+      label: 'RAG 质量评测',
+      onClick: () => {
+        setQualityOpen(true);
+        loadBenchmarkResults();
+      },
+    },
+  ];
+
   return (
-    <div className="app">
-      <TopBar
-        textbooksCount={totalTextbooks}
-        totalChars={totalChars}
-        compressionRatio={compressionRatio}
-        ragStatus={ragStatus}
-        onExport={handleExport}
-        onIntegrate={handleIntegrate}
-        onBuildRagIndex={handleBuildRagIndex}
-        isIntegrating={integrating}
-        isBuildingRag={ragBuilding}
-        modelStatus={modelStatus}
-      />
+    <div className="app-shell">
+      <header className="app-header">
+        <button className="brand" onClick={openLibrary} aria-label="返回教材库">
+          <span className="brand-mark">C</span>
+          <span className="brand-name">CourseWeave</span>
+        </button>
 
-      <div className="main-content">
-        {/* Left Panel - Textbook Management */}
-        <div className="left-panel">
-          <TextbookPanel
-            textbooks={textbooks}
-            selectedId={selectedTextbookId}
-            loading={textbooksLoading}
-            onSelect={handleSelectTextbook}
-            onUpload={handleUpload}
-            onParse={handleParse}
-            onExtractGraph={handleExtractGraph}
-            jobs={textbookJobs}
-          />
-        </div>
-
-        {/* Center Panel - Knowledge Graph */}
-        <GraphCanvas
-          graphData={graphData}
-          loading={graphLoading}
-          showIntegrated={showIntegrated}
-          onNodeClick={handleNodeClick}
-          onToggleView={handleToggleGraphView}
-          textbookId={selectedTextbookId}
+        <CourseSwitcher
+          courses={courses}
+          selectedCourse={selectedCourse}
+          onSelect={setSelectedCourseId}
+          onCreated={(course) => {
+            setCourses((current) => [course, ...current]);
+            setSelectedCourseId(course.id);
+          }}
+          onDeleted={handleCourseDeleted}
+          readOnly={publicDemoReadOnly}
         />
 
-        {/* Right Panel - Tabbed Tools */}
-        <div className="right-panel">
-          <Tabs
-            activeKey={activeRightTab}
-            onChange={handleTabChange}
-            items={[
-              {
-                key: 'decisions',
-                label: '整合决策',
-                children: (
-                  <DecisionPanel
-                    decisions={decisions}
-                    loading={decisionsLoading}
-                    onUpdate={handleDecisionUpdate}
-                    onRefresh={loadDecisions}
-                  />
-                ),
-              },
-              {
-                key: 'rag',
-                label: 'RAG 问答',
-                children: (
-                  <RagPanel
-                    ragStatus={ragStatus}
-                    onBuildIndex={handleBuildRagIndex}
-                    isBuilding={ragBuilding}
-                  />
-                ),
-              },
-              {
-                key: 'chat',
-                label: '教师决策反馈',
-                children: <TeacherChatPanel />,
-              },
-              {
-                key: 'report',
-                label: '整合报告',
-                children: (
-                  <ReportPanel
-                    summary={reportSummary}
-                    loading={reportLoading}
-                    onRefresh={loadReportSummary}
-                  />
-                ),
-              },
-              {
-                key: 'benchmark',
-                label: 'Benchmark',
-                children: (
-                  <BenchmarkPanel
-                    results={benchmarkResults}
-                    loading={benchmarkLoading}
-                    onRefresh={loadBenchmark}
-                    onRun={async () => {
-                      try {
-                        await api.runBenchmark();
-                        message.success('Benchmark 完成');
-                        loadBenchmark();
-                      } catch {
-                        message.error('Benchmark 运行失败');
-                      }
-                    }}
-                  />
-                ),
-              },
-            ]}
-          />
-        </div>
-      </div>
+        <nav className="primary-nav" aria-label="主要功能">
+          <button className={workspace === 'library' || workspace === 'tree' ? 'active' : ''} onClick={openLibrary}>
+            <BookOutlined /> 教材
+          </button>
+          <button className={workspace === 'compare' ? 'active' : ''} onClick={() => setWorkspace('compare')}>
+            <BranchesOutlined /> 跨教材
+          </button>
+          <button className={workspace === 'agent' ? 'active' : ''} onClick={() => setWorkspace('agent')}>
+            <CompassOutlined /> 备课 Agent
+          </button>
+          <button className={`mobile-ask-nav ${ragOpen ? 'active' : ''}`} onClick={() => setRagOpen(true)}>
+            <SearchOutlined /> 问答
+          </button>
+        </nav>
 
-      {/* Node Detail Drawer */}
-      <NodeDetail
+        <div className="header-actions">
+          <ModelAvailabilityBadge
+            status={modelStatus}
+            checking={modelChecking}
+            onCheck={() => loadModelStatus(!publicDemoReadOnly)}
+            probeEnabled={!publicDemoReadOnly}
+          />
+          <Button className="ask-button" icon={<SearchOutlined />} onClick={() => setRagOpen(true)}>
+            向教材提问
+          </Button>
+          {workspace !== 'library' && !publicDemoReadOnly && (
+            <Upload accept=".pdf,.md,.txt" showUploadList={false} customRequest={uploadRequest}>
+              <Button type="primary" icon={<PlusOutlined />}>上传教材</Button>
+            </Upload>
+          )}
+          <Dropdown menu={{ items: moreItems }} trigger={['click']}>
+            <Button aria-label="更多操作" icon={<MoreOutlined />} />
+          </Dropdown>
+        </div>
+      </header>
+
+      <main className="workspace">
+        {workspace === 'library' && (
+          <TextbookPanel
+            textbooks={textbooks}
+            selectedId={null}
+            loading={textbooksLoading}
+            onSelect={(id) => {
+              const book = textbooks.find((item) => item.id === id);
+              if (book) loadBookWorkspace(book);
+            }}
+            onUpload={handleUpload}
+            onParse={handleParse}
+              onExtractGraph={handleExtractGraph}
+              onDelete={handleDeleteTextbook}
+              onConfirmStructure={loadTextbooks}
+            jobs={textbookJobs}
+            readOnly={publicDemoReadOnly}
+          />
+        )}
+
+        {workspace === 'tree' && selectedTextbook && (
+          <KnowledgeTree
+            textbook={selectedTextbook}
+            chapters={chapters}
+            graphData={graphData}
+            loading={graphLoading}
+            onBack={openLibrary}
+            onSelectNode={setSelectedNode}
+            onReviewChapters={openLibrary}
+            onExtract={() => handleExtractGraph(selectedTextbook.id)}
+          />
+        )}
+
+        {workspace === 'compare' && (
+          <section className="task-page compare-page">
+            <div className="task-heading">
+              <div>
+                <span className="section-kicker">CROSS-TEXTBOOK</span>
+                <h1>跨教材知识连接</h1>
+                <p>选择多本教材，直接查看按教材分组的关联知识节点。</p>
+              </div>
+            </div>
+            <React.Suspense fallback={<div className="page-loading">正在加载关联图…</div>}>
+              <AlignmentReviewPanel
+                courseId={selectedCourseId}
+                textbooks={textbooks}
+                refreshToken={alignmentVersion}
+                onGenerate={handleBuildConnections}
+                onGoLibrary={openLibrary}
+                generating={integrating}
+                readOnly={publicDemoReadOnly}
+              />
+            </React.Suspense>
+          </section>
+        )}
+
+        {workspace === 'agent' && (
+          <React.Suspense fallback={<div className="page-loading">正在加载备课 Agent…</div>}>
+            <AgentWorkbench
+              courseId={selectedCourseId}
+              courseTitle={selectedCourse?.title || '当前知识空间'}
+              textbooks={textbooks}
+              modelStatus={modelStatus}
+              onGoLibrary={openLibrary}
+              readOnly={publicDemoReadOnly}
+            />
+          </React.Suspense>
+        )}
+
+      </main>
+
+      <React.Suspense fallback={null}>
+        <FloatingRagAssistant
+          open={ragOpen}
+          onOpenChange={setRagOpen}
+          courseId={selectedCourseId}
+          courseTitle={selectedCourse?.title || '当前知识空间'}
+          textbooks={textbooks}
+          ragStatus={ragStatus}
+          onBuildIndex={handleBuildRagIndex}
+          isBuilding={ragBuilding}
+          readOnly={publicDemoReadOnly}
+        />
+      </React.Suspense>
+
+      <KnowledgeDetailDrawer
         node={selectedNode}
-        visible={nodeDetailVisible}
-        onClose={() => setNodeDetailVisible(false)}
-        decisions={decisions}
+        graphData={graphData}
+        onClose={() => setSelectedNode(null)}
+        onSelectRelated={setSelectedNode}
       />
+
+      <Drawer
+        open={qualityOpen}
+        onClose={() => setQualityOpen(false)}
+        width={560}
+        title={null}
+        className="quality-drawer"
+      >
+        <React.Suspense fallback={<div className="page-loading">正在加载评测台…</div>}>
+          <BenchmarkPanel
+            results={benchmarkResults}
+            loading={benchmarkLoading}
+            onRefresh={loadBenchmarkResults}
+            onRun={runBenchmarkEvaluation}
+            readOnly={publicDemoReadOnly}
+          />
+        </React.Suspense>
+      </Drawer>
     </div>
   );
 };

@@ -102,8 +102,8 @@ const TopBar: React.FC<Props> = ({
   return (
     <div className="topbar">
       <div className="topbar-left">
-        <div className="topbar-logo">M</div>
-        <span className="topbar-title">MedEssence Agent · 七书归一</span>
+        <div className="topbar-logo">K</div>
+        <span className="topbar-title">CourseWeave · 教材知识网络</span>
         <div className="topbar-divider" />
         <div className="topbar-stats">
           <div className="topbar-stat">
@@ -267,7 +267,7 @@ const TopBar: React.FC<Props> = ({
               type="primary"
               style={{ background: '#4ECDC4', borderColor: '#4ECDC4' }}
             >
-              整合开始
+              生成跨教材关联
             </Button>
           </Tooltip>
 

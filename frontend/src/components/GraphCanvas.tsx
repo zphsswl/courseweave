@@ -37,6 +37,7 @@ interface Props {
   onNodeClick: (node: GraphNode) => void;
   onToggleView: () => void;
   textbookId: string | null;
+  onReloadGraph?: (params: { essence_only?: boolean; min_importance?: number; limit?: number }) => void;
 }
 
 // 10 distinct colors for different textbooks
@@ -533,6 +534,7 @@ const GraphCanvas: React.FC<Props> = ({
   onNodeClick,
   onToggleView,
   textbookId,
+  onReloadGraph,
 }) => {
   const cyRef = useRef<Cytoscape.Core | null>(null);
   const graphDataRef = useRef(graphData);
@@ -677,8 +679,11 @@ const GraphCanvas: React.FC<Props> = ({
   );
 
   // ---- Compute elements with expand/collapse support ----
+  const MAX_RENDER_NODES = 5000;
+  const [renderCapped, setRenderCapped] = useState(false);
+
   const elements = useMemo(() => {
-    if (!graphData) return [];
+    if (!graphData) return [] as any[];
 
     // If some nodes are collapsed, find all descendants to hide
     const hiddenIds = new Set<string>();
@@ -701,6 +706,14 @@ const GraphCanvas: React.FC<Props> = ({
     filteredNodes = filteredNodes.filter(passesFoldFilter);
     // Remove collapsed/hidden nodes
     filteredNodes = filteredNodes.filter((n) => !hiddenIds.has(n.id));
+
+    // Render cap: limit to MAX_RENDER_NODES to prevent browser freeze
+    const capped = filteredNodes.length > MAX_RENDER_NODES;
+    if (capped) {
+      filteredNodes = filteredNodes.slice(0, MAX_RENDER_NODES);
+    }
+    // Schedule state update outside the memo
+    setTimeout(() => setRenderCapped(capped), 0);
 
     const visibleNodeIds = new Set(filteredNodes.map((n) => n.id));
 
@@ -1190,7 +1203,15 @@ const GraphCanvas: React.FC<Props> = ({
         <div style={{ marginTop: 6, display: 'flex', gap: 4, flexWrap: 'wrap' }}>
           <Select
             value={viewMode}
-            onChange={(val: ViewMode) => setViewMode(val)}
+            onChange={(val: ViewMode) => {
+              setViewMode(val);
+              if (onReloadGraph) {
+                if (val === 'essence') onReloadGraph({ essence_only: true });
+                else if (val === 'all') onReloadGraph({ essence_only: false, limit: 3000 });
+                else if (val === 'structure') onReloadGraph({ essence_only: false, limit: 3000 });
+                else onReloadGraph({ essence_only: false, limit: 3000 });
+              }
+            }}
             style={{ minWidth: 110, fontSize: 12 }}
             size="small"
             dropdownMatchSelectWidth={false}
@@ -1436,6 +1457,18 @@ const GraphCanvas: React.FC<Props> = ({
             </Button>
           </div>
         )}
+
+      {/* Render cap warning */}
+      {!loading && renderCapped && (
+        <div style={{
+          position: 'absolute', top: 10, left: '50%', transform: 'translateX(-50%)',
+          zIndex: 100, background: 'rgba(255, 152, 0, 0.92)', color: '#fff',
+          padding: '8px 20px', borderRadius: 6, fontSize: 13, fontWeight: 500,
+          pointerEvents: 'none'
+        }}>
+          节点过多，仅显示前 {MAX_RENDER_NODES} 个。请切换至「精华视图」或「结构视图」以获得更好性能。
+        </div>
+      )}
 
       {/* Graph canvas */}
       {!loading &&

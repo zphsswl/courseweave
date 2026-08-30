@@ -10,10 +10,19 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       locale={zhCN}
       theme={{
         token: {
-          colorPrimary: '#4ECDC4',
-          borderRadius: 6,
+          colorPrimary: '#126b57',
+          colorInfo: '#126b57',
+          colorText: '#17231f',
+          colorTextSecondary: '#6f7d77',
+          colorBorder: '#d8e0da',
+          borderRadius: 8,
+          controlHeight: 40,
           fontFamily:
-            "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+            "'Noto Sans SC', 'Microsoft YaHei UI', 'Microsoft YaHei', sans-serif",
+        },
+        components: {
+          Button: { fontWeight: 600 },
+          Modal: { titleFontSize: 19 },
         },
       }}
     >
