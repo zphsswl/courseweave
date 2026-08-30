@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: courseweave
+    runtime: docker
+    plan: starter
+    healthCheckPath: /api/health
+    envVars:
+      - key: PUBLIC_DEMO_READ_ONLY
+        value: "true"
+      - key: SEED_DEMO_DATA
+        value: "true"
+      - key: DATABASE_URL
+        value: sqlite:////var/data/courseweave.db
+      - key: CHROMA_PERSIST_DIR
+        value: /var/data/chroma
+      - key: CORS_ORIGINS
+        value: https://courseweave.onrender.com
+    disk:
+      name: courseweave-data
+      mountPath: /var/data
+      sizeGB: 1

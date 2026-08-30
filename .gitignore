@@ -1,5 +1,5 @@
 *.pdf
-data/textbooks/*.pdf
+data/textbooks/
 data/cache/
 data/chroma/
 frontend/data/chroma/
@@ -13,10 +13,18 @@ node_modules/
 dist/
 *.tsbuildinfo
 *.db
+*.db-shm
+*.db-wal
 *.sqlite
 *.sqlite3
 chroma/
 **/chroma/
 .gstack/
+artifacts/
+.runtime/
 教材/
 赛事命题要求/
+魔搭部署/
+report/*.png
+!report/courseweave-demo.png
+!report/agent-workbench.png

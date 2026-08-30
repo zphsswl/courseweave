@@ -1,320 +1,239 @@
-# MedEssence Agent · 七书归一
+# CourseWeave · 教材知识网络
 
-> **七部医学巨著，一个智能平台 —— 让医学知识检索从"翻书"变为"对话"。**
+[![CI](https://github.com/zphsswl/courseweave/actions/workflows/ci.yml/badge.svg)](https://github.com/zphsswl/courseweave/actions/workflows/ci.yml)
 
-MedEssence Agent 是一个面向医学教科书的知识融合与智能问答平台。系统解析 **7 部医学教材（共 2567 页）**，提取知识图谱，跨教材对齐融合，压缩至原始体积的 **30%**，最终提供基于 RAG（检索增强生成）的精准问答服务，并支持"教师对话"机制用于知识决策修正。系统集成 **DeepSeek v4-pro** 作为 LLM 引擎，提供模型状态监控、基准评测等增强能力。
+> 教师上传自己的教材，系统按课程与章节抽取可追溯知识点，并在不同教材之间建立可审核的关联。
 
----
+CourseWeave 是一个面向教师的多教材 Agentic RAG 与知识图谱系统。它解决的不是“让 AI 总结一本书”，而是四个更难的问题：知识点是否来自真实原文、不同教材的相似概念是否应该连接、回答能否回到具体教材页码核验，以及 Agent 能否根据备课目标自主选择必要的工具并验证交付物。
 
-## 架构总览
+这是一个 AI 产品经理作品项目，同时包含可运行的全栈实现、数据模型、质量门禁、人工审核闭环和部署配置。
+
+![CourseWeave 课程知识图谱与跨教材审核工作台](./report/courseweave-demo.png)
+
+## 产品亮点
+
+- **任意课程，而非写死学科**：以课程工作区组织教材，支持 PDF、Markdown 和 TXT。
+- **页码感知解析**：保留物理页、章节范围、chunk 偏移与来源原文；低文本页会提示 OCR 风险。
+- **章节先审后抽**：教师可修改章节标题和层级，确认后才允许知识抽取，避免错误目录污染全链路。
+- **来源节点与统一概念分离**：每本教材中的表述保留为独立 occurrence；跨教材“同一概念”通过 canonical concept 连接，不覆盖原文。
+- **证据质量门禁**：概念和语义关系必须绑定可在 chunk 中逐字找到的原文；证据不足的结果不会伪装成高质量节点。
+- **跨教材候选 + 教师审核**：系统先召回候选，再由模型判断关系；只有高置信且双侧证据完整的结果可自动通过，其余进入审核队列。
+- **混合检索可降级**：BM25、真实向量检索和图谱扩展分别记录。向量模型不可用时明确降级为 BM25 + 图谱，不用哈希向量冒充语义能力。
+- **对比式 RAG**：可选择多本教材，按共同结论、各教材表述、差异/冲突和教学提示组织回答，并返回教材、章节、页码、chunk 与原文引用。
+- **目标驱动备课 Agent**：教师只需给出主题、教学目标和教材范围；Agent 先观察现有状态，再动态决定复用或调用解析、知识树、跨教材关联、RAG 检索和模型生成工具。
+- **人类检查点 + 自动质量门禁**：章节结构未确认时任务持久化暂停；生成后检查教材覆盖、页码、引用与结构，不达标时自动补检索并重试一次。
+
+## 核心工作流
 
 ```mermaid
-graph TB
-    subgraph "数据接入层"
-        A[7 部医学教材 PDF] --> B[PDF 解析引擎]
-        B --> C[文本分块与清洗]
-    end
-
-    subgraph "知识处理层"
-        C --> D[知识图谱提取 Agent]
-        D --> E[跨教材对齐 Agent]
-        E --> F[知识压缩 Agent]
-        F --> G[(ChromaDB 向量库)]
-        F --> H[(SQLite 知识图谱)]
-    end
-
-    subgraph "智能问答层"
-        I[用户查询] --> J[RAG 检索增强 Agent]
-        G --> J
-        H --> J
-        J --> K[答案生成与引用]
-    end
-
-    subgraph "交互增强层"
-        K --> L[教师对话 Agent]
-        L --> M[决策修正与反馈]
-        M --> J
-        K --> N[报告生成 Agent]
-    end
-
-    subgraph "编排层"
-        O[Orchestrator 编排 Agent]
-        O --> B
-        O --> D
-        O --> E
-        O --> F
-        O --> J
-        O --> L
-        O --> N
-    end
-
-    style O fill:#4a90d9,color:#fff,stroke:#2c5f8a
-    style A fill:#e8f4f8,stroke:#5b9bd5
-    style G fill:#f0e6d3,stroke:#c9a96e
-    style H fill:#f0e6d3,stroke:#c9a96e
-    style L fill:#d4a76a,color:#fff,stroke:#8b6914
-    style K fill:#6abf69,color:#fff,stroke:#3d8b40
+flowchart LR
+    A[创建课程] --> B[上传教材]
+    B --> C[逐页解析]
+    C --> D{教师确认章节结构}
+    D --> E[按章节切块]
+    E --> F[知识点与关系抽取]
+    F --> G{证据质量门禁}
+    G -->|通过| H[教材内知识图谱]
+    G -->|拒绝| R[质量记录]
+    H --> I[跨教材候选召回]
+    I --> J[关系判断]
+    J --> K{教师审核}
+    K --> L[课程级统一概念网络]
+    L --> M[BM25 / Vector / Graph 检索]
+    M --> N[带原文引用的课程问答与教材对比]
+    M --> O[备课 Agent 工具箱]
+    O --> P{引用与覆盖质量门禁}
+    P -->|通过| Q[可核验备课知识包]
+    P -->|不足| O
 ```
 
----
+## 备课 Agent（新）
 
-## 功能特性
+顶部进入“备课 Agent”，输入主题和目标，选择 1–6 本教材后启动。它不是把一串固定脚本包装成聊天窗，而是一个可观察的垂直领域 Agent：
 
-### 核心功能
+![CourseWeave 备课 Agent 工作台](./report/agent-workbench.png)
 
-| 功能 | 描述 | 优先级 |
-|------|------|--------|
-| **多教材知识图谱** | 从 7 部教材中自动提取实体与关系，构建统一医学知识图谱 | P0 |
-| **跨教材知识对齐** | 识别不同教材间相同/互补/冲突知识点，自动融合与消歧 | P0 |
-| **智能压缩** | 在保持知识完整性的前提下，将教材内容压缩至原始体积的 30% | P0 |
-| **RAG 问答** | 基于检索增强生成的精准问答，支持精确引用教材原文（页码+章节） | P0 |
-| **教师对话** | 允许领域专家对模型回答进行修正与反馈，形成持续改进闭环 | P0 |
-| **报告生成** | 自动生成学习报告、知识点总结与薄弱环节分析 | P1 |
-| **可视化浏览** | 基于 Cytoscape.js 的知识图谱交互式可视化 | P1 |
+1. `Observe`：检查教材是否解析、章节是否确认、知识树和 RAG 索引是否可复用。
+2. `Plan & Act`：把目标转成持久化执行计划，已完成步骤直接跳过，只调用当前需要的工具。
+3. `Human checkpoint`：章节结构未确认时暂停并请教师处理，确认后从原任务续跑。
+4. `Verify & Retry`：核验双教材覆盖、原文页码、结论引用和产物结构；未通过时自动扩充证据并重试一次。
+5. `Deliver`：交付主题概览、教学目标、讲解顺序、教材共同点/差异、易混淆点、课堂问题和可点击原文证据。
 
-### 覆盖教材
+Agent 任务与原有 RAG 问答相互独立：Agent 用于完成备课交付，右下角悬浮问答仍用于快速查证。
 
-| 编号 | 教材名称 | 领域 | 估算页数 |
-|------|----------|------|----------|
-| 1 | 局部解剖学 | 人体结构 | ~380 页 |
-| 2 | 组织学与胚胎学 | 微观结构 | ~350 页 |
-| 3 | 生理学 | 功能机制 | ~400 页 |
-| 4 | 医学微生物学 | 病原生物 | ~360 页 |
-| 5 | 病理学 | 疾病机制 | ~420 页 |
-| 6 | 传染病学 | 传染疾病 | ~330 页 |
-| 7 | 病理生理学 | 功能病理 | ~327 页 |
-| | **合计** | | **~2,567 页** |
+## 为什么不直接合并同名节点
 
----
+不同教材可能使用相同术语但定义范围不同，也可能用不同术语表达同一概念。直接去重会丢失来源、差异和版本信息。因此数据模型分为四层：
 
-## 技术栈
+| 层 | 作用 |
+|---|---|
+| `Course` | 一门课程及其教材集合 |
+| `KnowledgeNode` | 某本教材中的知识点出现，保留定义、章节、页码和原文 |
+| `CanonicalConcept` | 课程级统一概念，只负责连接多个来源出现 |
+| `KnowledgeEdge` + `RelationEvidence` | 教材内/跨教材关系及双侧证据 |
 
-### 前端
+这样既能查看“统一概念”，也能随时切回每本教材的原始表述。
 
-| 技术 | 用途 |
-|------|------|
-| **React 18 + TypeScript** | UI 框架 |
-| **Vite** | 构建工具 |
-| **Cytoscape.js** | 知识图谱可视化 |
-| **Ant Design** | 组件库 |
-| **React Router v6** | 路由管理 |
-| **Axios** | HTTP 客户端 |
-| **Tailwind CSS** | 样式框架 |
+## 界面信息架构
 
-### 后端
+- `教材`：上传、处理状态、章节确认与教材内知识流程。
+- `跨教材`：先选证据范围，再生成可筛选、可点击原文的关联节点图。
+- `备课 Agent`：任务简报、动态执行轨迹和有证据的交付成果三栏同屏。
+- `向教材提问`：可拖动、缩放和全屏的悬浮 RAG 窗，不离开当前任务即可查证。
 
-| 技术 | 用途 |
-|------|------|
-| **Python 3.11+ / FastAPI** | Web 框架 |
-| **SQLite** | 关系型数据存储（知识图谱、用户数据） |
-| **ChromaDB** | 向量数据库（语义检索） |
-| **sentence-transformers** | 文本嵌入模型 |
-| **PyMuPDF / pdfplumber** | PDF 解析 |
-| **spaCy / stanza** | 医学实体识别 |
-| **DeepSeek v4-pro** | LLM 引擎（问答生成、图谱抽取、对齐复核） |
-| **OpenAI SDK** | LLM 调用层（兼容 DeepSeek API） |
-| **Pydantic** | 数据模型验证 |
+## 技术架构
 
-### Agent 框架
-
-| 组件 | 技术 |
-|------|------|
-| **Orchestrator Agent** | LangChain + 自定义工作流引擎 |
-| **Ingestion Agent** | PyMuPDF + 自定义分块策略 |
-| **KG Extraction Agent** | spaCy + DeepSeek v4-pro / 本地规则回退 |
-| **Alignment Agent** | 语义相似度 + DeepSeek v4-pro 复核 |
-| **Compression Agent** | 信息密度评估 + 节点质量评分 |
-| **RAG Agent** | ChromaDB + DeepSeek v4-pro 生成 |
-| **Teacher Dialogue Agent** | 反馈循环 + DeepSeek v4-pro 语义理解 |
-| **Report Agent** | 模板引擎 + 数据聚合 |
-| **Benchmark Agent** | 自动化评测 + 准确性分析 |
-
----
+| 范围 | 实现 |
+|---|---|
+| 前端 | React 18、TypeScript、Vite、Ant Design、Cytoscape.js |
+| API | FastAPI、Pydantic |
+| 数据 | SQLAlchemy + SQLite；课程/教材/页/章节/chunk/节点/边/证据/审核事件 |
+| 解析 | PyMuPDF / pypdf；页码感知章节映射 |
+| 检索 | rank-bm25；可选 sentence-transformers + ChromaDB；知识图谱扩展；RRF 融合 |
+| 生成 | OpenAI-compatible API；提示注入边界；无模型时返回原文证据而非编造回答 |
+| Agent | 目标驱动计划、状态观察、工具调度、人类检查点、验证器与自动重试 |
+| 任务 | SQLite 持久任务记录 + 单 worker 队列；支持重启恢复、续跑和失败重试 |
+| 部署 | 多阶段 Docker；FastAPI 同源托管前端；可选持久磁盘 |
 
 ## 快速开始
 
-### 环境要求
+环境要求：Python 3.11+、Node.js 20+。
 
-- Node.js 18+
-- Python 3.11+
-- pip / conda
-- Git
+### 已配置项目：Windows 一键启动
 
-### 安装与运行
+如果依赖和前端已经构建完成，直接双击根目录的 `start-courseweave.cmd`，或运行：
+
+```powershell
+.\.venv\Scripts\python.exe .\scripts\start_local.py
+```
+
+启动成功后访问 <http://127.0.0.1:8001/>。脚本会自动复用已运行的服务，并把运行日志写入 `.runtime` 目录。
+
+### 首次安装
 
 ```bash
-# 1. 克隆仓库
-git clone https://github.com/your-org/medessence-agent.git
-cd medessence-agent
+git clone <your-repository-url>
+cd courseweave
 
-# 2. 后端安装
-cd backend
-python -m venv venv
-source venv/bin/activate   # Windows: venv\Scripts\activate
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# macOS / Linux
+# source .venv/bin/activate
+
 pip install -r requirements.txt
+copy .env.example .env  # Windows；macOS/Linux 使用 cp
 
-# 3. 初始化数据库
-python scripts/init_db.py
-
-# 4. 启动后端服务
-uvicorn app.main:app --reload --port 8000
-
-# 5. 前端安装与运行（新终端）
 cd frontend
-npm install
+npm ci
+npm run build
+cd ..
+
+uvicorn backend.main:app --reload --port 8001
+```
+
+浏览器访问 `http://localhost:8001`。开发前端可另开终端运行：
+
+```bash
+cd frontend
 npm run dev
 ```
 
-浏览器访问 `http://localhost:5173` 进入平台。
+默认代理后端地址为 `http://localhost:8001`。
 
-### 数据导入
+## 配置
+
+```dotenv
+LLM_PROVIDER=openai
+LLM_API_KEY=
+LLM_BASE_URL=https://api.openai.com/v1
+LLM_MODEL=gpt-4o-mini
+LLM_TRUST_ENV_PROXY=false
+EMBEDDING_MODEL=paraphrase-multilingual-MiniLM-L12-v2
+DATABASE_URL=sqlite:///./data/medessence.db
+CHROMA_PERSIST_DIR=./data/chroma
+CORS_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+MAX_UPLOAD_SIZE_MB=50
+PUBLIC_DEMO_READ_ONLY=false
+SEED_DEMO_DATA=false
+```
+
+`LLM_API_KEY` 为空时，系统仍可解析、切块、执行质量规则和 BM25 检索；生成式回答会降级为原文证据展示。没有安装 sentence-transformers 时，索引会明确显示 `BM25 + graph`，不会报告向量检索成功。`LLM_TRUST_ENV_PROXY` 默认关闭，避免桌面环境中与模型无关的失效系统代理导致误报；确实需要通过系统代理访问模型时再设为 `true`。
+
+## 关键 API
+
+| 方法 | 路径 | 用途 |
+|---|---|---|
+| `POST` | `/api/courses` | 创建课程工作区 |
+| `POST` | `/api/textbooks/upload` | 向课程上传教材 |
+| `PATCH` | `/api/textbooks/{id}/chapters` | 修改并确认章节结构 |
+| `POST` | `/api/jobs/extract-graph` | 抽取教材知识图谱 |
+| `POST` | `/api/jobs/integrate` | 生成跨教材关联候选 |
+| `GET/PATCH` | `/api/courses/{course_id}/alignments` | 查看与审核跨教材关系 |
+| `GET` | `/api/courses/{course_id}/concepts/{id}` | 查看统一概念及各教材出现 |
+| `POST` | `/api/rag/index` | 构建课程检索索引 |
+| `POST` | `/api/rag/query` | 课程问答或跨教材对比 |
+| `POST` | `/api/agent/runs` | 创建目标驱动的备课 Agent 任务 |
+| `GET` | `/api/agent/runs?course_id=...` | 查看持久化任务历史与执行轨迹 |
+| `POST` | `/api/agent/runs/{id}/resume` | 人类检查点确认后续跑 |
+| `POST` | `/api/agent/runs/{id}/retry` | 重试失败任务 |
+
+启动后可在 `/docs` 查看完整 OpenAPI 文档。
+
+## 测试与验证
 
 ```bash
-# 将教材 PDF 放入 data/textbooks/ 目录
-# 执行知识摄取管道
-python scripts/run_ingestion.py
+.venv\Scripts\python.exe -m compileall -q backend tests
+.venv\Scripts\python.exe -m unittest discover -s tests -v
 
-# 启动知识图谱提取
-python scripts/run_kg_extraction.py
-
-# 执行跨教材对齐
-python scripts/run_alignment.py
-
-# 执行知识压缩
-python scripts/run_compression.py
+cd frontend
+npm run build
 ```
 
----
+当前 88 项自动化测试覆盖：课程隔离、来源 occurrence 保留、真实页码映射、chunk 页范围、原文引用校验、无证据关系拒绝、跨教材候选范围、混合检索课程隔离、Agent 计划/质量验证和人类检查点续跑。
 
-## API 总览
+完整的优化前后对比、严格评测口径、技术路线和 Agent 定位见 [RAG 优化与项目技术路线](./docs/RAG优化与项目技术路线.md)。
 
-| 端点 | 方法 | 描述 |
-|------|------|------|
-| `/api/health` | GET | 健康检查（含模型信息） |
-| `/api/model/status` | GET | 模型配置状态（提供商/模型/密钥状态） |
-| `/api/textbooks` | GET | 获取教材列表 |
-| `/api/textbooks/upload` | POST | 上传教材文件 |
-| `/api/textbooks/{id}` | DELETE | 删除教材及关联数据 |
-| `/api/textbooks/{id}/chapters` | GET | 获取教材章节列表 |
-| `/api/graph/book/{id}` | GET | 获取单教材知识图谱 |
-| `/api/graph/integrated` | GET | 获取整合知识图谱 |
-| `/api/rag/query` | POST | RAG 问答查询 |
-| `/api/rag/index` | POST | 建立 RAG 索引 |
-| `/api/rag/status` | GET | 索引状态检查 |
-| `/api/chat` | POST | 教师对话 |
-| `/api/decisions` | GET | 获取整合决策列表 |
-| `/api/decisions/{id}` | PATCH | 修改决策 |
-| `/api/chat/history` | GET | 对话历史 |
-| `/api/report/summary` | GET | 获取统计报告 |
-| `/api/report/export` | POST | 导出 Markdown 报告 |
-| `/api/benchmark` | GET | 获取基准测试结果 |
-| `/api/benchmark/run` | POST | 运行基准测试（20题） |
-| `/api/jobs/parse` | POST | 启动解析任务 |
-| `/api/jobs/extract-graph` | POST | 启动图谱提取 |
-| `/api/jobs/integrate` | POST | 启动整合压缩 |
-| `/api/jobs/rag-index` | POST | 启动 RAG 索引 |
-| `/api/jobs/{id}` | GET | 获取任务状态 |
+评估重点不是只看“回答像不像”，而是分别统计：
 
-完整 API 文档见 [docs/接口文档.md](./docs/接口文档.md)。
+1. 章节边界准确率与页码命中率
+2. 节点证据覆盖率与关系证据有效率
+3. 跨教材候选 Recall@K、审核通过率和冲突率
+4. 检索 Recall@K、引用准确率和无答案拒答率
+5. 教师完成一次审核所需时间
 
----
+## 部署
 
-## 项目结构
+Docker 本地运行：
 
-```
-medessence-agent/
-├── README.md
-├── docs/                           # 文档目录
-│   ├── 需求分析.md
-│   ├── 系统设计.md
-│   ├── Agent架构说明.md
-│   └── 接口文档.md
-├── frontend/                       # React 前端
-│   ├── src/
-│   │   ├── components/             # 通用组件
-│   │   ├── pages/                  # 页面
-│   │   │   ├── Home/
-│   │   │   ├── QA/
-│   │   │   ├── KnowledgeGraph/
-│   │   │   ├── TeacherDialogue/
-│   │   │   └── Reports/
-│   │   ├── services/               # API 客户端
-│   │   ├── hooks/                  # 自定义 Hooks
-│   │   ├── store/                  # 状态管理
-│   │   └── types/                  # TypeScript 类型
-│   ├── package.json
-│   └── vite.config.ts
-├── backend/                        # FastAPI 后端
-│   ├── main.py                     # 应用入口 (v1.1.0)
-│   ├── config.py                   # 配置（DeepSeek / 环境变量）
-│   ├── database.py                 # SQLite ORM 模型
-│   ├── api/                        # API 路由
-│   │   ├── textbooks.py            # 教材 CRUD + 删除
-│   │   ├── graph.py                # 知识图谱
-│   │   ├── rag.py                  # RAG 问答 + 索引
-│   │   ├── chat.py                 # 教师对话 + 决策管理
-│   │   ├── report.py               # 报告
-│   │   ├── benchmark.py            # 基准评测 (20问)
-│   │   ├── model_status.py         # 模型状态
-│   │   └── jobs.py                 # 异步任务
-│   ├── agents/                     # Agent 实现
-│   │   ├── orchestrator.py         # 编排 + 异步任务管理
-│   │   ├── ingestion_agent.py      # PDF 解析
-│   │   ├── kg_extraction_agent.py  # 知识图谱抽取 (DeepSeek)
-│   │   ├── alignment_agent.py      # 跨教材对齐 (DeepSeek)
-│   │   ├── compression_agent.py    # 知识压缩 + 节点质量评分
-│   │   ├── rag_agent.py            # RAG 问答 (DeepSeek)
-│   │   ├── teacher_dialogue_agent.py # 教师对话 (DeepSeek)
-│   │   └── report_agent.py         # 报告生成
-│   ├── services/                   # 基础服务
-│   │   ├── pdf_parser.py
-│   │   ├── chunker.py
-│   │   ├── embeddings.py
-│   │   └── vector_store.py         # ChromaDB
-│   ├── prompts/                    # Agent prompt 模板
-│   └── skills/                     # Skill 注册
-├── data/                           # 数据目录
-│   ├── textbooks/                  # 教材 PDF
-│   ├── chroma_db/                  # 向量数据库
-│   └── sqlite.db                   # SQLite 数据库
-└── tests/                          # 测试
-    ├── frontend/
-    └── backend/
+```bash
+docker build -t courseweave .
+docker run --rm -p 7860:7860 \
+  -e PUBLIC_DEMO_READ_ONLY=true \
+  -v courseweave-data:/home/user/app/data \
+  courseweave
 ```
 
----
+仓库提供 `render.yaml`。其中 `SEED_DEMO_DATA=true` 会幂等创建一门由原创短文本构成的示例课程；`PUBLIC_DEMO_READ_ONLY=true` 只允许浏览样例和进行证据问答，上传、抽取、审核和删除在公开环境中被禁止。公开作品默认不配置模型密钥，问答以教材证据降级模式运行；完整模型与写入流程应在本地或具备鉴权、限流和费用配额的私有部署中演示。
 
-## 演示脚本（3 分钟）
+## 面试演示建议（3 分钟）
 
-### 00:00 - 00:15 首页概览
-进入系统，首页展示 7 部教材的知识图谱总览图，节点按学科着色，边表示跨教材关联。右上角显示系统状态：已处理教材数、知识实体数、问答统计。
+1. **问题与用户**：教师同时使用多本教材，但传统 RAG 只返回碎片，难以看出教材差异。
+2. **Agent 目标与决策**：输入备课主题，选两本教材，说明 Agent 如何复用已有知识树和索引，而不是每次全量重跑。
+3. **执行轨迹与人工检查点**：展示动态步骤、调用工具、持久进度，以及章节未确认时为什么暂停。
+4. **可核验交付**：展示教学目标、讲解顺序、教材差异和课堂问题，再点击 `S1/S2` 回到教材原文与页码。
+5. **RAG 仍独立保留**：用右下角悬浮问答现场追问，强调 Agent 是“交付任务”，RAG 是“临时查证”。
+6. **产品判断**：强调“模型负责生成，验证器负责拦截，教师负责最终发布”，不把自主性建立在不可解释之上。
 
-### 00:15 - 01:00 知识图谱浏览
-切换到"知识图谱"页面，点击"局部解剖学"节点，展开其子图——显示"胸锁乳突肌"节点，包含其起止点、神经支配、功能等属性。右侧面板展示该实体在不同教材中的出现情况（局部解剖学第 3 章、生理学第 8 章均提及，但侧重点不同）。
+## 已知边界
 
-### 01:00 - 01:30 智能问答
-进入问答页面，输入："请解释肝硬化的门脉高压形成机制，并链接相关知识点。"
-系统返回结构化回答，包含：
-- 机制分步解释（引用病理学第 12 章第 3 节）
-- 相关知识点链接：腹水（病理生理学第 5 章）、食管胃底静脉曲张（局部解剖学第 4 章）
-- 每条答案后附精确页码引用
+- 扫描版 PDF 目前只提示 OCR 风险，尚未内置 OCR 队列。
+- SQLite 适合单机作品演示；多用户生产环境应迁移到 PostgreSQL，并将后台任务迁移到持久队列。
+- 公开只读模式不是完整鉴权系统；正式 SaaS 需要用户、组织、课程权限、配额与审计。
+- 教材版权属于原作者；公开仓库和在线演示不应包含未授权教材全文。
 
-### 01:30 - 02:00 教师对话
-点击回答下方的"教师反馈"按钮，教师指出："关于门脉高压的分级，最新临床指南已更新为三级分级体系，建议更新。"
-教师对话 Agent 记录反馈，更新知识库中的对应知识点，并返回确认信息。
+## 仓库说明
 
-### 02:00 - 02:30 进度与统计
-查看仪表盘：7/7 教材已完成处理，知识实体 15,842 个，跨教材关联 23,671 条，压缩率约 30%（达成目标），问答引擎基于 **DeepSeek v4-pro**，可通过基准评测（20 题）验证问答准确率。
+`.env`、数据库、向量索引、教材文件、构建产物和本地虚拟环境已被 `.gitignore` 排除。提交前仍应运行密钥扫描，并确认 Git 历史中不存在已泄露 token。
 
-### 02:30 - 03:00 报告生成
-点击"生成学习报告"，选择"病理学"与"病理生理学"关联知识点报告。系统生成包含交叉对比表格、知识薄弱点分析、推荐学习路径的报告，支持导出为 PDF。
-
----
-
-## 许可
-
-本项目仅用于教育和 hackathon 演示目的。教材内容版权归原作者所有。
-
----
-
-*MedEssence Agent · 七书归一 —— 让七本教材的智慧，凝聚于一瞬。*
+本项目代码采用 [MIT License](./LICENSE)。教材及其原文内容仍归各自权利人所有，不包含在本项目的软件许可范围内。
