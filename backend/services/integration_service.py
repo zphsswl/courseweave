@@ -1,7 +1,8 @@
 """Real text integration: merge definitions from multiple textbooks into unified concise knowledge."""
 
-from backend.config import LLM_MODEL, LLM_API_KEY, LLM_BASE_URL
+from backend.config import LLM_MODEL, LLM_API_KEY
 from backend.database import SessionLocal, KnowledgeNode, KnowledgeEdge, IntegrationDecision, Textbook
+from backend.services.llm_client import create_openai_client
 
 INTEGRATION_PROMPT = """你是医学教材知识整合专家。请将以下来自不同教材的同一知识点定义整合为一段精华说明。
 
@@ -58,8 +59,7 @@ def integrate_concept(decision_id: str) -> dict:
         # Call LLM for integration
         integrated_text = ""
         try:
-            import openai
-            client = openai.OpenAI(api_key=LLM_API_KEY, base_url=LLM_BASE_URL)
+            client = create_openai_client(timeout=60)
             prompt = INTEGRATION_PROMPT.format(
                 concept_name=dec.result_name,
                 textbook_count=len(source_nodes),

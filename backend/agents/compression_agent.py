@@ -3,6 +3,7 @@ from backend.database import SessionLocal, KnowledgeNode, KnowledgeEdge, Integra
 from backend.config import COMPRESSION_TARGET
 
 def compress_knowledge() -> dict:
+    print("  Compressing knowledge...")
     db = SessionLocal()
     try:
         nodes = db.query(KnowledgeNode).all()
@@ -20,9 +21,13 @@ def compress_knowledge() -> dict:
         merge_nodes = [n for n in nodes if n.id in merged_ids and not n.teacher_locked]
         other_nodes = [n for n in nodes if n.id not in merged_ids and not n.teacher_locked]
 
+        # Pre-compute textbook count per name (avoid N+1 queries)
+        from collections import Counter
+        name_counts = Counter(n.name for n in nodes)
+
         # Score each node
         for n in other_nodes:
-            n._score = _score_node(n, textbooks)
+            n._score = _score_node(n, textbooks, name_counts)
 
         other_nodes.sort(key=lambda n: n._score, reverse=True)
 
@@ -84,14 +89,9 @@ def compress_knowledge() -> dict:
     finally:
         db.close()
 
-def _score_node(node, textbooks) -> float:
+def _score_node(node, textbooks, name_textbook_count: dict) -> float:
     """Score node for retention priority."""
-    db2 = SessionLocal()
-    try:
-        textbooks_count = len(set(n.textbook_id for n in db2.query(KnowledgeNode).filter(KnowledgeNode.name == node.name).all()))
-    finally:
-        db2.close()
-    textbooks_count = max(textbooks_count, 1)
+    textbooks_count = max(name_textbook_count.get(node.name, 1), 1)
     return (
         0.35 * min(textbooks_count / 7, 1.0) +
         0.25 * (node.importance / 5) +

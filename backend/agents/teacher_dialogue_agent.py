@@ -1,8 +1,9 @@
 import json
 import re
 import uuid
-from backend.config import LLM_MODEL, LLM_API_KEY, LLM_BASE_URL
+from backend.config import LLM_MODEL, LLM_API_KEY
 from backend.database import SessionLocal, IntegrationDecision, ChatHistory
+from backend.services.llm_client import create_openai_client
 
 TEACHER_PROMPT = """你是教材整合方案助手。把教师自然语言反馈转换为对整合决策的修改。
 
@@ -39,8 +40,7 @@ def process_teacher_message(message: str) -> dict:
         ])
 
         try:
-            import openai
-            client = openai.OpenAI(api_key=LLM_API_KEY, base_url=LLM_BASE_URL)
+            client = create_openai_client(timeout=60)
             prompt = TEACHER_PROMPT.format(message=message, decisions=decisions_text[:4000])
             resp = client.chat.completions.create(
                 model=LLM_MODEL,
