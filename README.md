@@ -51,7 +51,7 @@ flowchart LR
 
 顶部进入“备课 Agent”，输入主题和目标，选择 1–6 本教材后启动。它不是把一串固定脚本包装成聊天窗，而是一个可观察的垂直领域 Agent：
 
-![CourseWeave 备课 Agent 工作台](./report/agent-workbench.png)
+![CourseWeave 备课 Agent 工作台](./report/cc84e594542f8f7861ee2246d1e172d9.png)
 
 1. `Observe`：检查教材是否解析、章节是否确认、知识树和 RAG 索引是否可复用。
 2. `Plan & Act`：把目标转成持久化执行计划，已完成步骤直接跳过，只调用当前需要的工具。
