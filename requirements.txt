@@ -7,7 +7,7 @@ pymupdf==1.25.1
 pypdf==5.1.0
 chromadb==0.5.23
 # sentence-transformers is optional. Without it, RAG reports and uses BM25 + graph retrieval.
-openai==1.58.1
+openai==3.5.0
 httpx==0.28.1
 python-dotenv==1.0.1
 pydantic==2.10.3
