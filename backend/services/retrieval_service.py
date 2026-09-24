@@ -26,8 +26,8 @@ _LEXICAL_CACHE = {}
 _CACHE_TTL_SECONDS = 60
 _ENGLISH_QUERY_STOPWORDS = {
     "about", "administered", "and", "compare", "constrains", "does", "during",
-    "explain", "for", "how", "perform", "processes", "the", "thresholds", "what",
-    "with", "was",
+    "describe", "discuss", "explain", "for", "how", "outline", "please", "perform",
+    "processes", "summarize", "tell", "the", "thresholds", "what", "with", "was",
 }
 
 _CHINESE_QUERY_STOP_PHRASES = {
@@ -263,10 +263,15 @@ def _answer_form_strength(question: str, content: str) -> float:
     return best
 
 
-def _query_is_supported_by_content(question: str, content: str, strict: bool = False) -> bool:
+def _query_is_supported_by_content(
+    question: str,
+    content: str,
+    strict: bool = False,
+    already_cleaned: bool = False,
+) -> bool:
     """Reject ASCII out-of-domain matches caused only by bibliography stopwords."""
     if re.search(r"[一-鿿]", question or ""):
-        cleaned = _clean_chinese_query_text(question)
+        cleaned = question if already_cleaned else _clean_chinese_query_text(question)
         segments = [
             part
             for term in re.findall(r"[一-鿿]+", cleaned)
@@ -346,7 +351,15 @@ def _query_has_scope_support(question: str, chunks) -> bool:
         return False
     searchable_chunks = [_retrieval_text(chunk) for chunk in chunks]
     chinese_supported = all(
-        any(_query_is_supported_by_content(segment, content, strict=True) for content in searchable_chunks)
+        any(
+            _query_is_supported_by_content(
+                segment,
+                content,
+                strict=True,
+                already_cleaned=True,
+            )
+            for content in searchable_chunks
+        )
         for segment in segments
     )
     english_terms = {

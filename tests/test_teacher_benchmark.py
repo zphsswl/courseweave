@@ -84,6 +84,58 @@ class TeacherBenchmarkTests(unittest.TestCase):
         self.assertEqual(by_name["引用准确率"]["numerator"], 1)
         self.assertEqual(by_name["引用准确率"]["denominator"], 2)
 
+    def test_chapter_questions_reject_wrong_chapter_only(self):
+        questions = [{
+            "id": "chapter_case",
+            "question": "解释静息电位",
+            "mode": "all",
+            "answerable": True,
+            "expected_terms": ["静息电位"],
+            "textbook_ids": ["book_a"],
+            "target_chapter_id": "chapter_a",
+            "target_chapter_title": "第二章",
+        }]
+        responses = [{"results": [{
+            "id": "wrong",
+            "content": "静息电位",
+            "page_start": 5,
+            "page_end": 5,
+            "textbook_id": "book_a",
+            "chapter_id": "chapter_b",
+            "chapter": "第三章",
+        }]}]
+
+        with patch("backend.api.benchmark.retrieve", side_effect=responses):
+            metrics = _evaluate_teacher_questions("course_test", questions)
+
+        by_name = {item["metric"]: item for item in metrics}
+        self.assertEqual(by_name["章节题命中率"]["score"], 0.0)
+        self.assertEqual(by_name["章节覆盖率"]["score"], 0.0)
+
+    def test_chapter_title_alone_does_not_match_expected_concept(self):
+        questions = [{
+            "id": "chapter_title_only",
+            "question": "传染病是什么",
+            "mode": "all",
+            "answerable": True,
+            "expected_terms": ["传染病"],
+        }]
+        responses = [{"results": [{
+            "id": "chapter_title_only_result",
+            "content": "本章介绍学习目标。",
+            "section_path": ["学习目标"],
+            "chapter": "传染病学总论",
+            "page_start": 5,
+            "page_end": 5,
+        }]}]
+
+        with patch("backend.api.benchmark.retrieve", side_effect=responses):
+            metrics = _evaluate_teacher_questions("course_test", questions)
+
+        by_name = {item["metric"]: item for item in metrics}
+        self.assertEqual(by_name["检索召回率"]["score"], 0.0)
+        self.assertEqual(by_name["引用准确率"]["score"], 0.0)
+
     def test_citation_requires_a_valid_full_page_range(self):
         questions = [{
             "question": "炎症是什么",
