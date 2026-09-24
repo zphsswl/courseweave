@@ -193,7 +193,7 @@ export const getBenchmarkResults = (courseId: string) =>
   api.get<BenchmarkResult[]>('/benchmark', { params: { course_id: courseId } });
 
 export const runBenchmark = (courseId: string) =>
-  api.post<BenchmarkResult[]>('/benchmark/run', { course_id: courseId });
+  api.post<BenchmarkResult[]>('/benchmark/run', { course_id: courseId }, { timeout: 300000 });
 
 export const getBenchmarkSuite = () => api.get<BenchmarkSuite>('/benchmark/suite');
 

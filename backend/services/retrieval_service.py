@@ -31,6 +31,11 @@ _ENGLISH_QUERY_STOPWORDS = {
 }
 
 _CHINESE_QUERY_STOP_PHRASES = {
+    "请概括", "核心要点", "并给出教材页码依据", "给出教材页码依据", "教材页码依据",
+    "页码依据", "页码证据", "教材原文证据", "发生机制或调节链路", "主要结构和组成",
+    "经历哪些关键过程或阶段", "主要功能和作用", "原理步骤或判定要点", "防治原则和关键措施",
+    "核心表现和鉴别要点", "判定要点", "关键措施", "调节链路", "相互关系", "备课时",
+    "并给出", "给出", "教材", "知识",
     "分别解释", "进行比较", "知识结构", "侧重点", "基本病理变化", "基本结构特点",
     "受哪些主要因素影响", "受哪些因素影响", "受哪些因素调节", "由哪些",
     "病因和发病机制", "发生发展", "常见的", "主要的", "主要通过", "基本机制",
@@ -86,6 +91,16 @@ _CHINESE_QUERY_FRAME_PATTERNS = (
 def _clean_chinese_query_text(value: str) -> str:
     """Remove question scaffolding while retaining the medical subject terms."""
     cleaned = (value or "").lower()
+    protected = []
+
+    def protect_quoted(match):
+        protected.append(match.group(1))
+        return f" qxprotected{len(protected) - 1}qx "
+
+    # Teacher questions often quote the exact concept being asked about. Keep
+    # that phrase intact even when it contains words such as “发生” or “结构”
+    # that are otherwise treated as question scaffolding.
+    cleaned = re.sub(r"[“「]([^”」]{1,80})[”」]", protect_quoted, cleaned)
     # Textbooks and questions vary between 血-睾、血 - 睾 and 血睾. Treat
     # punctuation inside a Chinese term as typography rather than semantics.
     cleaned = re.sub(r"(?<=[一-鿿])[\s\-‐‑–—·]+(?=[一-鿿])", "", cleaned)
@@ -93,6 +108,8 @@ def _clean_chinese_query_text(value: str) -> str:
         cleaned = re.sub(pattern, " ", cleaned)
     for phrase in sorted(_CHINESE_QUERY_STOP_PHRASES, key=len, reverse=True):
         cleaned = cleaned.replace(phrase, " ")
+    for index, phrase in enumerate(protected):
+        cleaned = cleaned.replace(f"qxprotected{index}qx", phrase)
     return cleaned
 
 
@@ -328,10 +345,20 @@ def _query_has_scope_support(question: str, chunks) -> bool:
     if not segments:
         return False
     searchable_chunks = [_retrieval_text(chunk) for chunk in chunks]
-    return all(
+    chinese_supported = all(
         any(_query_is_supported_by_content(segment, content, strict=True) for content in searchable_chunks)
         for segment in segments
     )
+    english_terms = {
+        token.lower()
+        for token in re.findall(r"[A-Za-z][A-Za-z0-9-]+", question or "")
+        if len(token) >= 4 and token.lower() not in _ENGLISH_QUERY_STOPWORDS
+    }
+    english_supported = all(
+        any(term in content.lower() for content in searchable_chunks)
+        for term in english_terms
+    )
+    return chinese_supported and english_supported
 
 
 def _section_labels(chunk):
@@ -874,6 +901,7 @@ def retrieve(
                 "content": chunk.content,
                 "textbook_id": chunk.textbook_id,
                 "textbook": chunk.textbook_title,
+                "chapter_id": chunk.chapter_id,
                 "chapter": chunk.chapter_title,
                 "section_path": _section_labels(chunk),
                 "page_start": chunk.page_start,

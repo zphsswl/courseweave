@@ -12,19 +12,28 @@ from backend.api.benchmark import (  # noqa: E402
 
 
 class TeacherBenchmarkTests(unittest.TestCase):
-    def test_suite_contains_100_balanced_realistic_teacher_questions(self):
+    def test_suite_contains_420_questions_covering_all_137_chapters(self):
         suite = load_teacher_suite()
         questions = suite["questions"]
-        self.assertEqual(suite["version"], "medical-teacher-v2")
-        self.assertEqual(len(questions), 100)
-        self.assertEqual(sum(1 for item in questions if item["answerable"]), 80)
-        self.assertEqual(sum(1 for item in questions if item["mode"] == "compare"), 15)
-        self.assertEqual(sum(1 for item in questions if not item["answerable"]), 20)
+        chapter_questions = [item for item in questions if item.get("target_chapter_id")]
+        self.assertEqual(suite["version"], "medical-teacher-v3")
+        self.assertEqual(len(questions), 420)
+        self.assertEqual(sum(1 for item in questions if item["answerable"]), 380)
+        self.assertEqual(sum(1 for item in questions if item["mode"] == "compare"), 41)
+        self.assertEqual(sum(1 for item in questions if not item["answerable"]), 40)
+        self.assertEqual(len(chapter_questions), 274)
+        self.assertEqual(len({item["target_chapter_id"] for item in chapter_questions}), 137)
+        self.assertEqual({
+            sum(1 for item in chapter_questions if item["target_chapter_id"] == chapter_id)
+            for chapter_id in {item["target_chapter_id"] for item in chapter_questions}
+        }, {2})
         self.assertEqual(len({item["id"] for item in questions}), len(questions))
         self.assertTrue(all(
             not item["answerable"] or item.get("expected_terms") or item.get("expected_concepts")
             for item in questions
         ))
+        forbidden_source_fields = {"content", "source_paragraph", "source_quote", "source_sentences"}
+        self.assertTrue(all(forbidden_source_fields.isdisjoint(item) for item in questions))
 
     def test_four_teacher_metrics_are_computed_from_retrieval_results(self):
         questions = [
@@ -44,8 +53,36 @@ class TeacherBenchmarkTests(unittest.TestCase):
             metrics = _evaluate_teacher_questions("course_test", questions)
 
         by_name = {item["metric"]: item for item in metrics}
-        self.assertEqual(set(by_name), {"检索召回率", "引用准确率", "跨教材覆盖率", "无答案拒答率"})
-        self.assertTrue(all(item["score"] == 1.0 for item in metrics))
+        self.assertTrue({"检索召回率", "引用准确率", "跨教材覆盖率", "无答案拒答率"}.issubset(by_name))
+        self.assertTrue(all(by_name[name]["score"] == 1.0 for name in ("检索召回率", "引用准确率", "跨教材覆盖率", "无答案拒答率")))
+
+    def test_chapter_questions_require_the_expected_chapter(self):
+        questions = [{
+            "id": "chapter_case",
+            "question": "解释静息电位",
+            "mode": "all",
+            "answerable": True,
+            "expected_terms": ["静息电位"],
+            "textbook_ids": ["book_a"],
+            "target_chapter_id": "chapter_a",
+            "target_chapter_title": "第二章",
+        }]
+        responses = [{"results": [
+            {"id": "wrong", "content": "静息电位", "page_start": 5, "textbook_id": "book_a", "chapter_id": "chapter_b", "chapter": "第三章"},
+            {"id": "right", "content": "静息电位", "page_start": 8, "textbook_id": "book_a", "chapter_id": "chapter_a", "chapter": "第二章"},
+        ]}]
+
+        with patch("backend.api.benchmark.retrieve", side_effect=responses) as mocked_retrieve:
+            metrics = _evaluate_teacher_questions("course_test", questions)
+
+        mocked_retrieve.assert_called_once_with(
+            "解释静息电位", course_id="course_test", textbook_ids=["book_a"], mode="all", top_k=8,
+        )
+        by_name = {item["metric"]: item for item in metrics}
+        self.assertEqual(by_name["章节题命中率"]["score"], 1.0)
+        self.assertEqual(by_name["章节覆盖率"]["score"], 1.0)
+        self.assertEqual(by_name["引用准确率"]["numerator"], 1)
+        self.assertEqual(by_name["引用准确率"]["denominator"], 2)
 
     def test_multi_part_questions_require_coverage_but_single_concepts_do_not_change(self):
         questions = [

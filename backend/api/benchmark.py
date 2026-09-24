@@ -21,7 +21,7 @@ from backend.services.retrieval_service import retrieve
 router = APIRouter(prefix="/api/benchmark", tags=["benchmark"])
 _result_cache = {}
 STRUCTURAL_RELATIONS = {"contains", "part_of", "example_of"}
-TEACHER_SUITE_PATH = Path(__file__).resolve().parents[1] / "evals" / "teacher_questions.json"
+TEACHER_SUITE_PATH = Path(__file__).resolve().parents[1] / "evals" / "teacher_questions_chapter_v3.json"
 
 
 def _metric(name: str, numerator: int, denominator: int, detail: str, category: str = "system"):
@@ -51,6 +51,14 @@ def get_benchmark_suite():
         "answerable_count": sum(1 for item in questions if item["answerable"]),
         "compare_count": sum(1 for item in questions if item["mode"] == "compare"),
         "rejection_count": sum(1 for item in questions if not item["answerable"]),
+        "chapter_count": len({
+            item["target_chapter_id"] for item in questions if item.get("target_chapter_id")
+        }),
+        "chapter_question_count": sum(1 for item in questions if item.get("target_chapter_id")),
+        "question_type_counts": {
+            question_type: sum(1 for item in questions if item.get("question_type") == question_type)
+            for question_type in sorted({item.get("question_type", "unknown") for item in questions})
+        },
         "questions": [
             {key: item[key] for key in ("id", "category", "question", "mode", "answerable")}
             for item in questions
@@ -159,7 +167,18 @@ def _matched_expected_terms(
     expected_concepts: list[dict] | None = None,
 ) -> set[str]:
     """Return distinct rubric concepts covered by an evidence set."""
-    normalized_contents = ["".join((item.get("content") or "").lower().split()) for item in items]
+    normalized_contents = [
+        "".join(
+            (
+                (item.get("content") or "")
+                + " "
+                + " ".join(item.get("section_path") or [])
+                + " "
+                + (item.get("chapter") or "")
+            ).lower().split()
+        )
+        for item in items
+    ]
     return {
         canonical
         for canonical, aliases in _expected_concept_groups(expected_terms, expected_concepts)
@@ -196,7 +215,11 @@ def _has_expected_coverage(
     return required == 0 or len(_matched_expected_terms(items, expected_terms, expected_concepts)) >= required
 
 
-def evaluate_teacher_questions(course_id: str, questions: list[dict] | None = None):
+def evaluate_teacher_questions(
+    course_id: str,
+    questions: list[dict] | None = None,
+    progress_callback=None,
+):
     """Evaluate the fixed suite and return aggregate metrics plus per-question facts.
 
     Citation precision is intentionally independent from answer coverage: each cited
@@ -215,12 +238,17 @@ def evaluate_teacher_questions(course_id: str, questions: list[dict] | None = No
     compare_count = 0
     rejection_hits = 0
     rejection_count = 0
+    chapter_question_hits = 0
+    chapter_question_count = 0
+    chapter_ids = set()
+    chapter_hit_ids = set()
     details = []
 
-    for question in questions:
+    for index, question in enumerate(questions, start=1):
         result = retrieve(
             question["question"],
             course_id=course_id,
+            textbook_ids=question.get("textbook_ids"),
             mode=question.get("mode", "all"),
             top_k=8,
         )
@@ -232,11 +260,15 @@ def evaluate_teacher_questions(course_id: str, questions: list[dict] | None = No
             details.append({
                 "id": question.get("id") or question["question"],
                 "category": question.get("category", "custom"),
+                "suite_group": question.get("suite_group", "custom"),
+                "question_type": question.get("question_type", "rejection"),
                 "mode": question.get("mode", "all"),
                 "answerable": False,
                 "rejected": rejected,
                 "returned_count": len(items),
             })
+            if progress_callback:
+                progress_callback(index, len(questions), question)
             continue
 
         answerable_count += 1
@@ -246,7 +278,23 @@ def evaluate_teacher_questions(course_id: str, questions: list[dict] | None = No
             item for item in items
             if _matched_expected_terms([item], expected_terms, expected_concepts)
         ]
-        retrieval_hit = _has_expected_coverage(items, expected_terms, expected_concepts)
+        expected_coverage = _has_expected_coverage(items, expected_terms, expected_concepts)
+        target_chapter_id = question.get("target_chapter_id")
+        target_chapter_title = question.get("target_chapter_title")
+        chapter_hit = None
+        if target_chapter_id:
+            chapter_question_count += 1
+            chapter_ids.add(target_chapter_id)
+            chapter_items = [
+                item for item in items
+                if item.get("chapter_id") == target_chapter_id
+                or item.get("chapter") == target_chapter_title
+            ]
+            chapter_hit = _has_expected_coverage(chapter_items, expected_terms, expected_concepts)
+            chapter_question_hits += int(chapter_hit)
+            if chapter_hit:
+                chapter_hit_ids.add(target_chapter_id)
+        retrieval_hit = expected_coverage and chapter_hit is not False
         retrieval_hits += int(retrieval_hit)
 
         citation_items = items[:3]
@@ -257,6 +305,11 @@ def evaluate_teacher_questions(course_id: str, questions: list[dict] | None = No
                 bool(item.get("id"))
                 and (item.get("page_start") or 0) > 0
                 and bool(_matched_expected_terms([item], expected_terms, expected_concepts))
+                and (
+                    not target_chapter_id
+                    or item.get("chapter_id") == target_chapter_id
+                    or item.get("chapter") == target_chapter_title
+                )
             )
             citation_hits += int(citation_hit)
             question_citation_hits += int(citation_hit)
@@ -271,20 +324,29 @@ def evaluate_teacher_questions(course_id: str, questions: list[dict] | None = No
         details.append({
             "id": question.get("id") or question["question"],
             "category": question.get("category", "custom"),
+            "suite_group": question.get("suite_group", "custom"),
+            "question_type": question.get("question_type", "knowledge"),
             "mode": question.get("mode", "all"),
             "answerable": True,
             "retrieval_hit": retrieval_hit,
+            "chapter_hit": chapter_hit,
+            "target_chapter_id": target_chapter_id,
+            "target_chapter_title": target_chapter_title,
             "citation_hits": question_citation_hits,
             "citation_count": len(citation_items),
             "compare_hit": compare_hit,
             "returned_count": len(items),
         })
+        if progress_callback:
+            progress_callback(index, len(questions), question)
 
     metrics = [
         _metric("检索召回率", retrieval_hits, answerable_count, "前 8 条结果覆盖单概念全部、双概念全部或多项知识至少 60%", "teacher_questions"),
-        _metric("引用准确率", citation_hits, citation_count, "前 3 条引用中，单条含预期知识且具有有效页码的比例", "teacher_questions"),
+        _metric("引用准确率", citation_hits, citation_count, "前 3 条引用中，正文或章节路径含预期知识且具有有效页码的比例", "teacher_questions"),
         _metric("跨教材覆盖率", compare_hits, compare_count, "对比问题召回至少两本教材的相关证据", "teacher_questions"),
         _metric("无答案拒答率", rejection_hits, rejection_count, "超出课程范围的问题未返回伪相关证据", "teacher_questions"),
+        _metric("章节题命中率", chapter_question_hits, chapter_question_count, "章节题在前 8 条结果中命中指定教材章节及知识点", "teacher_questions"),
+        _metric("章节覆盖率", len(chapter_hit_ids), len(chapter_ids), "至少有一道题命中的教材章节比例", "teacher_questions"),
     ]
     return {"metrics": metrics, "details": details}
 
