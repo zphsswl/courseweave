@@ -27,19 +27,31 @@ def _corpus_summary(course_id: str) -> dict:
     db = SessionLocal()
     try:
         textbook_count = db.query(Textbook).filter(Textbook.course_id == course_id).count()
-        chunk_count = (
+        chunks = (
             db.query(Chunk)
             .join(Textbook, Textbook.id == Chunk.textbook_id)
             .filter(Textbook.course_id == course_id)
-            .count()
+            .order_by(Chunk.textbook_id, Chunk.chapter_id, Chunk.chunk_index, Chunk.id)
+            .all()
         )
+        corpus_digest = hashlib.sha256()
+        for chunk in chunks:
+            corpus_digest.update((chunk.id or "").encode("utf-8"))
+            corpus_digest.update(b"\0")
+            corpus_digest.update((chunk.content or "").encode("utf-8"))
+            corpus_digest.update(b"\0")
         chapter_count = (
             db.query(Chapter)
             .join(Textbook, Textbook.id == Chapter.textbook_id)
             .filter(Textbook.course_id == course_id)
             .count()
         )
-        return {"textbook_count": textbook_count, "chapter_count": chapter_count, "chunk_count": chunk_count}
+        return {
+            "textbook_count": textbook_count,
+            "chapter_count": chapter_count,
+            "chunk_count": len(chunks),
+            "corpus_sha256": corpus_digest.hexdigest(),
+        }
     finally:
         db.close()
 
@@ -123,6 +135,8 @@ def _markdown(report: dict) -> str:
 评测日期：{report['run']['date']}
 
 数据范围：{report['corpus']['textbook_count']} 本教材、{report['corpus']['chapter_count']} 章、{report['corpus']['chunk_count']:,} 个可检索 chunk
+
+语料 SHA-256：`{report['corpus']['corpus_sha256']}`
 
 执行耗时：{report['run']['duration_seconds']:.2f} 秒
 
