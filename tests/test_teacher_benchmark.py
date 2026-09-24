@@ -42,10 +42,10 @@ class TeacherBenchmarkTests(unittest.TestCase):
             {"question": "quantum compiler", "mode": "all", "answerable": False, "expected_terms": []},
         ]
         responses = [
-            {"results": [{"id": "c1", "content": "炎症是防御反应", "page_start": 10, "textbook_id": "a"}]},
+            {"results": [{"id": "c1", "content": "炎症是防御反应", "page_start": 10, "page_end": 10, "textbook_id": "a"}]},
             {"results": [
-                {"id": "c2", "content": "缺氧的生理基础", "page_start": 20, "textbook_id": "a"},
-                {"id": "c3", "content": "缺氧的病理变化", "page_start": 30, "textbook_id": "b"},
+                {"id": "c2", "content": "缺氧的生理基础", "page_start": 20, "page_end": 20, "textbook_id": "a"},
+                {"id": "c3", "content": "缺氧的病理变化", "page_start": 30, "page_end": 30, "textbook_id": "b"},
             ]},
             {"results": []},
         ]
@@ -68,8 +68,8 @@ class TeacherBenchmarkTests(unittest.TestCase):
             "target_chapter_title": "第二章",
         }]
         responses = [{"results": [
-            {"id": "wrong", "content": "静息电位", "page_start": 5, "textbook_id": "book_a", "chapter_id": "chapter_b", "chapter": "第三章"},
-            {"id": "right", "content": "静息电位", "page_start": 8, "textbook_id": "book_a", "chapter_id": "chapter_a", "chapter": "第二章"},
+            {"id": "wrong", "content": "静息电位", "page_start": 5, "page_end": 5, "textbook_id": "book_a", "chapter_id": "chapter_b", "chapter": "第三章"},
+            {"id": "right", "content": "静息电位", "page_start": 8, "page_end": 8, "textbook_id": "book_a", "chapter_id": "chapter_a", "chapter": "第二章"},
         ]}]
 
         with patch("backend.api.benchmark.retrieve", side_effect=responses) as mocked_retrieve:
@@ -83,6 +83,27 @@ class TeacherBenchmarkTests(unittest.TestCase):
         self.assertEqual(by_name["章节覆盖率"]["score"], 1.0)
         self.assertEqual(by_name["引用准确率"]["numerator"], 1)
         self.assertEqual(by_name["引用准确率"]["denominator"], 2)
+
+    def test_citation_requires_a_valid_full_page_range(self):
+        questions = [{
+            "question": "炎症是什么",
+            "mode": "all",
+            "answerable": True,
+            "expected_terms": ["炎症"],
+        }]
+        responses = [{"results": [{
+            "id": "broken_page_range",
+            "content": "炎症是防御反应",
+            "page_start": 10,
+            "page_end": 0,
+        }]}]
+
+        with patch("backend.api.benchmark.retrieve", side_effect=responses):
+            metrics = _evaluate_teacher_questions("course_test", questions)
+
+        by_name = {item["metric"]: item for item in metrics}
+        self.assertEqual(by_name["检索召回率"]["score"], 1.0)
+        self.assertEqual(by_name["引用准确率"]["score"], 0.0)
 
     def test_multi_part_questions_require_coverage_but_single_concepts_do_not_change(self):
         questions = [
@@ -106,12 +127,12 @@ class TeacherBenchmarkTests(unittest.TestCase):
             },
         ]
         responses = [
-            {"results": [{"id": "one_phase", "content": "仅提到一期", "page_start": 1}]},
+            {"results": [{"id": "one_phase", "content": "仅提到一期", "page_start": 1, "page_end": 1}]},
             {"results": [
-                {"id": "cell_a", "content": "甲细胞", "page_start": 2},
-                {"id": "cell_b", "content": "乙细胞", "page_start": 3},
+                {"id": "cell_a", "content": "甲细胞", "page_start": 2, "page_end": 2},
+                {"id": "cell_b", "content": "乙细胞", "page_start": 3, "page_end": 3},
             ]},
-            {"results": [{"id": "single", "content": "炎症", "page_start": 4}]},
+            {"results": [{"id": "single", "content": "炎症", "page_start": 4, "page_end": 4}]},
         ]
 
         with patch("backend.api.benchmark.retrieve", side_effect=responses):
@@ -139,6 +160,7 @@ class TeacherBenchmarkTests(unittest.TestCase):
             "id": "stages",
             "content": "休克分为缺血缺氧期、淤血缺氧期和衰竭期。",
             "page_start": 10,
+            "page_end": 10,
         }]}]
 
         with patch("backend.api.benchmark.retrieve", side_effect=responses):

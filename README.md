@@ -203,7 +203,7 @@ npm run build
 | 章节题命中率@8 | 274/274，100% |
 | 章节覆盖率@8 | 137/137，100% |
 
-运行 `scripts/build_chapter_benchmark.py` 可从当前章节与知识节点重建不含教材原文的题集；运行 `scripts/run_teacher_benchmark.py` 可重新生成带题集哈希、逐题结果、题型分层和适用边界的报告。详见 [RAG 教师问题评测报告](./docs/evaluation/teacher-benchmark-v3.md)。
+运行 `scripts/build_chapter_benchmark.py` 可从当前章节与知识节点重建不含教材原文的题集；运行 `scripts/run_teacher_benchmark.py` 可重新生成带题集哈希、语料哈希、逐题结果、题型分层和适用边界的报告。详见 [RAG 教师问题评测报告](./docs/evaluation/teacher-benchmark-v3.md)。
 
 完整的优化前后对比、严格评测口径、技术路线和 Agent 定位见 [RAG 优化与项目技术路线](./docs/RAG优化与项目技术路线.md)。
 

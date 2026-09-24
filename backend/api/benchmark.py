@@ -304,6 +304,7 @@ def evaluate_teacher_questions(
             citation_hit = (
                 bool(item.get("id"))
                 and (item.get("page_start") or 0) > 0
+                and (item.get("page_end") or 0) >= (item.get("page_start") or 0)
                 and bool(_matched_expected_terms([item], expected_terms, expected_concepts))
                 and (
                     not target_chapter_id

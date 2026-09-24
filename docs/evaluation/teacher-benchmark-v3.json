@@ -14,11 +14,12 @@
     "course_id": "course_default",
     "textbook_count": 7,
     "chapter_count": 137,
-    "chunk_count": 6498
+    "chunk_count": 6498,
+    "corpus_sha256": "b318d31ad85fa4af514f26c8f40399c2de3127f6ee210761d54ae8056207b8c8"
   },
   "run": {
     "date": "2026-09-24",
-    "duration_seconds": 108.96
+    "duration_seconds": 94.87
   },
   "metrics": [
     {

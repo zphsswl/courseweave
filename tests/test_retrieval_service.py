@@ -234,6 +234,13 @@ class RetrievalServiceTest(unittest.TestCase):
         )
         self.assertEqual(result["results"][0]["id"], "teacher_frame")
 
+    def test_comparison_clause_cleanup_stops_at_the_comma(self):
+        cleaned = _clean_chinese_query_text(
+            "在不同教材中，胃酸分泌与胰液分泌在调节方式上有何不同？"
+        )
+        self.assertIn("胃酸分泌", cleaned)
+        self.assertIn("胰液分泌", cleaned)
+
     def test_quoted_concept_is_preserved_when_it_contains_a_stopword(self):
         cleaned = _clean_chinese_query_text("“眼的发生”经历哪些关键过程或阶段？")
         self.assertIn("眼的发生", cleaned)
