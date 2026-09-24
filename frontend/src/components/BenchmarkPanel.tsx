@@ -56,22 +56,23 @@ const BenchmarkPanel: React.FC<Props> = ({ results, loading, onRefresh, onRun, r
       </header>
 
       <section className="quality-suite-strip">
-        <div><small>问题集</small><strong>{suite?.question_count || 45}</strong><span>道教师问题</span></div>
-        <div><small>跨教材</small><strong>{suite?.compare_count || 5}</strong><span>道对比题</span></div>
-        <div><small>拒答检测</small><strong>{suite?.rejection_count || 5}</strong><span>道域外题</span></div>
-        <Tag icon={<SafetyCertificateOutlined />} color="success">固定版本 {suite?.version || 'medical-teacher-v1'}</Tag>
+        <div><small>问题集</small><strong>{suite?.question_count ?? 420}</strong><span>道教师问题</span></div>
+        <div><small>章节覆盖</small><strong>{suite?.chapter_count ?? 137}</strong><span>个一级章节</span></div>
+        <div><small>跨教材</small><strong>{suite?.compare_count ?? 41}</strong><span>道对比题</span></div>
+        <div><small>拒答检测</small><strong>{suite?.rejection_count ?? 40}</strong><span>道域外题</span></div>
+        <Tag icon={<SafetyCertificateOutlined />} color="success">固定版本 {suite?.version || 'medical-teacher-v3'}</Tag>
       </section>
 
       {!results.length ? (
         <div className="quality-empty">
           {loading ? <Spin /> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="还没有本课程的评测结果" />}
-          <p>首次运行会读取当前课程索引，通常需要几十秒，不调用付费大模型。</p>
-          {!readOnly && <Button type="primary" onClick={run} loading={running}>运行 45 题评测</Button>}
+          <p>420 题会读取当前课程索引，通常需要 1–2 分钟；运行期间请保持页面打开，不调用付费大模型。</p>
+          {!readOnly && <Button type="primary" onClick={run} loading={running}>运行 {suite?.question_count ?? 420} 题评测</Button>}
         </div>
       ) : (
         <>
           <section className="quality-score-hero">
-            <div><small>四项核心指标均值</small><strong>{Math.round(average * 100)}</strong><span>/ 100</span></div>
+            <div><small>六项核心指标均值</small><strong>{Math.round(average * 100)}</strong><span>/ 100</span></div>
             <p>本分数只评价可验证的检索行为，不把语言流畅度当作准确性。</p>
             {!readOnly && <Button onClick={run} loading={running}>重新评测</Button>}
           </section>

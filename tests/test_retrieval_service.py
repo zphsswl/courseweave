@@ -16,6 +16,7 @@ from backend.database import (  # noqa: E402
     RagIndexState,
 )
 from backend.services.retrieval_service import (  # noqa: E402
+    _clean_chinese_query_text,
     _content_signature,
     _prepare_query,
     get_index_status,
@@ -181,6 +182,15 @@ class RetrievalServiceTest(unittest.TestCase):
         )
         self.assertEqual(result["results"], [])
 
+    def test_mixed_language_out_of_domain_term_must_exist_in_the_course(self):
+        result = retrieve(
+            "Transformer 的位置编码有哪些实现？",
+            course_id=DEFAULT_COURSE_ID,
+            top_k=5,
+        )
+        self.assertEqual(result["results"], [])
+        self.assertEqual(result["trace"]["reason"], "unsupported_query_topics")
+
     def test_chinese_out_of_domain_query_cannot_mix_unrelated_course_terms(self):
         result = retrieve(
             "神经网络如何进行图像分类？",
@@ -189,6 +199,142 @@ class RetrievalServiceTest(unittest.TestCase):
         )
         self.assertEqual(result["results"], [])
         self.assertEqual(result["trace"]["reason"], "unsupported_query_topics")
+
+    def test_teacher_question_scaffolding_does_not_block_a_supported_topic(self):
+        cleaned = _clean_chinese_query_text(
+            "胃酸分泌受哪些神经和体液因素调节，有什么作用？"
+        )
+        self.assertIn("胃酸分泌", cleaned)
+        self.assertNotIn("受哪些", cleaned)
+        self.assertNotIn("有什么作用", cleaned)
+
+        db = SessionLocal()
+        try:
+            db.add(Chunk(
+                id="teacher_frame",
+                textbook_id="rag_book_a",
+                chapter_id="chapter_rag_book_a",
+                textbook_title="生理学",
+                chapter_title="消化",
+                page_start=20,
+                page_end=20,
+                content="胃酸分泌受乙酰胆碱、促胃液素和组胺共同调节。",
+                content_hash="teacher_frame",
+                chunk_index=20,
+            ))
+            db.commit()
+        finally:
+            db.close()
+        invalidate_course_cache(DEFAULT_COURSE_ID)
+
+        result = retrieve(
+            "胃酸分泌受哪些神经和体液因素调节？",
+            course_id=DEFAULT_COURSE_ID,
+            top_k=3,
+        )
+        self.assertEqual(result["results"][0]["id"], "teacher_frame")
+
+    def test_comparison_clause_cleanup_stops_at_the_comma(self):
+        cleaned = _clean_chinese_query_text(
+            "在不同教材中，胃酸分泌与胰液分泌在调节方式上有何不同？"
+        )
+        self.assertIn("胃酸分泌", cleaned)
+        self.assertIn("胰液分泌", cleaned)
+
+    def test_quoted_concept_is_preserved_when_it_contains_a_stopword(self):
+        cleaned = _clean_chinese_query_text("“眼的发生”经历哪些关键过程或阶段？")
+        self.assertIn("眼的发生", cleaned)
+
+        db = SessionLocal()
+        try:
+            db.add(Chunk(
+                id="eye_development",
+                textbook_id="rag_book_a",
+                chapter_id="chapter_rag_book_a",
+                textbook_title="组织学与胚胎学",
+                chapter_title="眼与耳的发生",
+                page_start=88,
+                page_end=88,
+                content="眼的发生始于视泡形成，随后视杯及晶状体逐步分化。",
+                section_path=["眼与耳的发生", "眼的发生"],
+                content_hash="eye_development",
+                chunk_index=88,
+            ))
+            db.commit()
+        finally:
+            db.close()
+        invalidate_course_cache(DEFAULT_COURSE_ID)
+
+        result = retrieve(
+            "“眼的发生”经历哪些关键过程或阶段？",
+            course_id=DEFAULT_COURSE_ID,
+            top_k=3,
+        )
+        self.assertEqual(result["results"][0]["id"], "eye_development")
+
+    def test_quoted_stop_phrase_survives_the_course_scope_check(self):
+        db = SessionLocal()
+        try:
+            db.add(Chunk(
+                id="basic_pathology",
+                textbook_id="rag_book_b",
+                chapter_id="chapter_rag_book_b",
+                textbook_title="病理生理学",
+                chapter_title="疾病概论",
+                page_start=90,
+                page_end=90,
+                content="基本病理变化包括细胞损伤、炎症和修复。",
+                section_path=["疾病概论", "基本病理变化"],
+                content_hash="basic_pathology",
+                chunk_index=90,
+            ))
+            db.commit()
+        finally:
+            db.close()
+        invalidate_course_cache(DEFAULT_COURSE_ID)
+
+        result = retrieve(
+            "“基本病理变化”是什么？",
+            course_id=DEFAULT_COURSE_ID,
+            top_k=3,
+        )
+        self.assertEqual(result["results"][0]["id"], "basic_pathology")
+
+    def test_english_request_framing_is_not_a_required_course_topic(self):
+        result = retrieve(
+            "Please explain 叶绿体吸收光能",
+            course_id=DEFAULT_COURSE_ID,
+            top_k=3,
+        )
+        self.assertTrue(result["results"])
+        self.assertIn("叶绿体吸收光能", result["results"][0]["content"])
+
+    def test_chinese_medical_hyphen_variants_are_normalized(self):
+        db = SessionLocal()
+        try:
+            db.add(Chunk(
+                id="blood_testis_barrier",
+                textbook_id="rag_book_a",
+                chapter_id="chapter_rag_book_a",
+                textbook_title="组织学",
+                chapter_title="男性生殖系统",
+                page_start=30,
+                page_end=30,
+                content="支持细胞间紧密连接参与构成血- 睾屏障。",
+                content_hash="blood_testis_barrier",
+                chunk_index=30,
+            ))
+            db.commit()
+        finally:
+            db.close()
+        invalidate_course_cache(DEFAULT_COURSE_ID)
+
+        result = retrieve(
+            "血-睾屏障由什么结构形成，有什么作用？",
+            course_id=DEFAULT_COURSE_ID,
+            top_k=3,
+        )
+        self.assertEqual(result["results"][0]["id"], "blood_testis_barrier")
 
     def test_stale_vector_index_is_not_used(self):
         db = SessionLocal()

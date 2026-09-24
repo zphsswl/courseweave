@@ -26,11 +26,16 @@ _LEXICAL_CACHE = {}
 _CACHE_TTL_SECONDS = 60
 _ENGLISH_QUERY_STOPWORDS = {
     "about", "administered", "and", "compare", "constrains", "does", "during",
-    "explain", "for", "how", "perform", "processes", "the", "thresholds", "what",
-    "with", "was",
+    "describe", "discuss", "explain", "for", "how", "outline", "please", "perform",
+    "processes", "summarize", "tell", "the", "thresholds", "what", "with", "was",
 }
 
 _CHINESE_QUERY_STOP_PHRASES = {
+    "请概括", "核心要点", "并给出教材页码依据", "给出教材页码依据", "教材页码依据",
+    "页码依据", "页码证据", "教材原文证据", "发生机制或调节链路", "主要结构和组成",
+    "经历哪些关键过程或阶段", "主要功能和作用", "原理步骤或判定要点", "防治原则和关键措施",
+    "核心表现和鉴别要点", "判定要点", "关键措施", "调节链路", "相互关系", "备课时",
+    "并给出", "给出", "教材", "知识",
     "分别解释", "进行比较", "知识结构", "侧重点", "基本病理变化", "基本结构特点",
     "受哪些主要因素影响", "受哪些因素影响", "受哪些因素调节", "由哪些",
     "病因和发病机制", "发生发展", "常见的", "主要的", "主要通过", "基本机制",
@@ -70,6 +75,42 @@ _QUERY_INTENT_GROUPS = (
         ("临床表现", "病理变化", "表现", "改变"),
     ),
 )
+
+_CHINESE_QUERY_FRAME_PATTERNS = (
+    # Interrogative scaffolding should guide answer shape, not become a topic
+    # that must appear verbatim in the textbook corpus.
+    r"哪[一二三四五六七八九十\d]+(?:个)?(?:段|期|类|种|项)?",
+    r"各(?:段|期|类|种)(?:主要)?",
+    r"(?:分别)?(?:由|受)哪些?[^，。！？?]{0,18}(?:主导|决定|调节|影响|构成|形成)",
+    r"由什么结构(?:形成|构成)",
+    r"有什么(?:作用|功能|意义|特点|区别)",
+    r"在[^，,。！？?]{0,32}(?:上|方面)有何(?:不同|区别)",
+)
+
+
+def _clean_chinese_query_text(value: str) -> str:
+    """Remove question scaffolding while retaining the medical subject terms."""
+    cleaned = (value or "").lower()
+    protected = []
+
+    def protect_quoted(match):
+        protected.append(match.group(1))
+        return f" qxprotected{len(protected) - 1}qx "
+
+    # Teacher questions often quote the exact concept being asked about. Keep
+    # that phrase intact even when it contains words such as “发生” or “结构”
+    # that are otherwise treated as question scaffolding.
+    cleaned = re.sub(r"[“「]([^”」]{1,80})[”」]", protect_quoted, cleaned)
+    # Textbooks and questions vary between 血-睾、血 - 睾 and 血睾. Treat
+    # punctuation inside a Chinese term as typography rather than semantics.
+    cleaned = re.sub(r"(?<=[一-鿿])[\s\-‐‑–—·]+(?=[一-鿿])", "", cleaned)
+    for pattern in _CHINESE_QUERY_FRAME_PATTERNS:
+        cleaned = re.sub(pattern, " ", cleaned)
+    for phrase in sorted(_CHINESE_QUERY_STOP_PHRASES, key=len, reverse=True):
+        cleaned = cleaned.replace(phrase, " ")
+    for index, phrase in enumerate(protected):
+        cleaned = cleaned.replace(f"qxprotected{index}qx", phrase)
+    return cleaned
 
 
 def tokenize(text_value: str):
@@ -119,8 +160,7 @@ def _prepare_query(question: str, textbooks: list[tuple[str, str]] | None = None
                 requested_books.append(textbook_id)
             cleaned = cleaned.replace(alias, " ")
 
-    for phrase in sorted(_CHINESE_QUERY_STOP_PHRASES, key=len, reverse=True):
-        cleaned = cleaned.replace(phrase, " ")
+    cleaned = _clean_chinese_query_text(cleaned)
     chinese_terms = []
     for term in re.findall(r"[一-鿿]+", cleaned):
         parts = [part for part in re.split(r"[和与及到对]", term) if part]
@@ -223,19 +263,23 @@ def _answer_form_strength(question: str, content: str) -> float:
     return best
 
 
-def _query_is_supported_by_content(question: str, content: str, strict: bool = False) -> bool:
+def _query_is_supported_by_content(
+    question: str,
+    content: str,
+    strict: bool = False,
+    already_cleaned: bool = False,
+) -> bool:
     """Reject ASCII out-of-domain matches caused only by bibliography stopwords."""
     if re.search(r"[一-鿿]", question or ""):
-        cleaned = (question or "").lower()
-        for phrase in sorted(_CHINESE_QUERY_STOP_PHRASES, key=len, reverse=True):
-            cleaned = cleaned.replace(phrase, " ")
+        cleaned = question if already_cleaned else _clean_chinese_query_text(question)
         segments = [
             part
             for term in re.findall(r"[一-鿿]+", cleaned)
             for part in re.split(r"[和与及到从对]", term)
             if part
         ]
-        searchable = re.sub(r"\s+", "", content or "").lower()
+        searchable = re.sub(r"(?<=[一-鿿])[\s\-‐‑–—·]+(?=[一-鿿])", "", content or "").lower()
+        searchable = re.sub(r"\s+", "", searchable)
         supported_segments = []
         for term in segments:
             if len(term) <= 3:
@@ -296,9 +340,7 @@ def _query_has_scope_support(question: str, chunks) -> bool:
     """Reject a Chinese query when one of its specific topics is absent course-wide."""
     if not re.search(r"[一-鿿]", question or ""):
         return True
-    cleaned = (question or "").lower()
-    for phrase in sorted(_CHINESE_QUERY_STOP_PHRASES, key=len, reverse=True):
-        cleaned = cleaned.replace(phrase, " ")
+    cleaned = _clean_chinese_query_text(question)
     segments = [
         part
         for term in re.findall(r"[一-鿿]+", cleaned)
@@ -308,10 +350,28 @@ def _query_has_scope_support(question: str, chunks) -> bool:
     if not segments:
         return False
     searchable_chunks = [_retrieval_text(chunk) for chunk in chunks]
-    return all(
-        any(_query_is_supported_by_content(segment, content, strict=True) for content in searchable_chunks)
+    chinese_supported = all(
+        any(
+            _query_is_supported_by_content(
+                segment,
+                content,
+                strict=True,
+                already_cleaned=True,
+            )
+            for content in searchable_chunks
+        )
         for segment in segments
     )
+    english_terms = {
+        token.lower()
+        for token in re.findall(r"[A-Za-z][A-Za-z0-9-]+", question or "")
+        if len(token) >= 4 and token.lower() not in _ENGLISH_QUERY_STOPWORDS
+    }
+    english_supported = all(
+        any(term in content.lower() for content in searchable_chunks)
+        for term in english_terms
+    )
+    return chinese_supported and english_supported
 
 
 def _section_labels(chunk):
@@ -854,6 +914,7 @@ def retrieve(
                 "content": chunk.content,
                 "textbook_id": chunk.textbook_id,
                 "textbook": chunk.textbook_title,
+                "chapter_id": chunk.chapter_id,
                 "chapter": chunk.chapter_title,
                 "section_path": _section_labels(chunk),
                 "page_start": chunk.page_start,

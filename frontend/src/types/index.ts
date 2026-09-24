@@ -379,6 +379,9 @@ export interface BenchmarkSuite {
   answerable_count: number;
   compare_count: number;
   rejection_count: number;
+  chapter_count: number;
+  chapter_question_count: number;
+  question_type_counts: Record<string, number>;
   questions: Array<{
     id: string;
     category: string;
