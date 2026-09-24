@@ -71,6 +71,30 @@ _QUERY_INTENT_GROUPS = (
     ),
 )
 
+_CHINESE_QUERY_FRAME_PATTERNS = (
+    # Interrogative scaffolding should guide answer shape, not become a topic
+    # that must appear verbatim in the textbook corpus.
+    r"哪[一二三四五六七八九十\d]+(?:个)?(?:段|期|类|种|项)?",
+    r"各(?:段|期|类|种)(?:主要)?",
+    r"(?:分别)?(?:由|受)哪些?[^，。！？?]{0,18}(?:主导|决定|调节|影响|构成|形成)",
+    r"由什么结构(?:形成|构成)",
+    r"有什么(?:作用|功能|意义|特点|区别)",
+    r"在[^。！？?]{0,32}(?:上|方面)有何(?:不同|区别)",
+)
+
+
+def _clean_chinese_query_text(value: str) -> str:
+    """Remove question scaffolding while retaining the medical subject terms."""
+    cleaned = (value or "").lower()
+    # Textbooks and questions vary between 血-睾、血 - 睾 and 血睾. Treat
+    # punctuation inside a Chinese term as typography rather than semantics.
+    cleaned = re.sub(r"(?<=[一-鿿])[\s\-‐‑–—·]+(?=[一-鿿])", "", cleaned)
+    for pattern in _CHINESE_QUERY_FRAME_PATTERNS:
+        cleaned = re.sub(pattern, " ", cleaned)
+    for phrase in sorted(_CHINESE_QUERY_STOP_PHRASES, key=len, reverse=True):
+        cleaned = cleaned.replace(phrase, " ")
+    return cleaned
+
 
 def tokenize(text_value: str):
     text_value = (text_value or "").lower()
@@ -119,8 +143,7 @@ def _prepare_query(question: str, textbooks: list[tuple[str, str]] | None = None
                 requested_books.append(textbook_id)
             cleaned = cleaned.replace(alias, " ")
 
-    for phrase in sorted(_CHINESE_QUERY_STOP_PHRASES, key=len, reverse=True):
-        cleaned = cleaned.replace(phrase, " ")
+    cleaned = _clean_chinese_query_text(cleaned)
     chinese_terms = []
     for term in re.findall(r"[一-鿿]+", cleaned):
         parts = [part for part in re.split(r"[和与及到对]", term) if part]
@@ -226,16 +249,15 @@ def _answer_form_strength(question: str, content: str) -> float:
 def _query_is_supported_by_content(question: str, content: str, strict: bool = False) -> bool:
     """Reject ASCII out-of-domain matches caused only by bibliography stopwords."""
     if re.search(r"[一-鿿]", question or ""):
-        cleaned = (question or "").lower()
-        for phrase in sorted(_CHINESE_QUERY_STOP_PHRASES, key=len, reverse=True):
-            cleaned = cleaned.replace(phrase, " ")
+        cleaned = _clean_chinese_query_text(question)
         segments = [
             part
             for term in re.findall(r"[一-鿿]+", cleaned)
             for part in re.split(r"[和与及到从对]", term)
             if part
         ]
-        searchable = re.sub(r"\s+", "", content or "").lower()
+        searchable = re.sub(r"(?<=[一-鿿])[\s\-‐‑–—·]+(?=[一-鿿])", "", content or "").lower()
+        searchable = re.sub(r"\s+", "", searchable)
         supported_segments = []
         for term in segments:
             if len(term) <= 3:
@@ -296,9 +318,7 @@ def _query_has_scope_support(question: str, chunks) -> bool:
     """Reject a Chinese query when one of its specific topics is absent course-wide."""
     if not re.search(r"[一-鿿]", question or ""):
         return True
-    cleaned = (question or "").lower()
-    for phrase in sorted(_CHINESE_QUERY_STOP_PHRASES, key=len, reverse=True):
-        cleaned = cleaned.replace(phrase, " ")
+    cleaned = _clean_chinese_query_text(question)
     segments = [
         part
         for term in re.findall(r"[一-鿿]+", cleaned)

@@ -196,7 +196,15 @@ def _has_expected_coverage(
     return required == 0 or len(_matched_expected_terms(items, expected_terms, expected_concepts)) >= required
 
 
-def _evaluate_teacher_questions(course_id: str, questions: list[dict] | None = None):
+def evaluate_teacher_questions(course_id: str, questions: list[dict] | None = None):
+    """Evaluate the fixed suite and return aggregate metrics plus per-question facts.
+
+    Citation precision is intentionally independent from answer coverage: each cited
+    item is judged for relevance and page traceability, while retrieval recall owns
+    the separate question of whether the result set covers enough expected concepts.
+    Keeping those dimensions separate avoids counting one missing concept as three
+    incorrect citations.
+    """
     suite = load_teacher_suite()
     questions = questions or suite["questions"]
     retrieval_hits = 0
@@ -207,6 +215,7 @@ def _evaluate_teacher_questions(course_id: str, questions: list[dict] | None = N
     compare_count = 0
     rejection_hits = 0
     rejection_count = 0
+    details = []
 
     for question in questions:
         result = retrieve(
@@ -218,7 +227,16 @@ def _evaluate_teacher_questions(course_id: str, questions: list[dict] | None = N
         items = result["results"]
         if not question.get("answerable", True):
             rejection_count += 1
-            rejection_hits += int(not items)
+            rejected = not items
+            rejection_hits += int(rejected)
+            details.append({
+                "id": question.get("id") or question["question"],
+                "category": question.get("category", "custom"),
+                "mode": question.get("mode", "all"),
+                "answerable": False,
+                "rejected": rejected,
+                "returned_count": len(items),
+            })
             continue
 
         answerable_count += 1
@@ -228,27 +246,49 @@ def _evaluate_teacher_questions(course_id: str, questions: list[dict] | None = N
             item for item in items
             if _matched_expected_terms([item], expected_terms, expected_concepts)
         ]
-        retrieval_hits += int(_has_expected_coverage(items, expected_terms, expected_concepts))
+        retrieval_hit = _has_expected_coverage(items, expected_terms, expected_concepts)
+        retrieval_hits += int(retrieval_hit)
 
         citation_items = items[:3]
-        citation_set_has_coverage = _has_expected_coverage(citation_items, expected_terms, expected_concepts)
+        question_citation_hits = 0
         for item in citation_items:
             citation_count += 1
-            citation_hits += int(
+            citation_hit = (
                 bool(item.get("id"))
                 and (item.get("page_start") or 0) > 0
-                and citation_set_has_coverage
                 and bool(_matched_expected_terms([item], expected_terms, expected_concepts))
             )
+            citation_hits += int(citation_hit)
+            question_citation_hits += int(citation_hit)
 
+        compare_hit = None
         if question.get("mode") == "compare":
             compare_count += 1
             covered_books = {item.get("textbook_id") for item in relevant_items if item.get("textbook_id")}
-            compare_hits += int(len(covered_books) >= int(question.get("min_textbooks", 2)))
+            compare_hit = len(covered_books) >= int(question.get("min_textbooks", 2))
+            compare_hits += int(compare_hit)
 
-    return [
+        details.append({
+            "id": question.get("id") or question["question"],
+            "category": question.get("category", "custom"),
+            "mode": question.get("mode", "all"),
+            "answerable": True,
+            "retrieval_hit": retrieval_hit,
+            "citation_hits": question_citation_hits,
+            "citation_count": len(citation_items),
+            "compare_hit": compare_hit,
+            "returned_count": len(items),
+        })
+
+    metrics = [
         _metric("检索召回率", retrieval_hits, answerable_count, "前 8 条结果覆盖单概念全部、双概念全部或多项知识至少 60%", "teacher_questions"),
-        _metric("引用准确率", citation_hits, citation_count, "前 3 条引用整体达到知识覆盖门槛，且单条含预期知识与有效页码", "teacher_questions"),
+        _metric("引用准确率", citation_hits, citation_count, "前 3 条引用中，单条含预期知识且具有有效页码的比例", "teacher_questions"),
         _metric("跨教材覆盖率", compare_hits, compare_count, "对比问题召回至少两本教材的相关证据", "teacher_questions"),
         _metric("无答案拒答率", rejection_hits, rejection_count, "超出课程范围的问题未返回伪相关证据", "teacher_questions"),
     ]
+    return {"metrics": metrics, "details": details}
+
+
+def _evaluate_teacher_questions(course_id: str, questions: list[dict] | None = None):
+    """Backward-compatible aggregate-only wrapper used by the API scorecard."""
+    return evaluate_teacher_questions(course_id, questions)["metrics"]

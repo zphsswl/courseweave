@@ -16,6 +16,7 @@ from backend.database import (  # noqa: E402
     RagIndexState,
 )
 from backend.services.retrieval_service import (  # noqa: E402
+    _clean_chinese_query_text,
     _content_signature,
     _prepare_query,
     get_index_status,
@@ -189,6 +190,67 @@ class RetrievalServiceTest(unittest.TestCase):
         )
         self.assertEqual(result["results"], [])
         self.assertEqual(result["trace"]["reason"], "unsupported_query_topics")
+
+    def test_teacher_question_scaffolding_does_not_block_a_supported_topic(self):
+        cleaned = _clean_chinese_query_text(
+            "胃酸分泌受哪些神经和体液因素调节，有什么作用？"
+        )
+        self.assertIn("胃酸分泌", cleaned)
+        self.assertNotIn("受哪些", cleaned)
+        self.assertNotIn("有什么作用", cleaned)
+
+        db = SessionLocal()
+        try:
+            db.add(Chunk(
+                id="teacher_frame",
+                textbook_id="rag_book_a",
+                chapter_id="chapter_rag_book_a",
+                textbook_title="生理学",
+                chapter_title="消化",
+                page_start=20,
+                page_end=20,
+                content="胃酸分泌受乙酰胆碱、促胃液素和组胺共同调节。",
+                content_hash="teacher_frame",
+                chunk_index=20,
+            ))
+            db.commit()
+        finally:
+            db.close()
+        invalidate_course_cache(DEFAULT_COURSE_ID)
+
+        result = retrieve(
+            "胃酸分泌受哪些神经和体液因素调节？",
+            course_id=DEFAULT_COURSE_ID,
+            top_k=3,
+        )
+        self.assertEqual(result["results"][0]["id"], "teacher_frame")
+
+    def test_chinese_medical_hyphen_variants_are_normalized(self):
+        db = SessionLocal()
+        try:
+            db.add(Chunk(
+                id="blood_testis_barrier",
+                textbook_id="rag_book_a",
+                chapter_id="chapter_rag_book_a",
+                textbook_title="组织学",
+                chapter_title="男性生殖系统",
+                page_start=30,
+                page_end=30,
+                content="支持细胞间紧密连接参与构成血- 睾屏障。",
+                content_hash="blood_testis_barrier",
+                chunk_index=30,
+            ))
+            db.commit()
+        finally:
+            db.close()
+        invalidate_course_cache(DEFAULT_COURSE_ID)
+
+        result = retrieve(
+            "血-睾屏障由什么结构形成，有什么作用？",
+            course_id=DEFAULT_COURSE_ID,
+            top_k=3,
+        )
+        self.assertEqual(result["results"][0]["id"], "blood_testis_barrier")
 
     def test_stale_vector_index_is_not_used(self):
         db = SessionLocal()
