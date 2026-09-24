@@ -12,13 +12,19 @@ from backend.api.benchmark import (  # noqa: E402
 
 
 class TeacherBenchmarkTests(unittest.TestCase):
-    def test_suite_contains_30_to_50_realistic_teacher_questions(self):
-        questions = load_teacher_suite()["questions"]
-        self.assertGreaterEqual(len(questions), 30)
-        self.assertLessEqual(len(questions), 50)
-        self.assertGreaterEqual(sum(1 for item in questions if item["mode"] == "compare"), 5)
-        self.assertGreaterEqual(sum(1 for item in questions if not item["answerable"]), 5)
+    def test_suite_contains_100_balanced_realistic_teacher_questions(self):
+        suite = load_teacher_suite()
+        questions = suite["questions"]
+        self.assertEqual(suite["version"], "medical-teacher-v2")
+        self.assertEqual(len(questions), 100)
+        self.assertEqual(sum(1 for item in questions if item["answerable"]), 80)
+        self.assertEqual(sum(1 for item in questions if item["mode"] == "compare"), 15)
+        self.assertEqual(sum(1 for item in questions if not item["answerable"]), 20)
         self.assertEqual(len({item["id"] for item in questions}), len(questions))
+        self.assertTrue(all(
+            not item["answerable"] or item.get("expected_terms") or item.get("expected_concepts")
+            for item in questions
+        ))
 
     def test_four_teacher_metrics_are_computed_from_retrieval_results(self):
         questions = [
@@ -77,7 +83,7 @@ class TeacherBenchmarkTests(unittest.TestCase):
         by_name = {item["metric"]: item for item in metrics}
         self.assertEqual(by_name["检索召回率"]["numerator"], 2)
         self.assertEqual(by_name["检索召回率"]["denominator"], 3)
-        self.assertEqual(by_name["引用准确率"]["numerator"], 3)
+        self.assertEqual(by_name["引用准确率"]["numerator"], 4)
         self.assertEqual(by_name["引用准确率"]["denominator"], 4)
 
     def test_aliases_match_one_concept_without_increasing_the_coverage_denominator(self):

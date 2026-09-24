@@ -56,17 +56,17 @@ const BenchmarkPanel: React.FC<Props> = ({ results, loading, onRefresh, onRun, r
       </header>
 
       <section className="quality-suite-strip">
-        <div><small>问题集</small><strong>{suite?.question_count || 45}</strong><span>道教师问题</span></div>
-        <div><small>跨教材</small><strong>{suite?.compare_count || 5}</strong><span>道对比题</span></div>
-        <div><small>拒答检测</small><strong>{suite?.rejection_count || 5}</strong><span>道域外题</span></div>
-        <Tag icon={<SafetyCertificateOutlined />} color="success">固定版本 {suite?.version || 'medical-teacher-v1'}</Tag>
+        <div><small>问题集</small><strong>{suite?.question_count ?? 100}</strong><span>道教师问题</span></div>
+        <div><small>跨教材</small><strong>{suite?.compare_count ?? 15}</strong><span>道对比题</span></div>
+        <div><small>拒答检测</small><strong>{suite?.rejection_count ?? 20}</strong><span>道域外题</span></div>
+        <Tag icon={<SafetyCertificateOutlined />} color="success">固定版本 {suite?.version || 'medical-teacher-v2'}</Tag>
       </section>
 
       {!results.length ? (
         <div className="quality-empty">
           {loading ? <Spin /> : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="还没有本课程的评测结果" />}
           <p>首次运行会读取当前课程索引，通常需要几十秒，不调用付费大模型。</p>
-          {!readOnly && <Button type="primary" onClick={run} loading={running}>运行 45 题评测</Button>}
+          {!readOnly && <Button type="primary" onClick={run} loading={running}>运行 {suite?.question_count ?? 100} 题评测</Button>}
         </div>
       ) : (
         <>
