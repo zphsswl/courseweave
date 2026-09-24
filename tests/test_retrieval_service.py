@@ -272,6 +272,43 @@ class RetrievalServiceTest(unittest.TestCase):
         )
         self.assertEqual(result["results"][0]["id"], "eye_development")
 
+    def test_quoted_stop_phrase_survives_the_course_scope_check(self):
+        db = SessionLocal()
+        try:
+            db.add(Chunk(
+                id="basic_pathology",
+                textbook_id="rag_book_b",
+                chapter_id="chapter_rag_book_b",
+                textbook_title="病理生理学",
+                chapter_title="疾病概论",
+                page_start=90,
+                page_end=90,
+                content="基本病理变化包括细胞损伤、炎症和修复。",
+                section_path=["疾病概论", "基本病理变化"],
+                content_hash="basic_pathology",
+                chunk_index=90,
+            ))
+            db.commit()
+        finally:
+            db.close()
+        invalidate_course_cache(DEFAULT_COURSE_ID)
+
+        result = retrieve(
+            "“基本病理变化”是什么？",
+            course_id=DEFAULT_COURSE_ID,
+            top_k=3,
+        )
+        self.assertEqual(result["results"][0]["id"], "basic_pathology")
+
+    def test_english_request_framing_is_not_a_required_course_topic(self):
+        result = retrieve(
+            "Please explain 叶绿体吸收光能",
+            course_id=DEFAULT_COURSE_ID,
+            top_k=3,
+        )
+        self.assertTrue(result["results"])
+        self.assertIn("叶绿体吸收光能", result["results"][0]["content"])
+
     def test_chinese_medical_hyphen_variants_are_normalized(self):
         db = SessionLocal()
         try:

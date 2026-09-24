@@ -173,8 +173,6 @@ def _matched_expected_terms(
                 (item.get("content") or "")
                 + " "
                 + " ".join(item.get("section_path") or [])
-                + " "
-                + (item.get("chapter") or "")
             ).lower().split()
         )
         for item in items
