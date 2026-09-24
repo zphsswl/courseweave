@@ -1,0 +1,7675 @@
+{
+  "version": "medical-teacher-v3",
+  "description": "420 道医学教材 RAG 固定评测题：保留 100 道人工核心题，新增覆盖全部 137 章的 274 道章节题、26 道跨教材题和 20 道域外拒答题；不包含教材原文。",
+  "generation": {
+    "course_id": "course_default",
+    "chapter_count": 137,
+    "questions_per_chapter": 2,
+    "chapter_question_count": 274,
+    "core_question_count": 100,
+    "cross_extension_count": 26,
+    "rejection_extension_count": 20,
+    "question_type_counts": {
+      "classification": 3,
+      "clinical": 53,
+      "definition": 100,
+      "diagnosis": 8,
+      "function": 17,
+      "mechanism": 31,
+      "process": 27,
+      "structure": 35
+    }
+  },
+  "questions": [
+    {
+      "id": "T01",
+      "category": "病理学",
+      "question": "细胞适应包括哪些基本类型？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "萎缩",
+        "肥大",
+        "增生",
+        "化生"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T02",
+      "category": "病理学",
+      "question": "炎症的基本病理变化有哪些？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "变质",
+        "渗出",
+        "增生"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T03",
+      "category": "病理学",
+      "question": "损伤后组织修复主要通过哪些方式完成？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "再生",
+        "纤维性修复"
+      ],
+      "expected_concepts": [
+        {
+          "canonical": "再生",
+          "aliases": [
+            "再生"
+          ]
+        },
+        {
+          "canonical": "纤维性修复",
+          "aliases": [
+            "纤维性修复",
+            "纤维性瘢痕",
+            "纤维化"
+          ]
+        }
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T04",
+      "category": "病理学",
+      "question": "血栓形成需要哪些条件？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "心血管内皮细胞损伤",
+        "血流状态改变",
+        "血液凝固性增加"
+      ],
+      "expected_concepts": [
+        {
+          "canonical": "内皮细胞损伤",
+          "aliases": [
+            "心血管内皮细胞损伤",
+            "心血管内皮细胞的损伤",
+            "血管内皮细胞损伤",
+            "血管内皮细胞的损伤"
+          ]
+        },
+        {
+          "canonical": "血流状态改变",
+          "aliases": [
+            "血流状态改变",
+            "血流状态的改变",
+            "血液流场改变",
+            "血液流变学异常"
+          ]
+        },
+        {
+          "canonical": "血液凝固性增加",
+          "aliases": [
+            "血液凝固性增加",
+            "血液凝固性的增加",
+            "血液凝固性增高",
+            "血液凝固性的增高",
+            "高凝状态"
+          ]
+        }
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T05",
+      "category": "病理学",
+      "question": "栓塞常见的类型及其来源是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "血栓栓塞",
+        "脂肪栓塞",
+        "气体栓塞"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T06",
+      "category": "病理学",
+      "question": "良性肿瘤和恶性肿瘤应从哪些方面鉴别？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "分化程度",
+        "生长速度",
+        "转移"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T07",
+      "category": "病理学",
+      "question": "动脉粥样硬化的基本病理变化是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "脂纹",
+        "纤维斑块",
+        "粥样斑块"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T08",
+      "category": "病理学",
+      "question": "大叶性肺炎各期的病理变化如何演变？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "充血水肿期",
+        "红色肝样变期",
+        "灰色肝样变期",
+        "溶解消散期"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T09",
+      "category": "病理学",
+      "question": "肝硬化形成过程中有哪些关键结构改变？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "假小叶",
+        "纤维间隔"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T10",
+      "category": "病理学",
+      "question": "肾小球肾炎的基本病理变化包括什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肾小球",
+        "增生",
+        "基底膜"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T11",
+      "category": "组织学",
+      "question": "上皮组织有哪些共同结构特点？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "上皮组织",
+        "极性",
+        "基膜"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T12",
+      "category": "组织学",
+      "question": "疏松结缔组织主要由哪些细胞和纤维组成？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "成纤维细胞",
+        "胶原纤维",
+        "弹性纤维"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T13",
+      "category": "组织学",
+      "question": "透明软骨的组织结构有什么特点？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "软骨细胞",
+        "软骨基质",
+        "软骨膜"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T14",
+      "category": "组织学",
+      "question": "神经组织中神经元和神经胶质细胞如何分工？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "神经元",
+        "神经胶质细胞"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T15",
+      "category": "组织学",
+      "question": "胃底腺主要包含哪些细胞？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "壁细胞",
+        "主细胞",
+        "颈黏液细胞"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T16",
+      "category": "胚胎学",
+      "question": "从受精到胚泡形成经历哪些阶段？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "卵裂",
+        "桑椹胚",
+        "胚泡"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T17",
+      "category": "生理学",
+      "question": "静息电位形成的离子机制是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "静息电位",
+        "钾离子",
+        "钠钾泵"
+      ],
+      "expected_concepts": [
+        {
+          "canonical": "静息电位",
+          "aliases": [
+            "静息电位"
+          ]
+        },
+        {
+          "canonical": "钾离子",
+          "aliases": [
+            "钾离子",
+            "K+"
+          ]
+        },
+        {
+          "canonical": "钠钾泵",
+          "aliases": [
+            "钠钾泵",
+            "钠泵",
+            "Na+-K+-ATP酶",
+            "Na-K-ATP酶"
+          ]
+        }
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T18",
+      "category": "生理学",
+      "question": "一个心动周期包括哪些时期？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "心动周期",
+        "收缩期",
+        "舒张期"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T19",
+      "category": "生理学",
+      "question": "动脉血压受哪些主要因素影响？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "心输出量",
+        "外周阻力",
+        "动脉血压"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T20",
+      "category": "生理学",
+      "question": "肺泡通气量与每分通气量有什么区别？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肺泡通气量",
+        "每分通气量",
+        "无效腔"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T21",
+      "category": "生理学",
+      "question": "肾小球滤过率受哪些因素调节？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肾小球滤过率",
+        "有效滤过压",
+        "滤过系数"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T22",
+      "category": "生理学",
+      "question": "机体如何维持酸碱平衡？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "酸碱平衡",
+        "缓冲系统",
+        "肺",
+        "肾"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T23",
+      "category": "微生物学",
+      "question": "细菌细胞壁的主要结构和功能是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肽聚糖",
+        "细胞壁"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T24",
+      "category": "微生物学",
+      "question": "革兰染色的步骤和鉴别意义是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "革兰染色",
+        "结晶紫",
+        "脱色"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T25",
+      "category": "微生物学",
+      "question": "病毒复制周期包括哪些基本阶段？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "吸附",
+        "穿入",
+        "脱壳",
+        "组装",
+        "释放"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T26",
+      "category": "微生物学",
+      "question": "抗原抗体反应有哪些基本特点？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "特异性",
+        "抗原抗体反应"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T27",
+      "category": "传染病学",
+      "question": "传染病流行过程的三个基本环节是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "传染源",
+        "传播途径",
+        "易感人群"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T28",
+      "category": "传染病学",
+      "question": "结核病常见的传播途径和基本病变是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "结核",
+        "呼吸道",
+        "干酪样坏死"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T29",
+      "category": "传染病学",
+      "question": "病毒性肝炎常见的临床分型有哪些？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病毒性肝炎",
+        "急性肝炎",
+        "慢性肝炎"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T30",
+      "category": "传染病学",
+      "question": "脓毒症发生时机体会出现哪些主要改变？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "脓毒症",
+        "全身炎症反应"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T31",
+      "category": "病理生理学",
+      "question": "水肿发生的基本机制有哪些？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "毛细血管流体静压",
+        "血浆胶体渗透压",
+        "淋巴回流"
+      ],
+      "expected_concepts": [
+        {
+          "canonical": "毛细血管流体静压",
+          "aliases": [
+            "毛细血管流体静压",
+            "毛细血管静水压",
+            "毛细血管血压",
+            "有效流体静压"
+          ]
+        },
+        {
+          "canonical": "血浆胶体渗透压",
+          "aliases": [
+            "血浆胶体渗透压",
+            "胶体渗透压"
+          ]
+        },
+        {
+          "canonical": "淋巴回流",
+          "aliases": [
+            "淋巴回流",
+            "淋巴液回流",
+            "淋巴管阻塞"
+          ]
+        }
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T32",
+      "category": "病理生理学",
+      "question": "缺氧可分为哪些基本类型？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "低张性缺氧",
+        "血液性缺氧",
+        "循环性缺氧",
+        "组织性缺氧"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T33",
+      "category": "病理生理学",
+      "question": "休克的发生发展可分为哪些阶段？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "微循环缺血期",
+        "微循环淤血期",
+        "微循环衰竭期"
+      ],
+      "expected_concepts": [
+        {
+          "canonical": "微循环缺血期",
+          "aliases": [
+            "微循环缺血期",
+            "缺血缺氧期"
+          ]
+        },
+        {
+          "canonical": "微循环淤血期",
+          "aliases": [
+            "微循环淤血期",
+            "淤血缺氧期"
+          ]
+        },
+        {
+          "canonical": "微循环衰竭期",
+          "aliases": [
+            "微循环衰竭期",
+            "衰竭期"
+          ]
+        }
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T34",
+      "category": "病理生理学",
+      "question": "发热时体温调节中枢如何发生改变？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "调定点",
+        "内生致热原",
+        "发热"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T35",
+      "category": "病理生理学",
+      "question": "弥散性血管内凝血为什么会同时出现出血和血栓？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "弥散性血管内凝血",
+        "凝血因子",
+        "微血栓"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T36",
+      "category": "跨教材",
+      "question": "病理学与病理生理学对炎症反应的侧重点有什么不同？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "炎症"
+      ],
+      "min_textbooks": 2,
+      "suite_group": "core_manual",
+      "question_type": "comparison"
+    },
+    {
+      "id": "T37",
+      "category": "跨教材",
+      "question": "从微生物学、病理学和传染病学角度比较结核病知识结构。",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "结核"
+      ],
+      "min_textbooks": 2,
+      "suite_group": "core_manual",
+      "question_type": "comparison"
+    },
+    {
+      "id": "T38",
+      "category": "跨教材",
+      "question": "生理学的氧运输与病理生理学的缺氧如何衔接？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "氧",
+        "缺氧"
+      ],
+      "min_textbooks": 2,
+      "suite_group": "core_manual",
+      "question_type": "comparison"
+    },
+    {
+      "id": "T39",
+      "category": "跨教材",
+      "question": "微生物学的免疫应答与病理学的免疫性损伤有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "免疫"
+      ],
+      "min_textbooks": 2,
+      "suite_group": "core_manual",
+      "question_type": "comparison"
+    },
+    {
+      "id": "T40",
+      "category": "跨教材",
+      "question": "生理学和病理生理学如何分别解释体液平衡与水肿？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "体液",
+        "水肿"
+      ],
+      "min_textbooks": 2,
+      "suite_group": "core_manual",
+      "question_type": "comparison"
+    },
+    {
+      "id": "T41",
+      "category": "拒答",
+      "question": "How does a compiler perform register allocation for SSA form?",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T42",
+      "category": "拒答",
+      "question": "Explain surface-code quantum error correction thresholds.",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T43",
+      "category": "拒答",
+      "question": "What observational evidence constrains dark matter halo profiles?",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T44",
+      "category": "拒答",
+      "question": "How was land taxation administered during the Song dynasty?",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T45",
+      "category": "拒答",
+      "question": "Compare EUV and DUV semiconductor lithography processes.",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T46",
+      "category": "拒答",
+      "question": "如何用细胞自动机生成迷宫游戏？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T47",
+      "category": "拒答",
+      "question": "数据库索引如何优化查询性能？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T48",
+      "category": "拒答",
+      "question": "量子纠缠如何影响黑洞蒸发？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T49",
+      "category": "拒答",
+      "question": "神经网络如何进行图像分类？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T50",
+      "category": "拒答",
+      "question": "宋代土地税赋制度如何运作？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T51",
+      "category": "局部解剖学",
+      "question": "腋动脉分为哪三段，各段主要分支是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "腋动脉",
+        "胸肩峰动脉",
+        "胸外侧动脉",
+        "肩胛下动脉"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T52",
+      "category": "局部解剖学",
+      "question": "肝十二指肠韧带内有哪些主要结构？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "胆总管",
+        "肝固有动脉",
+        "肝门静脉"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T53",
+      "category": "局部解剖学",
+      "question": "腹股沟管的四壁如何构成？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "腹外斜肌腱膜",
+        "腹横筋膜",
+        "腹股沟韧带",
+        "腹内斜肌"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T54",
+      "category": "局部解剖学",
+      "question": "股三角的境界和主要内容是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "腹股沟韧带",
+        "缝匠肌",
+        "长收肌",
+        "股神经",
+        "股动脉",
+        "股静脉"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T55",
+      "category": "局部解剖学",
+      "question": "坐骨肛门窝的境界和内容有哪些？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "坐骨肛门窝",
+        "阴部管",
+        "肛管"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T56",
+      "category": "局部解剖学",
+      "question": "腕管内通过哪些主要结构？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "正中神经",
+        "指屈肌腱",
+        "拇长屈肌腱"
+      ],
+      "expected_concepts": [
+        {
+          "canonical": "正中神经",
+          "aliases": [
+            "正中神经"
+          ]
+        },
+        {
+          "canonical": "指屈肌腱",
+          "aliases": [
+            "指浅屈肌腱",
+            "指深屈肌腱",
+            "指浅、深屈肌腱",
+            "指浅、深屈肌"
+          ]
+        },
+        {
+          "canonical": "拇长屈肌腱",
+          "aliases": [
+            "拇长屈肌腱"
+          ]
+        }
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T57",
+      "category": "组织学",
+      "question": "毛细血管分为哪些类型？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "连续毛细血管",
+        "有孔毛细血管",
+        "血窦"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T58",
+      "category": "组织学",
+      "question": "甲状腺滤泡的结构和功能如何对应？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "滤泡上皮细胞",
+        "胶质",
+        "甲状腺激素"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T59",
+      "category": "组织学",
+      "question": "血-睾屏障由什么结构形成，有什么作用？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "支持细胞",
+        "紧密连接",
+        "血-睾屏障"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T60",
+      "category": "胚胎学",
+      "question": "胎盘绒毛如何参与母胎物质交换？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "绒毛",
+        "胎盘屏障",
+        "母体血"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T61",
+      "category": "胚胎学",
+      "question": "神经管由什么胚层形成，并分化为什么结构？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "外胚层",
+        "神经管",
+        "中枢神经系统"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T62",
+      "category": "生理学",
+      "question": "动作电位的去极化和复极化分别由哪些离子电流主导？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "钠内流",
+        "钾外流",
+        "去极化",
+        "复极化"
+      ],
+      "expected_concepts": [
+        {
+          "canonical": "钠内流",
+          "aliases": [
+            "钠离子",
+            "Na+",
+            "GNa",
+            "钠通道"
+          ]
+        },
+        {
+          "canonical": "钾外流",
+          "aliases": [
+            "钾离子",
+            "K+",
+            "GK",
+            "钾通道"
+          ]
+        },
+        {
+          "canonical": "去极化",
+          "aliases": [
+            "去极化"
+          ]
+        },
+        {
+          "canonical": "复极化",
+          "aliases": [
+            "复极化"
+          ]
+        }
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T63",
+      "category": "生理学",
+      "question": "心输出量由哪些因素决定？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "心率",
+        "每搏输出量",
+        "心输出量"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T64",
+      "category": "生理学",
+      "question": "氧解离曲线右移受哪些因素影响？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "二氧化碳",
+        "氢离子",
+        "温度",
+        "2,3-二磷酸甘油酸"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T65",
+      "category": "生理学",
+      "question": "胃酸分泌受哪些神经和体液因素调节？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "乙酰胆碱",
+        "胃泌素",
+        "组胺"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T66",
+      "category": "生理学",
+      "question": "抗利尿激素如何调节肾集合管对水的重吸收？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "抗利尿激素",
+        "集合管",
+        "水通道蛋白"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T67",
+      "category": "生理学",
+      "question": "肾素-血管紧张素-醛固酮系统如何调节血压？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肾素",
+        "血管紧张素",
+        "醛固酮"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T68",
+      "category": "微生物学",
+      "question": "细菌芽胞为什么对理化因素抵抗力强？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "芽胞",
+        "抵抗力",
+        "吡啶二羧酸"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T69",
+      "category": "微生物学",
+      "question": "外毒素与内毒素在来源、化学性质和作用特点上有何区别？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "外毒素",
+        "内毒素",
+        "脂多糖"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T70",
+      "category": "微生物学",
+      "question": "细菌基因水平转移有哪些主要方式？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "转化",
+        "转导",
+        "接合"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T71",
+      "category": "微生物学",
+      "question": "结核分枝杆菌抗酸染色的结构基础是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "抗酸染色",
+        "分枝菌酸",
+        "结核分枝杆菌"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T72",
+      "category": "微生物学",
+      "question": "乙型肝炎病毒常用血清学标志物有哪些？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "HBsAg",
+        "HBeAg",
+        "抗-HBc"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T73",
+      "category": "病理学",
+      "question": "坏死的基本类型有哪些？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "凝固性坏死",
+        "液化性坏死",
+        "纤维蛋白样坏死",
+        "坏疽"
+      ],
+      "expected_concepts": [
+        {
+          "canonical": "凝固性坏死",
+          "aliases": [
+            "凝固性坏死"
+          ]
+        },
+        {
+          "canonical": "液化性坏死",
+          "aliases": [
+            "液化性坏死"
+          ]
+        },
+        {
+          "canonical": "纤维蛋白样坏死",
+          "aliases": [
+            "纤维蛋白样坏死",
+            "纤维素样坏死"
+          ]
+        },
+        {
+          "canonical": "坏疽",
+          "aliases": [
+            "坏疽"
+          ]
+        }
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T74",
+      "category": "病理学",
+      "question": "急性炎症与慢性炎症在细胞浸润上有何不同？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "中性粒细胞",
+        "淋巴细胞",
+        "巨噬细胞"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T75",
+      "category": "病理学",
+      "question": "肿瘤的扩散和转移有哪些主要方式？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "淋巴道转移",
+        "血行转移",
+        "种植性转移"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T76",
+      "category": "病理学",
+      "question": "风湿病的基本病理变化有哪些阶段？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "变质渗出期",
+        "增生期",
+        "纤维化期"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T77",
+      "category": "传染病学",
+      "question": "艾滋病的传播途径有哪些？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "性接触",
+        "血液",
+        "母婴"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T78",
+      "category": "传染病学",
+      "question": "肾综合征出血热的典型病程分为哪些阶段？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "发热期",
+        "低血压休克期",
+        "少尿期",
+        "多尿期",
+        "恢复期"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T79",
+      "category": "病理生理学",
+      "question": "高钾血症对心肌兴奋性和传导性有什么影响？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "高钾血症",
+        "静息电位",
+        "传导"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T80",
+      "category": "病理生理学",
+      "question": "呼吸性酸中毒的主要原因和代偿方式是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "二氧化碳",
+        "呼吸性酸中毒",
+        "肾"
+      ],
+      "suite_group": "core_manual",
+      "question_type": "knowledge"
+    },
+    {
+      "id": "T81",
+      "category": "跨教材",
+      "question": "组织学与生理学如何分别解释心肌结构和心肌收缩？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "心肌",
+        "收缩"
+      ],
+      "min_textbooks": 2,
+      "suite_group": "core_manual",
+      "question_type": "comparison"
+    },
+    {
+      "id": "T82",
+      "category": "跨教材",
+      "question": "局部解剖学的胸膜腔结构与生理学的肺通气机制如何衔接？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "胸膜腔",
+        "肺通气"
+      ],
+      "min_textbooks": 2,
+      "suite_group": "core_manual",
+      "question_type": "comparison"
+    },
+    {
+      "id": "T83",
+      "category": "跨教材",
+      "question": "组织学的肾单位结构与生理学的尿生成过程如何对应？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "肾单位",
+        "尿生成"
+      ],
+      "min_textbooks": 2,
+      "suite_group": "core_manual",
+      "question_type": "comparison"
+    },
+    {
+      "id": "T84",
+      "category": "跨教材",
+      "question": "乙型肝炎病毒的病原学和临床表现如何互补？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "乙型肝炎病毒",
+        "临床表现"
+      ],
+      "min_textbooks": 2,
+      "suite_group": "core_manual",
+      "question_type": "comparison"
+    },
+    {
+      "id": "T85",
+      "category": "跨教材",
+      "question": "病理学与传染病学如何分别解释结核病的病理损伤和临床过程？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "结核",
+        "干酪样坏死"
+      ],
+      "min_textbooks": 2,
+      "suite_group": "core_manual",
+      "question_type": "comparison"
+    },
+    {
+      "id": "T86",
+      "category": "跨教材",
+      "question": "组织学的肺泡结构与生理学的气体交换如何衔接？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "肺泡",
+        "气体交换"
+      ],
+      "min_textbooks": 2,
+      "suite_group": "core_manual",
+      "question_type": "comparison"
+    },
+    {
+      "id": "T87",
+      "category": "跨教材",
+      "question": "生理学的凝血过程与病理学的血栓形成如何衔接？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "凝血",
+        "血栓形成"
+      ],
+      "min_textbooks": 2,
+      "suite_group": "core_manual",
+      "question_type": "comparison"
+    },
+    {
+      "id": "T88",
+      "category": "跨教材",
+      "question": "生理学与病理生理学如何分别解释酸碱平衡及其紊乱？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "酸碱平衡",
+        "酸碱平衡紊乱"
+      ],
+      "min_textbooks": 2,
+      "suite_group": "core_manual",
+      "question_type": "comparison"
+    },
+    {
+      "id": "T89",
+      "category": "跨教材",
+      "question": "医学微生物学与传染病学如何分别解释细菌感染和脓毒症？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "细菌感染",
+        "脓毒症"
+      ],
+      "min_textbooks": 2,
+      "suite_group": "core_manual",
+      "question_type": "comparison"
+    },
+    {
+      "id": "T90",
+      "category": "跨教材",
+      "question": "组织学的血细胞结构与病理学的贫血变化如何联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "血细胞",
+        "贫血"
+      ],
+      "min_textbooks": 2,
+      "suite_group": "core_manual",
+      "question_type": "comparison"
+    },
+    {
+      "id": "T91",
+      "category": "拒答",
+      "question": "Transformer 的多头注意力机制如何计算？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T92",
+      "category": "拒答",
+      "question": "Kubernetes 如何实现容器的滚动更新？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T93",
+      "category": "拒答",
+      "question": "中央银行如何通过公开市场操作影响货币供应量？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T94",
+      "category": "拒答",
+      "question": "莎士比亚悲剧中的复仇主题如何演变？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T95",
+      "category": "拒答",
+      "question": "固态电池的硫化物电解质如何提高离子电导率？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T96",
+      "category": "拒答",
+      "question": "医学影像中的卷积神经网络如何分割肺结节？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T97",
+      "category": "拒答",
+      "question": "临床随机对照试验如何估算样本量？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T98",
+      "category": "拒答",
+      "question": "药物非劣效试验的界值应如何确定？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T99",
+      "category": "拒答",
+      "question": "蛋白质结构预测中的扩散模型如何工作？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "T100",
+      "category": "拒答",
+      "question": "区块链智能合约如何防止重入攻击？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": [],
+      "suite_group": "core_manual",
+      "question_type": "rejection"
+    },
+    {
+      "id": "C001A",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "definition",
+      "question": "什么是“感染的概念”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "感染的概念"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_000",
+      "target_chapter_title": "第一章 总 论",
+      "target_page_start": 19,
+      "target_page_end": 19
+    },
+    {
+      "id": "C001B",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "process",
+      "question": "请概括“感染过程的表现”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "感染过程的表现"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_000",
+      "target_chapter_title": "第一章 总 论",
+      "target_page_start": 19,
+      "target_page_end": 20
+    },
+    {
+      "id": "C002A",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "clinical",
+      "question": "“新发现的感染病”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "新发现的感染病"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_001",
+      "target_chapter_title": "第二章 新发感染病",
+      "target_page_start": 36,
+      "target_page_end": 36
+    },
+    {
+      "id": "C002B",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "mechanism",
+      "question": "请概括“特殊的新发感染病-多重耐药菌感染”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "特殊的新发感染病-多重耐药菌感染"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_001",
+      "target_chapter_title": "第二章 新发感染病",
+      "target_page_start": 36,
+      "target_page_end": 36
+    },
+    {
+      "id": "C003A",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "clinical",
+      "question": "“病毒性肝炎”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病毒性肝炎"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_002",
+      "target_chapter_title": "第三章 病毒性疾病",
+      "target_page_start": 43,
+      "target_page_end": 43
+    },
+    {
+      "id": "C003B",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "clinical",
+      "question": "请概括“甲型肝炎病毒”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "甲型肝炎病毒"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_002",
+      "target_chapter_title": "第三章 病毒性疾病",
+      "target_page_start": 43,
+      "target_page_end": 44
+    },
+    {
+      "id": "C004A",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "clinical",
+      "question": "“流行性斑疹伤寒”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "流行性斑疹伤寒"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_003",
+      "target_chapter_title": "第四章 立克次体病",
+      "target_page_start": 168,
+      "target_page_end": 168
+    },
+    {
+      "id": "C004B",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "clinical",
+      "question": "请概括“流行性与地方性斑疹伤寒”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "流行性与地方性斑疹伤寒"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_003",
+      "target_chapter_title": "第四章 立克次体病",
+      "target_page_start": 168,
+      "target_page_end": 168
+    },
+    {
+      "id": "C005A",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "clinical",
+      "question": "“猩红热”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "猩红热"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_004",
+      "target_chapter_title": "第五章 细菌性疾病",
+      "target_page_start": 180,
+      "target_page_end": 180
+    },
+    {
+      "id": "C005B",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "clinical",
+      "question": "请概括“普通型”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "普通型"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_004",
+      "target_chapter_title": "第五章 细菌性疾病",
+      "target_page_start": 181,
+      "target_page_end": 182
+    },
+    {
+      "id": "C006A",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "clinical",
+      "question": "“念珠菌病”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "念珠菌病"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_005",
+      "target_chapter_title": "第六章 深部真菌病",
+      "target_page_start": 247,
+      "target_page_end": 247
+    },
+    {
+      "id": "C006B",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "diagnosis",
+      "question": "请概括“病原学检查”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病原学检查"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_005",
+      "target_chapter_title": "第六章 深部真菌病",
+      "target_page_start": 250,
+      "target_page_end": 250
+    },
+    {
+      "id": "C007A",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "clinical",
+      "question": "“钩端螺旋体病”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "钩端螺旋体病"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_006",
+      "target_chapter_title": "第七章 螺旋体病",
+      "target_page_start": 263,
+      "target_page_end": 263
+    },
+    {
+      "id": "C007B",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "clinical",
+      "question": "请概括“流行形式”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "流行形式"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_006",
+      "target_chapter_title": "第七章 螺旋体病",
+      "target_page_start": 264,
+      "target_page_end": 264
+    },
+    {
+      "id": "C008A",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "clinical",
+      "question": "“阿米巴病”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "阿米巴病"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_007",
+      "target_chapter_title": "第八章 原虫病",
+      "target_page_start": 278,
+      "target_page_end": 278
+    },
+    {
+      "id": "C008B",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "clinical",
+      "question": "请概括“肠阿米巴病”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肠阿米巴病"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_007",
+      "target_chapter_title": "第八章 原虫病",
+      "target_page_start": 278,
+      "target_page_end": 278
+    },
+    {
+      "id": "C009A",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "clinical",
+      "question": "“日本血吸虫病”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "日本血吸虫病"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_008",
+      "target_chapter_title": "第九章 蠕虫病",
+      "target_page_start": 301,
+      "target_page_end": 301
+    },
+    {
+      "id": "C009B",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "clinical",
+      "question": "请概括“吸虫病”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "吸虫病"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_008",
+      "target_chapter_title": "第九章 蠕虫病",
+      "target_page_start": 301,
+      "target_page_end": 301
+    },
+    {
+      "id": "C010A",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "definition",
+      "question": "什么是“败血症”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "败血症"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_009",
+      "target_chapter_title": "第十章 其他感染相关问题",
+      "target_page_start": 342,
+      "target_page_end": 342
+    },
+    {
+      "id": "C010B",
+      "suite_group": "chapter_coverage",
+      "category": "传染病学",
+      "question_type": "mechanism",
+      "question": "请概括“发病机制”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "发病机制"
+      ],
+      "textbook_ids": [
+        "book_06"
+      ],
+      "target_textbook_id": "book_06",
+      "target_chapter_id": "book_06_ch_009",
+      "target_chapter_title": "第十章 其他感染相关问题",
+      "target_page_start": 343,
+      "target_page_end": 343
+    },
+    {
+      "id": "C011A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "structure",
+      "question": "“肽聚糖”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肽聚糖"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_000",
+      "target_chapter_title": "第一章 细菌的形态与结构",
+      "target_page_start": 30,
+      "target_page_end": 30
+    },
+    {
+      "id": "C011B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "structure",
+      "question": "请概括“革兰氏阳性菌细胞壁特殊组分”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "革兰氏阳性菌细胞壁特殊组分"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_000",
+      "target_chapter_title": "第一章 细菌的形态与结构",
+      "target_page_start": 30,
+      "target_page_end": 30
+    },
+    {
+      "id": "C012A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“细菌的理化性状”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "细菌的理化性状"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_001",
+      "target_chapter_title": "第二章 细菌的生理",
+      "target_page_start": 41,
+      "target_page_end": 41
+    },
+    {
+      "id": "C012B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“细菌的物理性状”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "细菌的物理性状"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_001",
+      "target_chapter_title": "第二章 细菌的生理",
+      "target_page_start": 41,
+      "target_page_end": 42
+    },
+    {
+      "id": "C013A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "diagnosis",
+      "question": "“消毒与灭菌”的原理、步骤或判定要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "消毒与灭菌"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_002",
+      "target_chapter_title": "第三章 消毒灭菌与病原微生物实验室生物安全",
+      "target_page_start": 51,
+      "target_page_end": 51
+    },
+    {
+      "id": "C013B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "diagnosis",
+      "question": "请概括“消毒灭菌的常用术语”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "消毒灭菌的常用术语"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_002",
+      "target_chapter_title": "第三章 消毒灭菌与病原微生物实验室生物安全",
+      "target_page_start": 51,
+      "target_page_end": 51
+    },
+    {
+      "id": "C014A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“噬菌体的生物学性状”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "噬菌体的生物学性状"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_003",
+      "target_chapter_title": "第四章 噬菌体",
+      "target_page_start": 61,
+      "target_page_end": 61
+    },
+    {
+      "id": "C014B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“毒性噬菌体”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "毒性噬菌体"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_003",
+      "target_chapter_title": "第四章 噬菌体",
+      "target_page_start": 63,
+      "target_page_end": 63
+    },
+    {
+      "id": "C015A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“细菌变异现象”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "细菌变异现象"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_004",
+      "target_chapter_title": "第五章 细菌的遗传与变异",
+      "target_page_start": 66,
+      "target_page_end": 67
+    },
+    {
+      "id": "C015B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“细菌基因组”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "细菌基因组"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_004",
+      "target_chapter_title": "第五章 细菌的遗传与变异",
+      "target_page_start": 67,
+      "target_page_end": 67
+    },
+    {
+      "id": "C016A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "mechanism",
+      "question": "“抗菌药物的种类”的发生机制或调节链路是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "抗菌药物的种类"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_005",
+      "target_chapter_title": "第六章 细菌的耐药性",
+      "target_page_start": 77,
+      "target_page_end": 77
+    },
+    {
+      "id": "C016B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "mechanism",
+      "question": "请概括“抗菌药物的种类及其作用机制”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "抗菌药物的种类及其作用机制"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_005",
+      "target_chapter_title": "第六章 细菌的耐药性",
+      "target_page_start": 77,
+      "target_page_end": 77
+    },
+    {
+      "id": "C017A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "mechanism",
+      "question": "“细菌的致病作用”的发生机制或调节链路是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "细菌的致病作用"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_006",
+      "target_chapter_title": "第七章 细菌的感染与免疫",
+      "target_page_start": 83,
+      "target_page_end": 84
+    },
+    {
+      "id": "C017B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“细菌的侵袭力”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "细菌的侵袭力"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_006",
+      "target_chapter_title": "第七章 细菌的感染与免疫",
+      "target_page_start": 84,
+      "target_page_end": 84
+    },
+    {
+      "id": "C018A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "diagnosis",
+      "question": "“细菌感染的检查方法”的原理、步骤或判定要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "细菌感染的检查方法"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_007",
+      "target_chapter_title": "第八章 细菌感染的检查方法与防治原则",
+      "target_page_start": 104,
+      "target_page_end": 105
+    },
+    {
+      "id": "C018B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "diagnosis",
+      "question": "请概括“临床微生物学标本的采集与运送原则”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "临床微生物学标本的采集与运送原则"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_007",
+      "target_chapter_title": "第八章 细菌感染的检查方法与防治原则",
+      "target_page_start": 105,
+      "target_page_end": 105
+    },
+    {
+      "id": "C019A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“葡萄球菌属”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "葡萄球菌属"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_008",
+      "target_chapter_title": "第九章 球 菌",
+      "target_page_start": 112,
+      "target_page_end": 112
+    },
+    {
+      "id": "C019B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“金黄色葡萄球菌”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "金黄色葡萄球菌"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_008",
+      "target_chapter_title": "第九章 球 菌",
+      "target_page_start": 112,
+      "target_page_end": 112
+    },
+    {
+      "id": "C020A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“肠杆菌科细菌共同特性”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肠杆菌科细菌共同特性"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_009",
+      "target_chapter_title": "第十章 肠杆菌科",
+      "target_page_start": 127,
+      "target_page_end": 127
+    },
+    {
+      "id": "C020B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“共同的生物学特性”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "共同的生物学特性"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_009",
+      "target_chapter_title": "第十章 肠杆菌科",
+      "target_page_start": 127,
+      "target_page_end": 127
+    },
+    {
+      "id": "C021A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“霍乱弧菌”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "霍乱弧菌"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_010",
+      "target_chapter_title": "第十一章 弧菌属",
+      "target_page_start": 142,
+      "target_page_end": 142
+    },
+    {
+      "id": "C021B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "mechanism",
+      "question": "请概括“致病物质”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "致病物质"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_010",
+      "target_chapter_title": "第十一章 弧菌属",
+      "target_page_start": 143,
+      "target_page_end": 143
+    },
+    {
+      "id": "C022A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“幽门螺杆菌”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "幽门螺杆菌"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_011",
+      "target_chapter_title": "第十二章 螺杆菌属和弯曲菌属",
+      "target_page_start": 147,
+      "target_page_end": 147
+    },
+    {
+      "id": "C022B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“空肠弯曲菌”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "空肠弯曲菌"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_011",
+      "target_chapter_title": "第十二章 螺杆菌属和弯曲菌属",
+      "target_page_start": 149,
+      "target_page_end": 149
+    },
+    {
+      "id": "C023A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“梭菌属”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "梭菌属"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_012",
+      "target_chapter_title": "第十三章 厌氧性细菌",
+      "target_page_start": 150,
+      "target_page_end": 150
+    },
+    {
+      "id": "C023B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“破伤风梭菌”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "破伤风梭菌"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_012",
+      "target_chapter_title": "第十三章 厌氧性细菌",
+      "target_page_start": 150,
+      "target_page_end": 151
+    },
+    {
+      "id": "C024A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“结核分枝杆菌”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "结核分枝杆菌"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_013",
+      "target_chapter_title": "第十四章 分枝杆菌属",
+      "target_page_start": 160,
+      "target_page_end": 160
+    },
+    {
+      "id": "C024B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "structure",
+      "question": "请概括“形态与染色”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "形态与染色"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_013",
+      "target_chapter_title": "第十四章 分枝杆菌属",
+      "target_page_start": 160,
+      "target_page_end": 161
+    },
+    {
+      "id": "C025A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“流感嗜血杆菌”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "流感嗜血杆菌"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_014",
+      "target_chapter_title": "第十五章 嗜血杆菌属与鲍特菌属",
+      "target_page_start": 168,
+      "target_page_end": 168
+    },
+    {
+      "id": "C025B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“百日咳鲍特菌”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "百日咳鲍特菌"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_014",
+      "target_chapter_title": "第十五章 嗜血杆菌属与鲍特菌属",
+      "target_page_start": 170,
+      "target_page_end": 170
+    },
+    {
+      "id": "C026A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“布鲁菌属”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "布鲁菌属"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_015",
+      "target_chapter_title": "第十六章 动物源性细菌",
+      "target_page_start": 172,
+      "target_page_end": 172
+    },
+    {
+      "id": "C026B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“耶尔森菌属”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "耶尔森菌属"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_015",
+      "target_chapter_title": "第十六章 动物源性细菌",
+      "target_page_start": 174,
+      "target_page_end": 174
+    },
+    {
+      "id": "C027A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“放线菌属”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "放线菌属"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_016",
+      "target_chapter_title": "第十七章 放线菌",
+      "target_page_start": 183,
+      "target_page_end": 184
+    },
+    {
+      "id": "C027B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“诺卡菌属”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "诺卡菌属"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_016",
+      "target_chapter_title": "第十七章 放线菌",
+      "target_page_start": 185,
+      "target_page_end": 185
+    },
+    {
+      "id": "C028A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“培养特性与繁殖方式”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "培养特性与繁殖方式"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_017",
+      "target_chapter_title": "第十八章 支原体",
+      "target_page_start": 186,
+      "target_page_end": 187
+    },
+    {
+      "id": "C028B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "clinical",
+      "question": "请概括“肺炎支原体”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肺炎支原体"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_017",
+      "target_chapter_title": "第十八章 支原体",
+      "target_page_start": 188,
+      "target_page_end": 189
+    },
+    {
+      "id": "C029A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "structure",
+      "question": "“菌体结构”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "菌体结构"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_018",
+      "target_chapter_title": "第十九章 立克次体",
+      "target_page_start": 192,
+      "target_page_end": 192
+    },
+    {
+      "id": "C029B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“免疫性”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "免疫性"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_018",
+      "target_chapter_title": "第十九章 立克次体",
+      "target_page_start": 193,
+      "target_page_end": 193
+    },
+    {
+      "id": "C030A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "structure",
+      "question": "“发育周期与形态染色”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "发育周期与形态染色"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_019",
+      "target_chapter_title": "第二十章 衣原体",
+      "target_page_start": 198,
+      "target_page_end": 199
+    },
+    {
+      "id": "C030B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“免疫性”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "免疫性"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_019",
+      "target_chapter_title": "第二十章 衣原体",
+      "target_page_start": 200,
+      "target_page_end": 200
+    },
+    {
+      "id": "C031A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“钩端螺旋体属”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "钩端螺旋体属"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_020",
+      "target_chapter_title": "第二十一章 螺旋体",
+      "target_page_start": 204,
+      "target_page_end": 204
+    },
+    {
+      "id": "C031B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“密螺旋体属”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "密螺旋体属"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_020",
+      "target_chapter_title": "第二十一章 螺旋体",
+      "target_page_start": 207,
+      "target_page_end": 207
+    },
+    {
+      "id": "C032A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“棒状杆菌属”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "棒状杆菌属"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_021",
+      "target_chapter_title": "第二十二章 其他细菌",
+      "target_page_start": 214,
+      "target_page_end": 214
+    },
+    {
+      "id": "C032B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "mechanism",
+      "question": "请概括“致病物质”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "致病物质"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_021",
+      "target_chapter_title": "第二十二章 其他细菌",
+      "target_page_start": 215,
+      "target_page_end": 215
+    },
+    {
+      "id": "C033A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "structure",
+      "question": "“病毒的形态与结构”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病毒的形态与结构"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_022",
+      "target_chapter_title": "第二十三章 病毒的基本性状",
+      "target_page_start": 226,
+      "target_page_end": 227
+    },
+    {
+      "id": "C033B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "structure",
+      "question": "请概括“病毒的形态”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病毒的形态"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_022",
+      "target_chapter_title": "第二十三章 病毒的基本性状",
+      "target_page_start": 227,
+      "target_page_end": 228
+    },
+    {
+      "id": "C034A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "mechanism",
+      "question": "“病毒的致病作用”的发生机制或调节链路是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病毒的致病作用"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_023",
+      "target_chapter_title": "第二十四章 病毒的感染与免疫",
+      "target_page_start": 241,
+      "target_page_end": 241
+    },
+    {
+      "id": "C034B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“杀细胞效应”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "杀细胞效应"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_023",
+      "target_chapter_title": "第二十四章 病毒的感染与免疫",
+      "target_page_start": 241,
+      "target_page_end": 242
+    },
+    {
+      "id": "C035A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "diagnosis",
+      "question": "“病毒感染的检查方法”的原理、步骤或判定要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病毒感染的检查方法"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_024",
+      "target_chapter_title": "第二十五章 病毒感染的检查方法与防治原则",
+      "target_page_start": 251,
+      "target_page_end": 251
+    },
+    {
+      "id": "C035B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "diagnosis",
+      "question": "请概括“病毒感染的抗体检测”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病毒感染的抗体检测"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_024",
+      "target_chapter_title": "第二十五章 病毒感染的检查方法与防治原则",
+      "target_page_start": 252,
+      "target_page_end": 252
+    },
+    {
+      "id": "C036A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“冠状病毒”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "冠状病毒"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_025",
+      "target_chapter_title": "第二十六章 呼吸道病毒",
+      "target_page_start": 259,
+      "target_page_end": 260
+    },
+    {
+      "id": "C036B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“病毒基因组及编码的蛋白”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病毒基因组及编码的蛋白"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_025",
+      "target_chapter_title": "第二十六章 呼吸道病毒",
+      "target_page_start": 261,
+      "target_page_end": 261
+    },
+    {
+      "id": "C037A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "structure",
+      "question": "“形态结构”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "形态结构"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_026",
+      "target_chapter_title": "第二十七章 肠道病毒",
+      "target_page_start": 275,
+      "target_page_end": 275
+    },
+    {
+      "id": "C037B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“基因组与编码蛋白”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "基因组与编码蛋白"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_026",
+      "target_chapter_title": "第二十七章 肠道病毒",
+      "target_page_start": 275,
+      "target_page_end": 276
+    },
+    {
+      "id": "C038A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "clinical",
+      "question": "“轮状病毒”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "轮状病毒"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_027",
+      "target_chapter_title": "第二十八章 急性胃肠炎病毒",
+      "target_page_start": 283,
+      "target_page_end": 284
+    },
+    {
+      "id": "C038B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "clinical",
+      "question": "请概括“杯状病毒”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "杯状病毒"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_027",
+      "target_chapter_title": "第二十八章 急性胃肠炎病毒",
+      "target_page_start": 286,
+      "target_page_end": 286
+    },
+    {
+      "id": "C039A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "clinical",
+      "question": "“甲型肝炎病毒”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "甲型肝炎病毒"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_028",
+      "target_chapter_title": "第二十九章 肝炎病毒",
+      "target_page_start": 289,
+      "target_page_end": 289
+    },
+    {
+      "id": "C039B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "mechanism",
+      "question": "请概括“致病与免疫机制”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "致病与免疫机制"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_028",
+      "target_chapter_title": "第二十九章 肝炎病毒",
+      "target_page_start": 290,
+      "target_page_end": 290
+    },
+    {
+      "id": "C040A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "clinical",
+      "question": "“流行性乙型脑炎病毒”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "流行性乙型脑炎病毒"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_029",
+      "target_chapter_title": "第三十章 虫媒病毒",
+      "target_page_start": 303,
+      "target_page_end": 303
+    },
+    {
+      "id": "C040B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "structure",
+      "question": "请概括“形态结构”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "形态结构"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_029",
+      "target_chapter_title": "第三十章 虫媒病毒",
+      "target_page_start": 303,
+      "target_page_end": 303
+    },
+    {
+      "id": "C041A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“汉坦病毒”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "汉坦病毒"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_030",
+      "target_chapter_title": "第三十一章 出血热病毒",
+      "target_page_start": 313,
+      "target_page_end": 313
+    },
+    {
+      "id": "C041B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“流行病学特征”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "流行病学特征"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_030",
+      "target_chapter_title": "第三十一章 出血热病毒",
+      "target_page_start": 314,
+      "target_page_end": 314
+    },
+    {
+      "id": "C042A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“生物学特性”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "生物学特性"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_031",
+      "target_chapter_title": "第三十二章 疱疹病毒",
+      "target_page_start": 320,
+      "target_page_end": 320
+    },
+    {
+      "id": "C042B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“病毒复制”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病毒复制"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_031",
+      "target_chapter_title": "第三十二章 疱疹病毒",
+      "target_page_start": 320,
+      "target_page_end": 321
+    },
+    {
+      "id": "C043A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“人类免疫缺陷病毒”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "人类免疫缺陷病毒"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_032",
+      "target_chapter_title": "第三十三章 逆转录病毒",
+      "target_page_start": 329,
+      "target_page_end": 329
+    },
+    {
+      "id": "C043B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "mechanism",
+      "question": "请概括“致病机制”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "致病机制"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_032",
+      "target_chapter_title": "第三十三章 逆转录病毒",
+      "target_page_start": 332,
+      "target_page_end": 332
+    },
+    {
+      "id": "C044A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“狂犬病病毒”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "狂犬病病毒"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_033",
+      "target_chapter_title": "第三十四章 其他病毒",
+      "target_page_start": 336,
+      "target_page_end": 337
+    },
+    {
+      "id": "C044B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“人乳头瘤病毒”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "人乳头瘤病毒"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_033",
+      "target_chapter_title": "第三十四章 其他病毒",
+      "target_page_start": 338,
+      "target_page_end": 339
+    },
+    {
+      "id": "C045A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“主要的人类朊粒病”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "主要的人类朊粒病"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_034",
+      "target_chapter_title": "第三十五章 朊 粒",
+      "target_page_start": 344,
+      "target_page_end": 344
+    },
+    {
+      "id": "C045B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“变异型克-雅病”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "变异型克-雅病"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_034",
+      "target_chapter_title": "第三十五章 朊 粒",
+      "target_page_start": 345,
+      "target_page_end": 345
+    },
+    {
+      "id": "C046A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“真菌的生物学性状”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "真菌的生物学性状"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_035",
+      "target_chapter_title": "第三十六章 真菌学总论",
+      "target_page_start": 349,
+      "target_page_end": 350
+    },
+    {
+      "id": "C046B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“多细胞真菌”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "多细胞真菌"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_035",
+      "target_chapter_title": "第三十六章 真菌学总论",
+      "target_page_start": 350,
+      "target_page_end": 350
+    },
+    {
+      "id": "C047A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "什么是“浅部感染真菌”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "浅部感染真菌"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_036",
+      "target_chapter_title": "第三十七章 主要病原性真菌",
+      "target_page_start": 357,
+      "target_page_end": 357
+    },
+    {
+      "id": "C047B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "definition",
+      "question": "请概括“皮肤癣菌”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "皮肤癣菌"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_036",
+      "target_chapter_title": "第三十七章 主要病原性真菌",
+      "target_page_start": 358,
+      "target_page_end": 358
+    },
+    {
+      "id": "C048A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "function",
+      "question": "“人体微生物群的构成”的主要功能和作用是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "人体微生物群的构成"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_037",
+      "target_chapter_title": "第三十八章 人体微生物群的构成和功能",
+      "target_page_start": 368,
+      "target_page_end": 369
+    },
+    {
+      "id": "C048B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "function",
+      "question": "请概括“人体细菌群”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "人体细菌群"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_037",
+      "target_chapter_title": "第三十八章 人体微生物群的构成和功能",
+      "target_page_start": 369,
+      "target_page_end": 369
+    },
+    {
+      "id": "C049A",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "clinical",
+      "question": "“微生态失调与感染性疾病”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "微生态失调与感染性疾病"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_038",
+      "target_chapter_title": "第三十九章 人体微生物群与疾病",
+      "target_page_start": 372,
+      "target_page_end": 373
+    },
+    {
+      "id": "C049B",
+      "suite_group": "chapter_coverage",
+      "category": "医学微生物学",
+      "question_type": "clinical",
+      "question": "请概括“微生态失调与非感染性疾病”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "微生态失调与非感染性疾病"
+      ],
+      "textbook_ids": [
+        "book_04"
+      ],
+      "target_textbook_id": "book_04",
+      "target_chapter_id": "book_04_ch_038",
+      "target_chapter_title": "第三十九章 人体微生物群与疾病",
+      "target_page_start": 373,
+      "target_page_end": 374
+    },
+    {
+      "id": "C050A",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "definition",
+      "question": "什么是“体表及骨性标志”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "体表及骨性标志"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_000",
+      "target_chapter_title": "第一章 头 部",
+      "target_page_start": 28,
+      "target_page_end": 29
+    },
+    {
+      "id": "C050B",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "definition",
+      "question": "请概括“脑膜中动脉的投影本干经过前垂直线”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "脑膜中动脉的投影本干经过前垂直线"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_000",
+      "target_chapter_title": "第一章 头 部",
+      "target_page_start": 30,
+      "target_page_end": 30
+    },
+    {
+      "id": "C051A",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "definition",
+      "question": "什么是“体表投影”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "体表投影"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_001",
+      "target_chapter_title": "第二章 颈 部",
+      "target_page_start": 58,
+      "target_page_end": 60
+    },
+    {
+      "id": "C051B",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "structure",
+      "question": "请概括“浅层结构”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "浅层结构"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_001",
+      "target_chapter_title": "第二章 颈 部",
+      "target_page_start": 60,
+      "target_page_end": 60
+    },
+    {
+      "id": "C052A",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "definition",
+      "question": "什么是“标志线”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "标志线"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_002",
+      "target_chapter_title": "第三章 胸 部",
+      "target_page_start": 83,
+      "target_page_end": 83
+    },
+    {
+      "id": "C052B",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "definition",
+      "question": "请概括“胸壁”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "胸壁"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_002",
+      "target_chapter_title": "第三章 胸 部",
+      "target_page_start": 83,
+      "target_page_end": 84
+    },
+    {
+      "id": "C053A",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "definition",
+      "question": "什么是“体表投影”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "体表投影"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_003",
+      "target_chapter_title": "第四章 腹 部",
+      "target_page_start": 112,
+      "target_page_end": 112
+    },
+    {
+      "id": "C053B",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "definition",
+      "question": "请概括“腹前外侧壁”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "腹前外侧壁"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_003",
+      "target_chapter_title": "第四章 腹 部",
+      "target_page_start": 113,
+      "target_page_end": 113
+    },
+    {
+      "id": "C054A",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "definition",
+      "question": "什么是“盆部”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "盆部"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_004",
+      "target_chapter_title": "第五章 盆部与会阴",
+      "target_page_start": 173,
+      "target_page_end": 174
+    },
+    {
+      "id": "C054B",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "definition",
+      "question": "请概括“盆筋膜”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "盆筋膜"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_004",
+      "target_chapter_title": "第五章 盆部与会阴",
+      "target_page_start": 175,
+      "target_page_end": 175
+    },
+    {
+      "id": "C055A",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "structure",
+      "question": "“层次结构”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "层次结构"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_005",
+      "target_chapter_title": "第六章 脊柱区",
+      "target_page_start": 207,
+      "target_page_end": 208
+    },
+    {
+      "id": "C055B",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "definition",
+      "question": "请概括“深筋膜”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "深筋膜"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_005",
+      "target_chapter_title": "第六章 脊柱区",
+      "target_page_start": 208,
+      "target_page_end": 208
+    },
+    {
+      "id": "C056A",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "definition",
+      "question": "什么是“体表标志”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "体表标志"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_006",
+      "target_chapter_title": "第七章 上 肢",
+      "target_page_start": 224,
+      "target_page_end": 224
+    },
+    {
+      "id": "C056B",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "definition",
+      "question": "请概括“腕部和手部”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "腕部和手部"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_006",
+      "target_chapter_title": "第七章 上 肢",
+      "target_page_start": 224,
+      "target_page_end": 225
+    },
+    {
+      "id": "C057A",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "definition",
+      "question": "什么是“体表标志”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "体表标志"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_007",
+      "target_chapter_title": "第八章 下 肢",
+      "target_page_start": 262,
+      "target_page_end": 262
+    },
+    {
+      "id": "C057B",
+      "suite_group": "chapter_coverage",
+      "category": "局部解剖学",
+      "question_type": "definition",
+      "question": "请概括“体表投影”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "体表投影"
+      ],
+      "textbook_ids": [
+        "book_01"
+      ],
+      "target_textbook_id": "book_01",
+      "target_chapter_id": "book_01_ch_007",
+      "target_chapter_title": "第八章 下 肢",
+      "target_page_start": 263,
+      "target_page_end": 263
+    },
+    {
+      "id": "C058A",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "function",
+      "question": "“生理学的研究对象和任务”的主要功能和作用是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "生理学的研究对象和任务"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_000",
+      "target_chapter_title": "第一章 绪 论",
+      "target_page_start": 24,
+      "target_page_end": 24
+    },
+    {
+      "id": "C058B",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "definition",
+      "question": "请概括“生理学的认识层次”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "生理学的认识层次"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_000",
+      "target_chapter_title": "第一章 绪 论",
+      "target_page_start": 25,
+      "target_page_end": 26
+    },
+    {
+      "id": "C059A",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "structure",
+      "question": "“细胞膜的化学组成及其分子排列形式”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "细胞膜的化学组成及其分子排列形式"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_001",
+      "target_chapter_title": "第二章 细胞的基本功能",
+      "target_page_start": 36,
+      "target_page_end": 36
+    },
+    {
+      "id": "C059B",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "function",
+      "question": "请概括“细胞膜的物质转运功能”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "细胞膜的物质转运功能"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_001",
+      "target_chapter_title": "第二章 细胞的基本功能",
+      "target_page_start": 36,
+      "target_page_end": 36
+    },
+    {
+      "id": "C060A",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "structure",
+      "question": "“血液的组成”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "血液的组成"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_002",
+      "target_chapter_title": "第三章 血 液",
+      "target_page_start": 76,
+      "target_page_end": 76
+    },
+    {
+      "id": "C060B",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "definition",
+      "question": "请概括“血液生理概述”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "血液生理概述"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_002",
+      "target_chapter_title": "第三章 血 液",
+      "target_page_start": 76,
+      "target_page_end": 76
+    },
+    {
+      "id": "C061A",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "process",
+      "question": "“心脏的泵血功能”经历哪些关键过程或阶段？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "心脏的泵血功能"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_003",
+      "target_chapter_title": "第四章 血液循环",
+      "target_page_start": 102,
+      "target_page_end": 102
+    },
+    {
+      "id": "C061B",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "mechanism",
+      "question": "请概括“心脏的泵血过程和机制”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "心脏的泵血过程和机制"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_003",
+      "target_chapter_title": "第四章 血液循环",
+      "target_page_start": 102,
+      "target_page_end": 103
+    },
+    {
+      "id": "C062A",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "definition",
+      "question": "什么是“肺通气”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肺通气"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_004",
+      "target_chapter_title": "第五章 呼 吸",
+      "target_page_start": 158,
+      "target_page_end": 159
+    },
+    {
+      "id": "C062B",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "definition",
+      "question": "请概括“肺通气的动力”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肺通气的动力"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_004",
+      "target_chapter_title": "第五章 呼 吸",
+      "target_page_start": 159,
+      "target_page_end": 159
+    },
+    {
+      "id": "C063A",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "definition",
+      "question": "什么是“消化生理概述”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "消化生理概述"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_005",
+      "target_chapter_title": "第六章 消化和吸收",
+      "target_page_start": 188,
+      "target_page_end": 188
+    },
+    {
+      "id": "C063B",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "definition",
+      "question": "请概括“消化道平滑肌的特性”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "消化道平滑肌的特性"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_005",
+      "target_chapter_title": "第六章 消化和吸收",
+      "target_page_start": 188,
+      "target_page_end": 189
+    },
+    {
+      "id": "C064A",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "process",
+      "question": "“能量代谢”经历哪些关键过程或阶段？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "能量代谢"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_006",
+      "target_chapter_title": "第七章 能量代谢与体温",
+      "target_page_start": 219,
+      "target_page_end": 219
+    },
+    {
+      "id": "C064B",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "process",
+      "question": "请概括“能量的来源”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "能量的来源"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_006",
+      "target_chapter_title": "第七章 能量代谢与体温",
+      "target_page_start": 219,
+      "target_page_end": 219
+    },
+    {
+      "id": "C065A",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "structure",
+      "question": "“肾的功能解剖”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肾的功能解剖"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_007",
+      "target_chapter_title": "第八章 尿的生成和排出",
+      "target_page_start": 236,
+      "target_page_end": 236
+    },
+    {
+      "id": "C065B",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "structure",
+      "question": "请概括“肾的功能解剖和肾血流量”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肾的功能解剖和肾血流量"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_007",
+      "target_chapter_title": "第八章 尿的生成和排出",
+      "target_page_start": 236,
+      "target_page_end": 236
+    },
+    {
+      "id": "C066A",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "function",
+      "question": "“感觉概述”的主要功能和作用是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "感觉概述"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_008",
+      "target_chapter_title": "第九章 感觉器官的功能",
+      "target_page_start": 265,
+      "target_page_end": 265
+    },
+    {
+      "id": "C066B",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "function",
+      "question": "请概括“感受器的一般生理特性”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "感受器的一般生理特性"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_008",
+      "target_chapter_title": "第九章 感觉器官的功能",
+      "target_page_start": 265,
+      "target_page_end": 266
+    },
+    {
+      "id": "C067A",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "function",
+      "question": "“神经元和神经胶质细胞”的主要功能和作用是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "神经元和神经胶质细胞"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_009",
+      "target_chapter_title": "第十章 神经系统的功能",
+      "target_page_start": 303,
+      "target_page_end": 303
+    },
+    {
+      "id": "C067B",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "function",
+      "question": "请概括“神经系统功能活动的基本原理”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "神经系统功能活动的基本原理"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_009",
+      "target_chapter_title": "第十章 神经系统的功能",
+      "target_page_start": 303,
+      "target_page_end": 303
+    },
+    {
+      "id": "C068A",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "definition",
+      "question": "什么是“内分泌与内分泌系统”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "内分泌与内分泌系统"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_010",
+      "target_chapter_title": "第十一章 内分泌",
+      "target_page_start": 360,
+      "target_page_end": 360
+    },
+    {
+      "id": "C068B",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "definition",
+      "question": "请概括“内分泌与激素”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "内分泌与激素"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_010",
+      "target_chapter_title": "第十一章 内分泌",
+      "target_page_start": 360,
+      "target_page_end": 360
+    },
+    {
+      "id": "C069A",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "mechanism",
+      "question": "“男性生殖功能及其调节”的发生机制或调节链路是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "男性生殖功能及其调节"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_011",
+      "target_chapter_title": "第十二章 生 殖",
+      "target_page_start": 406,
+      "target_page_end": 406
+    },
+    {
+      "id": "C069B",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "function",
+      "question": "请概括“睾丸的生精功能”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "睾丸的生精功能"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_011",
+      "target_chapter_title": "第十二章 生 殖",
+      "target_page_start": 407,
+      "target_page_end": 407
+    },
+    {
+      "id": "C070A",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "process",
+      "question": "“生长发育”经历哪些关键过程或阶段？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "生长发育"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_012",
+      "target_chapter_title": "第十三章 生长发育和衰老",
+      "target_page_start": 423,
+      "target_page_end": 423
+    },
+    {
+      "id": "C070B",
+      "suite_group": "chapter_coverage",
+      "category": "生理学",
+      "question_type": "process",
+      "question": "请概括“体格生长发育”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "体格生长发育"
+      ],
+      "textbook_ids": [
+        "book_03"
+      ],
+      "target_textbook_id": "book_03",
+      "target_chapter_id": "book_03_ch_012",
+      "target_chapter_title": "第十三章 生长发育和衰老",
+      "target_page_start": 423,
+      "target_page_end": 423
+    },
+    {
+      "id": "C071A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "structure",
+      "question": "“适应”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "适应"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_000",
+      "target_chapter_title": "第一章 细胞和组织的适应与损伤",
+      "target_page_start": 30,
+      "target_page_end": 30
+    },
+    {
+      "id": "C071B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "structure",
+      "question": "请概括“萎缩”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "萎缩"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_000",
+      "target_chapter_title": "第一章 细胞和组织的适应与损伤",
+      "target_page_start": 30,
+      "target_page_end": 31
+    },
+    {
+      "id": "C072A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "mechanism",
+      "question": "“再生”的发生机制或调节链路是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "再生"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_001",
+      "target_chapter_title": "第二章 损伤的修复",
+      "target_page_start": 50,
+      "target_page_end": 50
+    },
+    {
+      "id": "C072B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "mechanism",
+      "question": "请概括“细胞周期和不同类型细胞的再生潜能”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "细胞周期和不同类型细胞的再生潜能"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_001",
+      "target_chapter_title": "第二章 损伤的修复",
+      "target_page_start": 50,
+      "target_page_end": 50
+    },
+    {
+      "id": "C073A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "process",
+      "question": "“充血和淤血”经历哪些关键过程或阶段？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "充血和淤血"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_002",
+      "target_chapter_title": "第三章 局部血液循环障碍",
+      "target_page_start": 66,
+      "target_page_end": 66
+    },
+    {
+      "id": "C073B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "process",
+      "question": "请概括“淤血”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "淤血"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_002",
+      "target_chapter_title": "第三章 局部血液循环障碍",
+      "target_page_start": 67,
+      "target_page_end": 67
+    },
+    {
+      "id": "C074A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "“炎症概述”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "炎症概述"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_003",
+      "target_chapter_title": "第四章 炎 症",
+      "target_page_start": 84,
+      "target_page_end": 84
+    },
+    {
+      "id": "C074B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "请概括“炎症的原因”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "炎症的原因"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_003",
+      "target_chapter_title": "第四章 炎 症",
+      "target_page_start": 84,
+      "target_page_end": 84
+    },
+    {
+      "id": "C075A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "“自身免疫病”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "自身免疫病"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_004",
+      "target_chapter_title": "第五章 免疫性疾病",
+      "target_page_start": 102,
+      "target_page_end": 102
+    },
+    {
+      "id": "C075B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "mechanism",
+      "question": "请概括“自身免疫病的发病机制”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "自身免疫病的发病机制"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_004",
+      "target_chapter_title": "第五章 免疫性疾病",
+      "target_page_start": 102,
+      "target_page_end": 102
+    },
+    {
+      "id": "C076A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "“肿瘤的概念”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肿瘤的概念"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_005",
+      "target_chapter_title": "第六章 肿 瘤",
+      "target_page_start": 115,
+      "target_page_end": 115
+    },
+    {
+      "id": "C076B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "structure",
+      "question": "请概括“肿瘤的形态和结构”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肿瘤的形态和结构"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_005",
+      "target_chapter_title": "第六章 肿 瘤",
+      "target_page_start": 116,
+      "target_page_end": 116
+    },
+    {
+      "id": "C077A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "“环境污染和职业暴露”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "环境污染和职业暴露"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_006",
+      "target_chapter_title": "第七章 环境和营养性疾病",
+      "target_page_start": 149,
+      "target_page_end": 149
+    },
+    {
+      "id": "C077B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "请概括“室外空气污染”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "室外空气污染"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_006",
+      "target_chapter_title": "第七章 环境和营养性疾病",
+      "target_page_start": 149,
+      "target_page_end": 149
+    },
+    {
+      "id": "C078A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "“遗传性疾病”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "遗传性疾病"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_007",
+      "target_chapter_title": "第八章 遗传性疾病和儿童疾病",
+      "target_page_start": 158,
+      "target_page_end": 158
+    },
+    {
+      "id": "C078B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "请概括“蛋白质编码基因突变”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "蛋白质编码基因突变"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_007",
+      "target_chapter_title": "第八章 遗传性疾病和儿童疾病",
+      "target_page_start": 158,
+      "target_page_end": 158
+    },
+    {
+      "id": "C079A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "“动脉粥样硬化”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "动脉粥样硬化"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_008",
+      "target_chapter_title": "第九章 心血管系统疾病",
+      "target_page_start": 166,
+      "target_page_end": 166
+    },
+    {
+      "id": "C079B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "请概括“危险因素”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "危险因素"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_008",
+      "target_chapter_title": "第九章 心血管系统疾病",
+      "target_page_start": 166,
+      "target_page_end": 166
+    },
+    {
+      "id": "C080A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "“呼吸道和肺的炎症性疾病”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "呼吸道和肺的炎症性疾病"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_009",
+      "target_chapter_title": "第十章 呼吸系统疾病",
+      "target_page_start": 194,
+      "target_page_end": 195
+    },
+    {
+      "id": "C080B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "请概括“鼻炎”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "鼻炎"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_009",
+      "target_chapter_title": "第十章 呼吸系统疾病",
+      "target_page_start": 195,
+      "target_page_end": 195
+    },
+    {
+      "id": "C081A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "“食管的炎症”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "食管的炎症"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_010",
+      "target_chapter_title": "第十一章 消化系统疾病",
+      "target_page_start": 219,
+      "target_page_end": 219
+    },
+    {
+      "id": "C081B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "请概括“食管的炎症、狭窄与扩张”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "食管的炎症、狭窄与扩张"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_010",
+      "target_chapter_title": "第十一章 消化系统疾病",
+      "target_page_start": 219,
+      "target_page_end": 219
+    },
+    {
+      "id": "C082A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "“淋巴结的良性病变”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "淋巴结的良性病变"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_011",
+      "target_chapter_title": "第十二章 淋巴造血系统疾病",
+      "target_page_start": 249,
+      "target_page_end": 249
+    },
+    {
+      "id": "C082B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "请概括“慢性非特异性淋巴结炎”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "慢性非特异性淋巴结炎"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_011",
+      "target_chapter_title": "第十二章 淋巴造血系统疾病",
+      "target_page_start": 250,
+      "target_page_end": 250
+    },
+    {
+      "id": "C083A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "“肾小球疾病”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肾小球疾病"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_012",
+      "target_chapter_title": "第十三章 泌尿系统疾病",
+      "target_page_start": 274,
+      "target_page_end": 274
+    },
+    {
+      "id": "C083B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "process",
+      "question": "请概括“循环免疫复合物沉积”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "循环免疫复合物沉积"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_012",
+      "target_chapter_title": "第十三章 泌尿系统疾病",
+      "target_page_start": 276,
+      "target_page_end": 276
+    },
+    {
+      "id": "C084A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "“子宫颈疾病”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "子宫颈疾病"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_013",
+      "target_chapter_title": "第十四章 生殖系统和乳腺疾病",
+      "target_page_start": 293,
+      "target_page_end": 293
+    },
+    {
+      "id": "C084B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "请概括“子宫颈鳞状上皮内病变和子宫颈癌”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "子宫颈鳞状上皮内病变和子宫颈癌"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_013",
+      "target_chapter_title": "第十四章 生殖系统和乳腺疾病",
+      "target_page_start": 293,
+      "target_page_end": 293
+    },
+    {
+      "id": "C085A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "“垂体疾病”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "垂体疾病"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_014",
+      "target_chapter_title": "第十五章 内分泌系统疾病",
+      "target_page_start": 314,
+      "target_page_end": 314
+    },
+    {
+      "id": "C085B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "function",
+      "question": "请概括“垂体前叶功能亢进与低下”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "垂体前叶功能亢进与低下"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_014",
+      "target_chapter_title": "第十五章 内分泌系统疾病",
+      "target_page_start": 314,
+      "target_page_end": 315
+    },
+    {
+      "id": "C086A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "“神经元及其神经纤维的基本病变”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "神经元及其神经纤维的基本病变"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_015",
+      "target_chapter_title": "第十六章 神经系统疾病",
+      "target_page_start": 330,
+      "target_page_end": 330
+    },
+    {
+      "id": "C086B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "请概括“神经系统疾病的基本病变”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "神经系统疾病的基本病变"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_015",
+      "target_chapter_title": "第十六章 神经系统疾病",
+      "target_page_start": 330,
+      "target_page_end": 330
+    },
+    {
+      "id": "C087A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "structure",
+      "question": "“骨和软骨的基本病变”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "骨和软骨的基本病变"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_016",
+      "target_chapter_title": "第十七章 骨关节和软组织疾病",
+      "target_page_start": 351,
+      "target_page_end": 351
+    },
+    {
+      "id": "C087B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "structure",
+      "question": "请概括“骨的代谢性疾病”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "骨的代谢性疾病"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_016",
+      "target_chapter_title": "第十七章 骨关节和软组织疾病",
+      "target_page_start": 351,
+      "target_page_end": 352
+    },
+    {
+      "id": "C088A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "“病原生物侵入机体的途径和在体内的播散”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病原生物侵入机体的途径和在体内的播散"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_017",
+      "target_chapter_title": "第十八章 传染病",
+      "target_page_start": 365,
+      "target_page_end": 365
+    },
+    {
+      "id": "C088B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "clinical",
+      "question": "请概括“传染病概述”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "传染病概述"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_017",
+      "target_chapter_title": "第十八章 传染病",
+      "target_page_start": 365,
+      "target_page_end": 365
+    },
+    {
+      "id": "C089A",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "structure",
+      "question": "“大体、组织和细胞病理学技术”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "大体、组织和细胞病理学技术"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_018",
+      "target_chapter_title": "第十九章 病理学诊断与研究技术",
+      "target_page_start": 390,
+      "target_page_end": 390
+    },
+    {
+      "id": "C089B",
+      "suite_group": "chapter_coverage",
+      "category": "病理学",
+      "question_type": "diagnosis",
+      "question": "请概括“液体活检技术”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "液体活检技术"
+      ],
+      "textbook_ids": [
+        "book_05"
+      ],
+      "target_textbook_id": "book_05",
+      "target_chapter_id": "book_05_ch_018",
+      "target_chapter_title": "第十九章 病理学诊断与研究技术",
+      "target_page_start": 390,
+      "target_page_end": 390
+    },
+    {
+      "id": "C090A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "definition",
+      "question": "什么是“发展简史”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "发展简史"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_000",
+      "target_chapter_title": "第一章 绪 论",
+      "target_page_start": 25,
+      "target_page_end": 25
+    },
+    {
+      "id": "C090B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "definition",
+      "question": "请概括“病理生理学的发展简史和未来趋势”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病理生理学的发展简史和未来趋势"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_000",
+      "target_chapter_title": "第一章 绪 论",
+      "target_page_start": 25,
+      "target_page_end": 25
+    },
+    {
+      "id": "C091A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "clinical",
+      "question": "“健康和疾病”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "健康和疾病"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_001",
+      "target_chapter_title": "第二章 疾病概论",
+      "target_page_start": 29,
+      "target_page_end": 29
+    },
+    {
+      "id": "C091B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "clinical",
+      "question": "请概括“健康”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "健康"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_001",
+      "target_chapter_title": "第二章 疾病概论",
+      "target_page_start": 29,
+      "target_page_end": 29
+    },
+    {
+      "id": "C092A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "clinical",
+      "question": "“细胞增殖、分化与疾病”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "细胞增殖、分化与疾病"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_002",
+      "target_chapter_title": "第三章 细胞增殖、分化和死亡与疾病",
+      "target_page_start": 41,
+      "target_page_end": 41
+    },
+    {
+      "id": "C092B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "clinical",
+      "question": "请概括“细胞增殖的调控”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "细胞增殖的调控"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_002",
+      "target_chapter_title": "第三章 细胞增殖、分化和死亡与疾病",
+      "target_page_start": 41,
+      "target_page_end": 41
+    },
+    {
+      "id": "C093A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "clinical",
+      "question": "“受体”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "受体"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_003",
+      "target_chapter_title": "第四章 细胞信号转导与疾病",
+      "target_page_start": 54,
+      "target_page_end": 55
+    },
+    {
+      "id": "C093B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "clinical",
+      "question": "请概括“细胞信号的接受和转导”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "细胞信号的接受和转导"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_003",
+      "target_chapter_title": "第四章 细胞信号转导与疾病",
+      "target_page_start": 54,
+      "target_page_end": 55
+    },
+    {
+      "id": "C094A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "“衰老的发生发展机制”的发生机制或调节链路是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "衰老的发生发展机制"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_004",
+      "target_chapter_title": "第五章 衰老与疾病",
+      "target_page_start": 66,
+      "target_page_end": 66
+    },
+    {
+      "id": "C094B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "clinical",
+      "question": "请概括“基因组不稳定”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "基因组不稳定"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_004",
+      "target_chapter_title": "第五章 衰老与疾病",
+      "target_page_start": 66,
+      "target_page_end": 66
+    },
+    {
+      "id": "C095A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "classification",
+      "question": "“应激原及其分类”可分为哪些类型？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "应激原及其分类"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_005",
+      "target_chapter_title": "第六章 应 激",
+      "target_page_start": 75,
+      "target_page_end": 75
+    },
+    {
+      "id": "C095B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "classification",
+      "question": "请概括“应激与应激原的分类”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "应激与应激原的分类"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_005",
+      "target_chapter_title": "第六章 应 激",
+      "target_page_start": 75,
+      "target_page_end": 75
+    },
+    {
+      "id": "C096A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "“正常水、钠平衡”的发生机制或调节链路是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "正常水、钠平衡"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_006",
+      "target_chapter_title": "第七章 水、电解质代谢紊乱",
+      "target_page_start": 89,
+      "target_page_end": 89
+    },
+    {
+      "id": "C096B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "请概括“水、钠代谢紊乱”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "水、钠代谢紊乱"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_006",
+      "target_chapter_title": "第七章 水、电解质代谢紊乱",
+      "target_page_start": 89,
+      "target_page_end": 89
+    },
+    {
+      "id": "C097A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "“酸碱的概念及酸碱物质的来源”的发生机制或调节链路是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "酸碱的概念及酸碱物质的来源"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_007",
+      "target_chapter_title": "第八章 酸碱平衡紊乱",
+      "target_page_start": 112,
+      "target_page_end": 112
+    },
+    {
+      "id": "C097B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "请概括“体液中酸碱物质的来源”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "体液中酸碱物质的来源"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_007",
+      "target_chapter_title": "第八章 酸碱平衡紊乱",
+      "target_page_start": 112,
+      "target_page_end": 113
+    },
+    {
+      "id": "C098A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "“糖代谢紊乱”的发生机制或调节链路是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "糖代谢紊乱"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_008",
+      "target_chapter_title": "第九章 糖脂代谢紊乱",
+      "target_page_start": 132,
+      "target_page_end": 132
+    },
+    {
+      "id": "C098B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "请概括“病因与发病机制”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病因与发病机制"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_008",
+      "target_chapter_title": "第九章 糖脂代谢紊乱",
+      "target_page_start": 132,
+      "target_page_end": 132
+    },
+    {
+      "id": "C099A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "definition",
+      "question": "什么是“常用的血氧指标”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "常用的血氧指标"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_009",
+      "target_chapter_title": "第十章 缺 氧",
+      "target_page_start": 147,
+      "target_page_end": 147
+    },
+    {
+      "id": "C099B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "definition",
+      "question": "请概括“血红蛋白氧饱和度”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "血红蛋白氧饱和度"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_009",
+      "target_chapter_title": "第十章 缺 氧",
+      "target_page_start": 148,
+      "target_page_end": 148
+    },
+    {
+      "id": "C100A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "clinical",
+      "question": "“发热激活物”的核心表现和鉴别要点是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "发热激活物"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_010",
+      "target_chapter_title": "第十一章 发 热",
+      "target_page_start": 160,
+      "target_page_end": 161
+    },
+    {
+      "id": "C100B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "definition",
+      "question": "请概括“细菌及其毒素”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "细菌及其毒素"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_010",
+      "target_chapter_title": "第十一章 发 热",
+      "target_page_start": 161,
+      "target_page_end": 161
+    },
+    {
+      "id": "C101A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "“病因和影响因素”的发生机制或调节链路是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病因和影响因素"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_011",
+      "target_chapter_title": "第十二章 缺血 - 再灌注损伤",
+      "target_page_start": 170,
+      "target_page_end": 170
+    },
+    {
+      "id": "C101B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "请概括“影响因素”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "影响因素"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_011",
+      "target_chapter_title": "第十二章 缺血 - 再灌注损伤",
+      "target_page_start": 170,
+      "target_page_end": 170
+    },
+    {
+      "id": "C102A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "“病因及分类”的发生机制或调节链路是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病因及分类"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_012",
+      "target_chapter_title": "第十三章 休 克",
+      "target_page_start": 182,
+      "target_page_end": 182
+    },
+    {
+      "id": "C102B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "definition",
+      "question": "请概括“血管床容量增加”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "血管床容量增加"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_012",
+      "target_chapter_title": "第十三章 休 克",
+      "target_page_start": 182,
+      "target_page_end": 183
+    },
+    {
+      "id": "C103A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "“凝血与抗凝血平衡”的发生机制或调节链路是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "凝血与抗凝血平衡"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_013",
+      "target_chapter_title": "第十四章 凝血与抗凝血平衡紊乱",
+      "target_page_start": 193,
+      "target_page_end": 193
+    },
+    {
+      "id": "C103B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "请概括“凝血与抗凝血平衡及其紊乱”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "凝血与抗凝血平衡及其紊乱"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_013",
+      "target_chapter_title": "第十四章 凝血与抗凝血平衡紊乱",
+      "target_page_start": 193,
+      "target_page_end": 193
+    },
+    {
+      "id": "C104A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "“病因和诱因”的发生机制或调节链路是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "病因和诱因"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_014",
+      "target_chapter_title": "第十五章 心功能不全",
+      "target_page_start": 205,
+      "target_page_end": 205
+    },
+    {
+      "id": "C104B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "function",
+      "question": "请概括“机体的代偿反应”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "机体的代偿反应"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_014",
+      "target_chapter_title": "第十五章 心功能不全",
+      "target_page_start": 207,
+      "target_page_end": 208
+    },
+    {
+      "id": "C105A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "function",
+      "question": "“肺泡通气不足”的主要功能和作用是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肺泡通气不足"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_015",
+      "target_chapter_title": "第十六章 肺功能不全",
+      "target_page_start": 219,
+      "target_page_end": 220
+    },
+    {
+      "id": "C105B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "function",
+      "question": "请概括“肺通气功能障碍”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肺通气功能障碍"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_015",
+      "target_chapter_title": "第十六章 肺功能不全",
+      "target_page_start": 219,
+      "target_page_end": 220
+    },
+    {
+      "id": "C106A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "“肝功能不全的病因”的发生机制或调节链路是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肝功能不全的病因"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_016",
+      "target_chapter_title": "第十七章 肝功能不全",
+      "target_page_start": 232,
+      "target_page_end": 232
+    },
+    {
+      "id": "C106B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "process",
+      "question": "请概括“代谢障碍”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "代谢障碍"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_016",
+      "target_chapter_title": "第十七章 肝功能不全",
+      "target_page_start": 233,
+      "target_page_end": 233
+    },
+    {
+      "id": "C107A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "function",
+      "question": "“肾功能不全的基本发病环节”的主要功能和作用是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肾功能不全的基本发病环节"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_017",
+      "target_chapter_title": "第十八章 肾功能不全",
+      "target_page_start": 242,
+      "target_page_end": 242
+    },
+    {
+      "id": "C107B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "function",
+      "question": "请概括“肾小管重吸收、分泌功能障碍”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肾小管重吸收、分泌功能障碍"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_017",
+      "target_chapter_title": "第十八章 肾功能不全",
+      "target_page_start": 243,
+      "target_page_end": 243
+    },
+    {
+      "id": "C108A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "function",
+      "question": "“认知障碍”的主要功能和作用是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "认知障碍"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_018",
+      "target_chapter_title": "第十九章 脑功能不全",
+      "target_page_start": 259,
+      "target_page_end": 259
+    },
+    {
+      "id": "C108B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "请概括“认知障碍的病因”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "认知障碍的病因"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_018",
+      "target_chapter_title": "第十九章 脑功能不全",
+      "target_page_start": 259,
+      "target_page_end": 260
+    },
+    {
+      "id": "C109A",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "mechanism",
+      "question": "“MODS的病因和分类”的发生机制或调节链路是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "MODS的病因和分类"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_019",
+      "target_chapter_title": "第二十章 多器官功能障碍",
+      "target_page_start": 270,
+      "target_page_end": 270
+    },
+    {
+      "id": "C109B",
+      "suite_group": "chapter_coverage",
+      "category": "病理生理学",
+      "question_type": "function",
+      "question": "请概括“非感染性因素”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "非感染性因素"
+      ],
+      "textbook_ids": [
+        "book_07"
+      ],
+      "target_textbook_id": "book_07",
+      "target_chapter_id": "book_07_ch_019",
+      "target_chapter_title": "第二十章 多器官功能障碍",
+      "target_page_start": 271,
+      "target_page_end": 271
+    },
+    {
+      "id": "C110A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "structure",
+      "question": "“组织学的学习方法”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "组织学的学习方法"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_000",
+      "target_chapter_title": "第1 章 组织学绪论",
+      "target_page_start": 26,
+      "target_page_end": 26
+    },
+    {
+      "id": "C110B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "structure",
+      "question": "请概括“常用组织学技术”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "常用组织学技术"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_000",
+      "target_chapter_title": "第1 章 组织学绪论",
+      "target_page_start": 26,
+      "target_page_end": 26
+    },
+    {
+      "id": "C111A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "structure",
+      "question": "“被覆上皮”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "被覆上皮"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_001",
+      "target_chapter_title": "第2 章 上皮组织",
+      "target_page_start": 32,
+      "target_page_end": 32
+    },
+    {
+      "id": "C111B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "structure",
+      "question": "请概括“腺上皮和腺”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "腺上皮和腺"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_001",
+      "target_chapter_title": "第2 章 上皮组织",
+      "target_page_start": 36,
+      "target_page_end": 36
+    },
+    {
+      "id": "C112A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "structure",
+      "question": "“疏松结缔组织”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "疏松结缔组织"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_002",
+      "target_chapter_title": "第3 章 结缔组织",
+      "target_page_start": 43,
+      "target_page_end": 43
+    },
+    {
+      "id": "C112B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "structure",
+      "question": "请概括“分泌功能”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "分泌功能"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_002",
+      "target_chapter_title": "第3 章 结缔组织",
+      "target_page_start": 45,
+      "target_page_end": 46
+    },
+    {
+      "id": "C113A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "什么是“软骨”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "软骨"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_003",
+      "target_chapter_title": "第4 章 软骨和骨",
+      "target_page_start": 52,
+      "target_page_end": 52
+    },
+    {
+      "id": "C113B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "请概括“软骨的发生与生长”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "软骨的发生与生长"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_003",
+      "target_chapter_title": "第4 章 软骨和骨",
+      "target_page_start": 54,
+      "target_page_end": 54
+    },
+    {
+      "id": "C114A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "什么是“红细胞”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "红细胞"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_004",
+      "target_chapter_title": "第5 章 血 液",
+      "target_page_start": 65,
+      "target_page_end": 65
+    },
+    {
+      "id": "C114B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "请概括“白细胞”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "白细胞"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_004",
+      "target_chapter_title": "第5 章 血 液",
+      "target_page_start": 65,
+      "target_page_end": 66
+    },
+    {
+      "id": "C115A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "structure",
+      "question": "“骨骼肌”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "骨骼肌"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_005",
+      "target_chapter_title": "第6 章 肌组织",
+      "target_page_start": 75,
+      "target_page_end": 75
+    },
+    {
+      "id": "C115B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "structure",
+      "question": "请概括“骨骼肌纤维的光镜结构”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "骨骼肌纤维的光镜结构"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_005",
+      "target_chapter_title": "第6 章 肌组织",
+      "target_page_start": 75,
+      "target_page_end": 76
+    },
+    {
+      "id": "C116A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "structure",
+      "question": "“神经元”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "神经元"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_006",
+      "target_chapter_title": "第7 章 神经组织",
+      "target_page_start": 83,
+      "target_page_end": 84
+    },
+    {
+      "id": "C116B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "structure",
+      "question": "请概括“神经元的结构”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "神经元的结构"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_006",
+      "target_chapter_title": "第7 章 神经组织",
+      "target_page_start": 84,
+      "target_page_end": 84
+    },
+    {
+      "id": "C117A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "什么是“大脑皮质”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "大脑皮质"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_007",
+      "target_chapter_title": "第8 章 神经系统",
+      "target_page_start": 98,
+      "target_page_end": 99
+    },
+    {
+      "id": "C117B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "请概括“大脑皮质的分层”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "大脑皮质的分层"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_007",
+      "target_chapter_title": "第8 章 神经系统",
+      "target_page_start": 98,
+      "target_page_end": 99
+    },
+    {
+      "id": "C118A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "structure",
+      "question": "“动脉和静脉管壁的一般结构”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "动脉和静脉管壁的一般结构"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_008",
+      "target_chapter_title": "第9 章 循环系统",
+      "target_page_start": 106,
+      "target_page_end": 106
+    },
+    {
+      "id": "C118B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "请概括“内膜”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "内膜"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_008",
+      "target_chapter_title": "第9 章 循环系统",
+      "target_page_start": 106,
+      "target_page_end": 106
+    },
+    {
+      "id": "C119A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "什么是“淋巴细胞”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "淋巴细胞"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_009",
+      "target_chapter_title": "第10 章 免疫系统",
+      "target_page_start": 117,
+      "target_page_end": 117
+    },
+    {
+      "id": "C119B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "请概括“主要的免疫细胞”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "主要的免疫细胞"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_009",
+      "target_chapter_title": "第10 章 免疫系统",
+      "target_page_start": 117,
+      "target_page_end": 117
+    },
+    {
+      "id": "C120A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "什么是“表皮”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "表皮"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_010",
+      "target_chapter_title": "第11 章 皮 肤",
+      "target_page_start": 129,
+      "target_page_end": 130
+    },
+    {
+      "id": "C120B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "请概括“表皮分层和角化”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "表皮分层和角化"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_010",
+      "target_chapter_title": "第11 章 皮 肤",
+      "target_page_start": 130,
+      "target_page_end": 130
+    },
+    {
+      "id": "C121A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "什么是“角膜”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "角膜"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_011",
+      "target_chapter_title": "第12 章 眼与耳",
+      "target_page_start": 137,
+      "target_page_end": 138
+    },
+    {
+      "id": "C121B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "请概括“眼球壁”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "眼球壁"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_011",
+      "target_chapter_title": "第12 章 眼与耳",
+      "target_page_start": 137,
+      "target_page_end": 138
+    },
+    {
+      "id": "C122A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "什么是“甲状腺”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "甲状腺"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_012",
+      "target_chapter_title": "第13 章 内分泌系统",
+      "target_page_start": 150,
+      "target_page_end": 151
+    },
+    {
+      "id": "C122B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "请概括“甲状腺滤泡”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "甲状腺滤泡"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_012",
+      "target_chapter_title": "第13 章 内分泌系统",
+      "target_page_start": 151,
+      "target_page_end": 151
+    },
+    {
+      "id": "C123A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "structure",
+      "question": "“消化管壁的一般结构”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "消化管壁的一般结构"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_013",
+      "target_chapter_title": "第14 章 消化管",
+      "target_page_start": 159,
+      "target_page_end": 160
+    },
+    {
+      "id": "C123B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "请概括“口腔与咽”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "口腔与咽"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_013",
+      "target_chapter_title": "第14 章 消化管",
+      "target_page_start": 160,
+      "target_page_end": 160
+    },
+    {
+      "id": "C124A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "什么是“大唾液腺”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "大唾液腺"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_014",
+      "target_chapter_title": "第15 章 消化腺",
+      "target_page_start": 174,
+      "target_page_end": 174
+    },
+    {
+      "id": "C124B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "structure",
+      "question": "请概括“3种大唾液腺的结构特点”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "3种大唾液腺的结构特点"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_014",
+      "target_chapter_title": "第15 章 消化腺",
+      "target_page_start": 174,
+      "target_page_end": 175
+    },
+    {
+      "id": "C125A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "什么是“鼻腔”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "鼻腔"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_015",
+      "target_chapter_title": "第16 章 呼吸系统",
+      "target_page_start": 184,
+      "target_page_end": 184
+    },
+    {
+      "id": "C125B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "请概括“外膜”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "外膜"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_015",
+      "target_chapter_title": "第16 章 呼吸系统",
+      "target_page_start": 186,
+      "target_page_end": 187
+    },
+    {
+      "id": "C126A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "什么是“肾单位”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肾单位"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_016",
+      "target_chapter_title": "第17 章 泌尿系统",
+      "target_page_start": 194,
+      "target_page_end": 194
+    },
+    {
+      "id": "C126B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "请概括“血管球”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "血管球"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_016",
+      "target_chapter_title": "第17 章 泌尿系统",
+      "target_page_start": 194,
+      "target_page_end": 195
+    },
+    {
+      "id": "C127A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "什么是“睾丸”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "睾丸"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_017",
+      "target_chapter_title": "第18 章 男性生殖系统",
+      "target_page_start": 203,
+      "target_page_end": 203
+    },
+    {
+      "id": "C127B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "请概括“生精小管”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "生精小管"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_017",
+      "target_chapter_title": "第18 章 男性生殖系统",
+      "target_page_start": 203,
+      "target_page_end": 204
+    },
+    {
+      "id": "C128A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "什么是“卵巢”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "卵巢"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_018",
+      "target_chapter_title": "第19 章 女性生殖系统",
+      "target_page_start": 211,
+      "target_page_end": 211
+    },
+    {
+      "id": "C128B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "请概括“卵泡的发育与成熟”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "卵泡的发育与成熟"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_018",
+      "target_chapter_title": "第19 章 女性生殖系统",
+      "target_page_start": 212,
+      "target_page_end": 212
+    },
+    {
+      "id": "C129A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "什么是“胚胎学的内容”？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "胚胎学的内容"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_019",
+      "target_chapter_title": "第20 章 胚胎学绪论",
+      "target_page_start": 223,
+      "target_page_end": 223
+    },
+    {
+      "id": "C129B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "definition",
+      "question": "请概括“胚胎学发展简史”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "胚胎学发展简史"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_019",
+      "target_chapter_title": "第20 章 胚胎学绪论",
+      "target_page_start": 223,
+      "target_page_end": 224
+    },
+    {
+      "id": "C130A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "“生殖细胞和受精”经历哪些关键过程或阶段？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "生殖细胞和受精"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_020",
+      "target_chapter_title": "第21 章 胚胎发生总论",
+      "target_page_start": 226,
+      "target_page_end": 226
+    },
+    {
+      "id": "C130B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "请概括“受精”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "受精"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_020",
+      "target_chapter_title": "第21 章 胚胎发生总论",
+      "target_page_start": 226,
+      "target_page_end": 227
+    },
+    {
+      "id": "C131A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "“鳃器的发生”经历哪些关键过程或阶段？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "鳃器的发生"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_021",
+      "target_chapter_title": "第22 章 颜面和四肢的发生",
+      "target_page_start": 244,
+      "target_page_end": 245
+    },
+    {
+      "id": "C131B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "请概括“颜面的形成”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "颜面的形成"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_021",
+      "target_chapter_title": "第22 章 颜面和四肢的发生",
+      "target_page_start": 245,
+      "target_page_end": 245
+    },
+    {
+      "id": "C132A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "“原始咽的发生及咽囊的演变”经历哪些关键过程或阶段？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "原始咽的发生及咽囊的演变"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_022",
+      "target_chapter_title": "第23 章 消化系统和呼吸系统的发生",
+      "target_page_start": 252,
+      "target_page_end": 252
+    },
+    {
+      "id": "C132B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "请概括“消化系统的发生”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "消化系统的发生"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_022",
+      "target_chapter_title": "第23 章 消化系统和呼吸系统的发生",
+      "target_page_start": 252,
+      "target_page_end": 252
+    },
+    {
+      "id": "C133A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "“肾和输尿管的发生”经历哪些关键过程或阶段？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "肾和输尿管的发生"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_023",
+      "target_chapter_title": "第24 章 泌尿系统和生殖系统的发生",
+      "target_page_start": 261,
+      "target_page_end": 261
+    },
+    {
+      "id": "C133B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "请概括“泌尿系统的发生”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "泌尿系统的发生"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_023",
+      "target_chapter_title": "第24 章 泌尿系统和生殖系统的发生",
+      "target_page_start": 261,
+      "target_page_end": 261
+    },
+    {
+      "id": "C134A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "“原始心血管系统的建立”经历哪些关键过程或阶段？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "原始心血管系统的建立"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_024",
+      "target_chapter_title": "第25 章 心血管系统的发生",
+      "target_page_start": 270,
+      "target_page_end": 270
+    },
+    {
+      "id": "C134B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "请概括“心脏的发生”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "心脏的发生"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_024",
+      "target_chapter_title": "第25 章 心血管系统的发生",
+      "target_page_start": 271,
+      "target_page_end": 272
+    },
+    {
+      "id": "C135A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "structure",
+      "question": "“神经组织的发生”的主要结构和组成是什么？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "神经组织的发生"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_025",
+      "target_chapter_title": "第26 章 神经系统的发生",
+      "target_page_start": 282,
+      "target_page_end": 282
+    },
+    {
+      "id": "C135B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "请概括“神经元的发生和成熟”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "神经元的发生和成熟"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_025",
+      "target_chapter_title": "第26 章 神经系统的发生",
+      "target_page_start": 283,
+      "target_page_end": 284
+    },
+    {
+      "id": "C136A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "“眼的发生”经历哪些关键过程或阶段？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "眼的发生"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_026",
+      "target_chapter_title": "第27 章 眼与耳的发生",
+      "target_page_start": 294,
+      "target_page_end": 294
+    },
+    {
+      "id": "C136B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "请概括“眼球的发生”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "眼球的发生"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_026",
+      "target_chapter_title": "第27 章 眼与耳的发生",
+      "target_page_start": 294,
+      "target_page_end": 294
+    },
+    {
+      "id": "C137A",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "classification",
+      "question": "“先天畸形的分类”可分为哪些类型？",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "先天畸形的分类"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_027",
+      "target_chapter_title": "第28 章 先天畸形概论",
+      "target_page_start": 300,
+      "target_page_end": 300
+    },
+    {
+      "id": "C137B",
+      "suite_group": "chapter_coverage",
+      "category": "组织学与胚胎学",
+      "question_type": "process",
+      "question": "请概括“先天畸形的发生原因”的核心要点，并给出教材页码依据。",
+      "mode": "all",
+      "answerable": true,
+      "expected_terms": [
+        "先天畸形的发生原因"
+      ],
+      "textbook_ids": [
+        "book_02"
+      ],
+      "target_textbook_id": "book_02",
+      "target_chapter_id": "book_02_ch_027",
+      "target_chapter_title": "第28 章 先天畸形概论",
+      "target_page_start": 300,
+      "target_page_end": 301
+    },
+    {
+      "id": "X001",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《病理学》与《病理生理学》中的“炎症”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "炎症"
+      ],
+      "textbook_ids": [
+        "book_05",
+        "book_07"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X002",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《生理学》与《病理生理学》中的“缺氧”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "缺氧"
+      ],
+      "textbook_ids": [
+        "book_03",
+        "book_07"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X003",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《病理学》与《病理生理学》中的“水肿”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "水肿"
+      ],
+      "textbook_ids": [
+        "book_05",
+        "book_07"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X004",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《病理学》与《病理生理学》中的“血栓”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "血栓"
+      ],
+      "textbook_ids": [
+        "book_05",
+        "book_07"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X005",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《生理学》与《病理生理学》中的“休克”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "休克"
+      ],
+      "textbook_ids": [
+        "book_03",
+        "book_07"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X006",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《生理学》与《病理生理学》中的“发热”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "发热"
+      ],
+      "textbook_ids": [
+        "book_03",
+        "book_07"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X007",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《生理学》与《病理生理学》中的“酸碱”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "酸碱"
+      ],
+      "textbook_ids": [
+        "book_03",
+        "book_07"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X008",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《生理学》与《病理生理学》中的“心功能”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "心功能"
+      ],
+      "textbook_ids": [
+        "book_03",
+        "book_07"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X009",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《生理学》与《病理生理学》中的“肺功能”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "肺功能"
+      ],
+      "textbook_ids": [
+        "book_03",
+        "book_07"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X010",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《生理学》与《病理生理学》中的“肾功能”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "肾功能"
+      ],
+      "textbook_ids": [
+        "book_03",
+        "book_07"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X011",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《组织学与胚胎学》与《病理生理学》中的“肝”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "肝"
+      ],
+      "textbook_ids": [
+        "book_02",
+        "book_07"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X012",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《病理学》与《病理生理学》中的“细胞死亡”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "细胞死亡"
+      ],
+      "textbook_ids": [
+        "book_05",
+        "book_07"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X013",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《组织学与胚胎学》与《病理学》中的“再生”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "再生"
+      ],
+      "textbook_ids": [
+        "book_02",
+        "book_05"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X014",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《医学微生物学》与《病理学》中的“免疫”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "免疫"
+      ],
+      "textbook_ids": [
+        "book_04",
+        "book_05"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X015",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《医学微生物学》与《传染病学》中的“细菌”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "细菌"
+      ],
+      "textbook_ids": [
+        "book_04",
+        "book_06"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X016",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《医学微生物学》与《传染病学》中的“病毒”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "病毒"
+      ],
+      "textbook_ids": [
+        "book_04",
+        "book_06"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X017",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《医学微生物学》与《传染病学》中的“结核”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "结核"
+      ],
+      "textbook_ids": [
+        "book_04",
+        "book_06"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X018",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《医学微生物学》与《传染病学》中的“肝炎”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "肝炎"
+      ],
+      "textbook_ids": [
+        "book_04",
+        "book_06"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X019",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《医学微生物学》与《传染病学》中的“螺旋体”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "螺旋体"
+      ],
+      "textbook_ids": [
+        "book_04",
+        "book_06"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X020",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《医学微生物学》与《传染病学》中的“真菌”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "真菌"
+      ],
+      "textbook_ids": [
+        "book_04",
+        "book_06"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X021",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《医学微生物学》与《传染病学》中的“感染”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "感染"
+      ],
+      "textbook_ids": [
+        "book_04",
+        "book_06"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X022",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《组织学与胚胎学》与《生理学》中的“血液”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "血液"
+      ],
+      "textbook_ids": [
+        "book_02",
+        "book_03"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X023",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《组织学与胚胎学》与《生理学》中的“呼吸”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "呼吸"
+      ],
+      "textbook_ids": [
+        "book_02",
+        "book_03"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X024",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《组织学与胚胎学》与《生理学》中的“泌尿”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "泌尿"
+      ],
+      "textbook_ids": [
+        "book_02",
+        "book_03"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X025",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《组织学与胚胎学》与《生理学》中的“生殖”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "生殖"
+      ],
+      "textbook_ids": [
+        "book_02",
+        "book_03"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "X026",
+      "suite_group": "cross_textbook_extension",
+      "category": "跨教材",
+      "question_type": "comparison",
+      "question": "《组织学与胚胎学》与《病理学》中的“发育”知识有什么联系？",
+      "mode": "compare",
+      "answerable": true,
+      "expected_terms": [
+        "发育"
+      ],
+      "textbook_ids": [
+        "book_02",
+        "book_05"
+      ],
+      "min_textbooks": 2
+    },
+    {
+      "id": "N001",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "如何证明黎曼猜想？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N002",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "区块链共识算法如何容错？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N003",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "明代海禁政策经历了哪些变化？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N004",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "怎样设计一台量子计算机？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N005",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "Transformer 的位置编码有哪些实现？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N006",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "火星土壤适合种植什么作物？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N007",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "怎样计算桥梁抗震荷载？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N008",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "文艺复兴油画如何使用明暗法？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N009",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "宏观经济中的菲利普斯曲线是什么？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N010",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "如何编写 Rust 异步运行时？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N011",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "解释航空发动机涡扇比的设计取舍。",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N012",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "什么是椭圆曲线数字签名？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N013",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "古典音乐中的奏鸣曲式如何分析？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N014",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "太阳耀斑如何影响地球磁层？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N015",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "怎样训练自动驾驶感知模型？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N016",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "欧盟数字市场法有哪些核心义务？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N017",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "如何估算商业卫星的轨道衰减？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N018",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "唐诗格律中的拗救规则是什么？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N019",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "数据库分布式事务如何保证一致性？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    },
+    {
+      "id": "N020",
+      "suite_group": "rejection_extension",
+      "category": "拒答",
+      "question_type": "rejection",
+      "question": "芯片光刻中的数值孔径有什么作用？",
+      "mode": "all",
+      "answerable": false,
+      "expected_terms": []
+    }
+  ]
+}

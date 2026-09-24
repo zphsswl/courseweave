@@ -182,6 +182,15 @@ class RetrievalServiceTest(unittest.TestCase):
         )
         self.assertEqual(result["results"], [])
 
+    def test_mixed_language_out_of_domain_term_must_exist_in_the_course(self):
+        result = retrieve(
+            "Transformer 的位置编码有哪些实现？",
+            course_id=DEFAULT_COURSE_ID,
+            top_k=5,
+        )
+        self.assertEqual(result["results"], [])
+        self.assertEqual(result["trace"]["reason"], "unsupported_query_topics")
+
     def test_chinese_out_of_domain_query_cannot_mix_unrelated_course_terms(self):
         result = retrieve(
             "神经网络如何进行图像分类？",
@@ -224,6 +233,37 @@ class RetrievalServiceTest(unittest.TestCase):
             top_k=3,
         )
         self.assertEqual(result["results"][0]["id"], "teacher_frame")
+
+    def test_quoted_concept_is_preserved_when_it_contains_a_stopword(self):
+        cleaned = _clean_chinese_query_text("“眼的发生”经历哪些关键过程或阶段？")
+        self.assertIn("眼的发生", cleaned)
+
+        db = SessionLocal()
+        try:
+            db.add(Chunk(
+                id="eye_development",
+                textbook_id="rag_book_a",
+                chapter_id="chapter_rag_book_a",
+                textbook_title="组织学与胚胎学",
+                chapter_title="眼与耳的发生",
+                page_start=88,
+                page_end=88,
+                content="眼的发生始于视泡形成，随后视杯及晶状体逐步分化。",
+                section_path=["眼与耳的发生", "眼的发生"],
+                content_hash="eye_development",
+                chunk_index=88,
+            ))
+            db.commit()
+        finally:
+            db.close()
+        invalidate_course_cache(DEFAULT_COURSE_ID)
+
+        result = retrieve(
+            "“眼的发生”经历哪些关键过程或阶段？",
+            course_id=DEFAULT_COURSE_ID,
+            top_k=3,
+        )
+        self.assertEqual(result["results"][0]["id"], "eye_development")
 
     def test_chinese_medical_hyphen_variants_are_normalized(self):
         db = SessionLocal()
