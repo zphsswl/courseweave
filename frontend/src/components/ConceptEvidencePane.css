@@ -1,0 +1,94 @@
+.concept-evidence-pane { min-width: 0; max-width: 100%; padding: 22px; color: #263e33; background: #fffef8; border: 1px solid #d7ded2; border-top: 3px solid #356b51; border-radius: 4px; overflow-wrap: anywhere; }
+.concept-evidence-pane, .concept-evidence-pane * { box-sizing: border-box; }
+.concept-evidence-pane button { font-family: var(--sans, sans-serif); }
+.ce-pane-heading { margin-bottom: 19px; }
+.ce-kicker { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; color: #677c69; font-size: 10px; letter-spacing: .05em; }
+.ce-kicker > span:last-child { padding: 4px 7px; border-radius: 3px; letter-spacing: 0; }
+.ce-selected-badge { color: #226348; background: #eaf2e4; }
+.ce-candidate-badge { color: #7c7758; background: #f2f0e5; }
+.ce-draft-badge { color: #906d34; background: #f7eedb; }
+.ce-pane-heading h2 { margin: 13px 0 8px; font: 600 23px/1.55 var(--serif, "Noto Serif SC", "Songti SC", SimSun, serif); color: #1c4230; }
+.ce-pane-heading > p { margin: 0; color: #60745e; font-size: 12px; line-height: 1.9; }
+.ce-pane-heading > .ce-book-title { color: #456d4d; font-size: 12px; }
+.ce-source-metadata { padding: 13px 14px; border-left: 2px solid #c7d3ba; background: #f4f5eb; }
+.ce-origin { display: inline-block; font-size: 11px; color: #4d744d; }
+.ce-origin.ce-origin-pending { color: #927339; }
+.ce-metadata-note { margin: 7px 0 0; font-size: 11px; line-height: 1.85; color: #6c775f; }
+.ce-source-metadata dl { margin: 9px 0 0; }
+.ce-source-metadata dt { margin-top: 7px; color: #7b826e; font-size: 10px; }
+.ce-source-metadata dd { margin: 3px 0 0; color: #52694f; font-size: 11px; line-height: 1.85; }
+.ce-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.ce-field > span { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px; color: #466343; font-size: 12px; }
+.ce-field > span > small { color: #7f8b73; font-size: 10px; }
+.ce-field .ant-select, .ce-relation-side > .ant-select, .ce-dimension > .ant-select { width: 100%; min-width: 0; }
+.ce-evidence-picker { margin: 18px 0; }
+.concept-evidence-pane .ant-select-selection-item { min-width: 0; }
+.concept-evidence-pane .ant-input, .concept-evidence-pane .ant-select-selector { font-size: 12px; }
+.ce-primary-evidence { margin-top: 20px; }
+.ce-evidence-label { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; color: #6c7c66; font-size: 10px; }
+.ce-quote { margin: 12px 0; padding: 0; border: 0; color: #2d4232; font: 17px/1.95 var(--serif, "Noto Serif SC", "Songti SC", SimSun, serif); white-space: pre-line; overflow-wrap: anywhere; }
+.ce-quote mark { color: inherit; background: #edf0c7; padding: 0 2px; }
+.ce-text-button { padding: 3px 0; color: #22634a; background: none; border: 0; font-size: 12px; cursor: pointer; }
+.ce-text-button:hover { text-decoration: underline; }
+.ce-text-button:focus-visible, .ce-dimension > summary:focus-visible { outline: 2px solid #97743d; outline-offset: 3px; }
+.ce-excerpt-note { margin: 8px 0 12px; color: #7d806b; font-size: 11px; line-height: 1.8; }
+.concept-evidence-pane .ce-original-page { margin-top: 8px; max-width: 100%; color: #286648; border-color: #b9c9ae; background: #fbfcf5; font-size: 12px; }
+.ce-primary-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 22px; padding-top: 20px; border-top: 1px solid #e0e5d7; }
+.ce-primary-actions .ant-btn { height: auto; min-height: 37px; padding: 8px 10px; white-space: normal; font-size: 12px; }
+.ce-action-hint { margin: -3px 0 0; color: #7b7f65; font-size: 11px; line-height: 1.8; }
+.ce-primary-actions .ce-remove-evidence { align-self: flex-end; min-height: 28px; margin-top: -5px; padding: 2px 0; font-size: 11px; }
+.ce-teaching-notes { margin-top: 24px; padding-top: 18px; border-top: 1px solid #dce2d3; }
+.ce-teaching-notes > header { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+.ce-teaching-notes h3, .ce-relation-reason > h3 { margin: 0; color: #355638; font: 600 17px/1.65 var(--serif, serif); }
+.ce-teaching-notes header > span { color: #8a917d; font-size: 10px; }
+.ce-teaching-notes > .ce-field + .ce-field { margin-top: 19px; }
+.ce-teaching-notes .ant-input-textarea-show-count { margin-bottom: 12px; }
+.ce-teaching-notes .ant-input-show-count-suffix, .ce-relation-reason .ant-input-data-count { color: #8d967e; font-size: 10px; }
+.ce-dimension { margin-top: 20px; font-size: 11px; }
+.ce-dimension > summary { color: #677961; cursor: pointer; padding: 5px 0; }
+.ce-dimension > summary > span { margin-left: 12px; color: #8d957e; }
+.ce-dimension > .ant-select { margin-top: 9px; }
+.ce-saved-title { margin: 0 0 8px; color: #446443; font-size: 13px; }
+.ce-saved-note { margin: 10px 0 0; color: #536b50; font-size: 14px; line-height: 1.95; white-space: pre-line; }
+.ce-unselected-note { margin: 13px 0 0; color: #7a846b; font-size: 11px; line-height: 1.9; }
+.ce-read-dimension { display: inline-block; margin-top: 12px; color: #74826a; font-size: 11px; }
+.ce-empty { display: flex; align-items: center; justify-content: center; flex-direction: column; min-height: 290px; padding: 36px 25px; text-align: center; }
+.ce-empty > span { color: #90a77e; font: 39px/1 Georgia, serif; }
+.ce-empty > h2 { margin: 19px 0 9px; font: 500 22px/1.6 var(--serif, serif); }
+.ce-empty > p { max-width: 310px; margin: 0; color: #7a866e; font-size: 12px; line-height: 1.9; }
+.ce-relation-controls { display: flex; align-items: end; gap: 12px; min-width: 0; }
+.ce-relation-controls > label { flex: 1; }
+.ce-relation-controls .ce-swap { flex-shrink: 0; max-width: 45%; padding-inline: 10px; color: #52704d; font-size: 11px; }
+.ce-direction-note { margin: 12px 0 20px; padding: 9px 11px; color: #6e7f62; background: #f3f4eb; font-size: 11px; line-height: 1.85; }
+.ce-direction-note.is-directed { border-left: 2px solid #a4b38c; }
+.ce-relation-sides { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 19px; }
+.ce-relation-side { min-width: 0; padding: 16px 14px; background: #f7f7ef; border: 1px solid #e1e5d7; }
+.ce-side-label { display: flex; align-items: baseline; gap: 9px; margin-bottom: 11px; }
+.ce-side-label > span { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 22px; height: 22px; color: #517846; border: 1px solid #b5c5a4; font: 12px/1 Georgia, serif; }
+.ce-side-label > strong { color: #496744; font-size: 12px; line-height: 1.8; font-weight: 500; }
+.ce-relation-side > h3 { margin: 13px 0 5px; color: #355b38; font: 600 17px/1.7 var(--serif, serif); }
+.ce-side-path { margin: 0 0 10px; color: #869077; font-size: 10px; line-height: 1.85; }
+.ce-relation-side .ce-quote { font-size: 16px; line-height: 1.95; }
+.ce-source-gap { margin: 25px 0; color: #839077; font-size: 12px; line-height: 1.9; }
+.ce-relation-reason { margin-top: 23px; padding-top: 18px; border-top: 1px solid #dfe4d5; }
+.ce-relation-reason > h3 { margin-bottom: 12px; }
+.ce-relation-reason .ant-input-textarea-show-count { margin-bottom: 14px; }
+.ce-relation-caption { margin: 22px 0 0; color: #8b927e; font-size: 11px; line-height: 1.9; }
+.ce-validation { margin: 13px 0 0; padding: 9px 11px; color: #8c6b31; background: #f8f1df; font-size: 11px; line-height: 1.85; }
+.ce-relation-actions { display: flex; flex-wrap: wrap; gap: 10px 8px; margin-top: 19px; }
+.ce-relation-actions > .ant-btn { min-height: 35px; padding-inline: 11px; font-size: 12px; }
+.ce-relation-actions .ce-delete-relation { margin-left: auto; font-size: 11px; }
+.ce-presenting { padding: 27px; background: #fbfaf3; }
+.ce-presenting .ce-pane-heading h2 { font-size: 28px; }
+.ce-presenting .ce-quote { font-size: 23px; line-height: 2.05; }
+.ce-presenting .ce-relation-side .ce-quote { font-size: 21px; }
+.ce-presenting .ce-relation-side { background: transparent; }
+.ce-presenting .ce-saved-note { font-size: 19px; line-height: 2; }
+@media (max-width: 500px) {
+  .concept-evidence-pane { padding: 18px; }
+  .ce-pane-heading h2 { font-size: 22px; }
+  .ce-presenting .ce-pane-heading h2 { font-size: 25px; }
+  .ce-presenting .ce-quote { font-size: 21px; }
+  .ce-relation-actions > .ant-btn { flex: 1 1 auto; }
+  .ce-relation-actions .ce-delete-relation { flex: 0 0 auto; margin-left: 0; }
+}

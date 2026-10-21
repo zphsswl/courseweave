@@ -28,6 +28,7 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (axios.isCancel(error)) return Promise.reject(error);
     const msg = error?.response?.data?.detail || error.message || '未知错误';
     console.error('[API Error]', msg, error.config?.url);
     return Promise.reject(error);
@@ -72,6 +73,8 @@ export const updateChapterStructure = (id: string, chapters: Chapter[], confirme
       order_index: chapter.order_index ?? index,
       parent_id: chapter.parent_id || '',
       level: chapter.level || 1,
+      page_start: chapter.page_start,
+      page_end: chapter.page_end,
     })),
   });
 
@@ -92,8 +95,11 @@ export const startExtractGraphJob = (textbookId: string, force: boolean = false)
 export const startIntegrateJob = (courseId: string, textbookIds: string[]) =>
   api.post<Job>('/jobs/integrate', { course_id: courseId, textbook_ids: textbookIds });
 
-export const getJobStatus = (id: string) =>
-  api.get<Job>(`/jobs/${id}`);
+export const getJobStatus = (id: string, signal?: AbortSignal) =>
+  api.get<Job>(`/jobs/${id}`, { signal });
+
+export const getTextbookJobs = (courseId: string, signal?: AbortSignal) =>
+  api.get<Job[]>('/jobs', { params: { course_id: courseId }, signal });
 
 /* ========== Lesson preparation Agent ========== */
 export const createAgentRun = (data: {
@@ -151,12 +157,13 @@ export const queryRag = (
   courseId: string,
   mode: 'all' | 'compare' = 'all',
   textbookIds?: string[],
+  signal?: AbortSignal,
 ) => api.post<QueryResult>('/rag/query', {
   question,
   course_id: courseId,
   mode,
   textbook_ids: textbookIds,
-});
+}, { signal });
 
 /* ========== Cross-textbook review ========== */
 export const getAlignmentCandidates = (courseId: string, textbookIds: string[], status: string = 'pending') =>
@@ -182,11 +189,11 @@ export const sendChatMessage = (message: string) =>
   api.post<{ response?: string; operation?: string; detail?: string }>('/chat', { message });
 
 /* ========== Report ========== */
-export const getReportSummary = () =>
-  api.get<ReportSummary>('/report/summary');
+export const getReportSummary = (courseId?: string) =>
+  api.get<ReportSummary>('/report/summary', { params: { course_id: courseId } });
 
-export const exportReport = () =>
-  api.post('/report/export', {}, { responseType: 'blob' });
+export const exportReport = (courseId?: string) =>
+  api.post('/report/export', { course_id: courseId || 'course_default' }, { responseType: 'blob' });
 
 /* ========== Benchmark ========== */
 export const getBenchmarkResults = (courseId: string) =>

@@ -16,6 +16,8 @@ export interface Textbook {
   index_status: string;
   structure_status?: 'pending' | 'review' | 'confirmed';
   parse_warnings?: string[];
+  chapter_range_editable?: boolean;
+  chapter_range_edit_reason?: string;
 }
 
 export interface Course {

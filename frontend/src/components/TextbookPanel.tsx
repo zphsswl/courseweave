@@ -13,6 +13,8 @@ import {
 } from '@ant-design/icons';
 import type { Job, Textbook } from '../types';
 import ChapterReviewModal from './ChapterReviewModal';
+import { textbookWorkflow } from './textbookWorkflow';
+import './Teaching.css';
 
 interface Props {
   textbooks: Textbook[];
@@ -33,18 +35,6 @@ const formatFileSize = (bytes: number) => {
   const units = ['B', 'KB', 'MB', 'GB'];
   const index = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
   return `${(bytes / Math.pow(1024, index)).toFixed(index ? 1 : 0)} ${units[index]}`;
-};
-
-const graphReady = (book: Textbook) => ['completed', 'review'].includes(book.graph_status);
-
-const getBookState = (book: Textbook) => {
-  if (book.parse_status === 'processing') return { label: '正在解析', tone: 'working' };
-  if (book.graph_status === 'processing') return { label: '正在生成知识树', tone: 'working' };
-  if (book.parse_status === 'pending' || book.parse_status === 'failed') return { label: '等待解析', tone: 'next' };
-  if (book.structure_status === 'review') return { label: '待确认章节', tone: 'review' };
-  if (graphReady(book)) return { label: '知识树已生成', tone: 'ready' };
-  if (book.structure_status === 'confirmed') return { label: '可生成知识树', tone: 'next' };
-  return { label: '已解析', tone: 'neutral' };
 };
 
 const TextbookPanel: React.FC<Props> = ({
@@ -76,18 +66,10 @@ const TextbookPanel: React.FC<Props> = ({
   }, [onUpload]);
 
   const runPrimaryAction = (book: Textbook) => {
-    if (book.parse_status === 'pending' || book.parse_status === 'failed') return onParse(book.id);
-    if (book.structure_status === 'review') return setReviewingBook(book);
-    if (book.structure_status === 'confirmed' && !graphReady(book)) return onExtractGraph(book.id);
-    return onSelect(book.id);
-  };
-
-  const primaryLabel = (book: Textbook) => {
-    if (book.parse_status === 'processing' || book.graph_status === 'processing') return '处理中';
-    if (book.parse_status === 'pending' || book.parse_status === 'failed') return '解析教材';
-    if (book.structure_status === 'review') return '确认章节';
-    if (book.structure_status === 'confirmed' && !graphReady(book)) return '生成知识树';
-    return '打开知识树';
+    const { action } = textbookWorkflow(book, jobs[book.id], readOnly);
+    if (action === 'parse') return onParse(book.id);
+    if (action === 'review') return setReviewingBook(book);
+    if (action === 'read') return onSelect(book.id);
   };
 
   const confirmForce = (title: string, content: string, action: () => void) => {
@@ -128,14 +110,14 @@ const TextbookPanel: React.FC<Props> = ({
         <div>
           <span className="section-kicker">TEXTBOOK LIBRARY</span>
           <h1>教材</h1>
-          <p>上传教材，确认章节，再生成一棵可以阅读和追溯的知识树。</p>
+          <p>阅读教材与原页，核对目录，再把需要的材料带入备课。</p>
         </div>
         <div className="library-summary">
           <strong>{textbooks.length}</strong>
           <span>本教材</span>
           <i />
-          <strong>{textbooks.filter(graphReady).length}</strong>
-          <span>棵知识树</span>
+          <strong>{textbooks.filter((book) => book.parse_status === 'completed').length}</strong>
+          <span>本可阅读</span>
         </div>
       </div>
 
@@ -143,8 +125,15 @@ const TextbookPanel: React.FC<Props> = ({
         <div className="library-upload readonly-demo-note">
           <div className="upload-inline">
             <span className="upload-icon"><BookOutlined /></span>
-            <div><strong>在线示例已加载原创教材</strong><small>可直接打开知识树、跨教材连接和教材问答；上传与重新解析请在本地运行。</small></div>
+            <div><strong>在线示例已加载原创教材</strong><small>打开教材阅读、核对跨教材证据，或查看示例教案。</small></div>
           </div>
+        </div>
+      ) : textbooks.length > 0 ? (
+        <div className="library-upload-compact">
+          <div><strong>添加参考教材</strong><small>PDF、Markdown 或 TXT · 上传后可解析正文</small></div>
+          <Upload accept=".pdf,.md,.txt" showUploadList={false} customRequest={upload} disabled={uploading}>
+            <Button icon={<UploadOutlined />} loading={uploading}>{uploading ? '正在上传…' : '上传教材'}</Button>
+          </Upload>
         </div>
       ) : (
         <Upload.Dragger
@@ -158,7 +147,7 @@ const TextbookPanel: React.FC<Props> = ({
             <span className="upload-icon">{uploading ? <LoadingOutlined /> : <UploadOutlined />}</span>
             <div>
               <strong>{uploading ? '正在上传教材…' : '拖入教材，或点击选择文件'}</strong>
-              <small>支持 PDF、Markdown、TXT，单本教材上传后按步骤处理</small>
+              <small>支持 PDF、Markdown、TXT，上传后解析正文并核对目录</small>
             </div>
             <Button type="primary" icon={<UploadOutlined />} loading={uploading}>选择教材</Button>
           </div>
@@ -167,7 +156,7 @@ const TextbookPanel: React.FC<Props> = ({
 
       <div className="library-list-heading">
         <span>全部教材</span>
-        <small>每本教材只显示当前需要完成的下一步</small>
+          <small>解析完成即可阅读；目录核对后用于备课</small>
       </div>
 
       {loading ? (
@@ -176,20 +165,14 @@ const TextbookPanel: React.FC<Props> = ({
         <Empty
           className="library-empty"
           image={<FileTextOutlined />}
-          description={<span>还没有教材<br /><small>上传第一本教材开始构建知识树</small></span>}
+          description={<span>还没有教材<br /><small>上传主教材或参考书，开始准备一堂课</small></span>}
         />
       ) : (
         <div className="textbook-list">
           {textbooks.map((book, index) => {
-            const state = getBookState(book);
             const job = jobs[book.id];
-            const jobWorking = job && (job.status === 'pending' || job.status === 'processing');
-            const working = Boolean(jobWorking || book.parse_status === 'processing' || book.graph_status === 'processing');
-            const progress = jobWorking
-              ? job.total > 0 ? Math.max(6, Math.min(96, Math.round((job.progress / job.total) * 100))) : 8
-              : working ? 35 : 100;
-            const generatingGraph = job?.type === 'extract_graph' || book.graph_status === 'processing';
-            const workingLabel = generatingGraph ? '正在生成知识树' : '正在解析教材';
+            const state = textbookWorkflow(book, job, readOnly);
+            const working = state.processing;
             const deleting = deletingId === book.id;
             return (
               <article className="textbook-row" key={book.id}>
@@ -198,41 +181,44 @@ const TextbookPanel: React.FC<Props> = ({
                 <div className="book-main">
                   <div className="book-title-line">
                     <h2>{book.title}</h2>
-                    <span className={`book-state ${working ? 'working' : state.tone}`}>
+                    <span className={`book-state ${state.tone}`}>
                       {!working && state.tone === 'ready' && <CheckCircleFilled />}
                       {working && <LoadingOutlined />}
-                      {working ? workingLabel : state.label}
+                      {state.label}
                     </span>
                   </div>
                   <p>
                     <span>{formatFileSize(book.file_size)}</span>
                     <span>{book.total_pages || '—'} 页</span>
                   </p>
+                  {state.detail && <p className={`book-workflow-detail ${state.tone === 'error' ? 'has-error' : ''}`} role={state.tone === 'error' ? 'alert' : undefined}>{state.detail}{working && state.progress !== null ? ` · ${state.progress}%` : ''}</p>}
+                  {!!book.parse_warnings?.length && <details className="book-parse-warnings"><summary>{book.parse_warnings.length} 项正文与页码提示</summary><ul>{book.parse_warnings.map((warning, at) => <li key={at}>{warning}</li>)}</ul></details>}
                 </div>
                 <div className="book-row-actions">
                   <div className="book-primary-wrap">
                     <Button
-                      className={`book-primary-action ${working ? 'processing' : ''}`}
+                      className={`book-primary-action ${state.action === 'wait' ? 'processing' : ''}`}
                       type={state.tone === 'next' || state.tone === 'review' ? 'primary' : 'default'}
                       size="large"
-                      disabled={working}
+                      disabled={state.action === 'wait'}
                       loading={deleting}
                       onClick={() => runPrimaryAction(book)}
                     >
-                      <span>{working ? workingLabel : primaryLabel(book)}</span>
-                      {!working && <RightOutlined />}
-                      {working && (
-                        <span className="action-progress-track" role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}>
-                          <i style={{ width: `${progress}%` }} />
+                      <span>{state.actionLabel}</span>
+                      {state.action !== 'wait' && <RightOutlined />}
+                      {state.action === 'wait' && state.processing && state.progress !== null && (
+                        <span className="action-progress-track" role="progressbar" aria-valuenow={state.progress} aria-valuemin={0} aria-valuemax={100}>
+                          <i style={{ width: `${state.progress}%` }} />
                         </span>
                       )}
                     </Button>
-                    {working && <small className="book-job-message">{job?.message || '任务正在启动'} · {progress}%</small>}
+                    {state.action === 'review' && <Button type="link" size="small" className="book-read-action" onClick={() => onSelect(book.id)}>先阅读正文</Button>}
                   </div>
                   {!readOnly && <Dropdown
                     trigger={['click']}
                     menu={{
                       items: [
+                        { key: 'chapters', label: '核对章节结构', disabled: working || book.parse_status !== 'completed', onClick: () => setReviewingBook(book) },
                         {
                           key: 'parse',
                           label: '重新解析教材',
@@ -241,9 +227,11 @@ const TextbookPanel: React.FC<Props> = ({
                         },
                         {
                           key: 'extract',
-                          label: '重新生成知识树',
+                          label: ['completed', 'review'].includes(book.graph_status) ? '重新整理教材知识' : book.graph_status === 'failed' ? '重试知识整理' : '整理教材知识',
                           disabled: working || book.structure_status !== 'confirmed',
-                          onClick: () => confirmForce('重新生成知识树？', '现有知识点与关系会被重新计算。', () => onExtractGraph(book.id, true)),
+                          onClick: () => ['completed', 'review'].includes(book.graph_status)
+                            ? confirmForce('重新整理教材知识？', '现有知识点与关系会被重新计算。', () => onExtractGraph(book.id, true))
+                            : onExtractGraph(book.id, book.graph_status === 'failed'),
                         },
                         { type: 'divider' },
                         {

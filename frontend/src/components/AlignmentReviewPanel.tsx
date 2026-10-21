@@ -38,6 +38,8 @@ interface Props {
   generating?: boolean;
   refreshToken?: number;
   readOnly?: boolean;
+  scopeBookIds?: string[];
+  initialTheme?: string;
 }
 
 const RELATION_LABELS: Record<string, string> = {
@@ -68,6 +70,7 @@ const usefulDefinition = (node?: GraphNode | null) => {
 
 const AlignmentReviewPanel: React.FC<Props> = ({
   courseId, textbooks, onGenerate, onGoLibrary, generating = false, refreshToken = 0, readOnly = false,
+  scopeBookIds, initialTheme = '',
 }) => {
   const cyRef = useRef<Cytoscape.Core | null>(null);
   const [selectedBookIds, setSelectedBookIds] = useState<string[]>([]);
@@ -84,12 +87,14 @@ const AlignmentReviewPanel: React.FC<Props> = ({
   const readyBookKey = readyBooks.map((book) => book.id).sort().join('|');
   const selectedBookKey = [...selectedBookIds].sort().join('|');
   const canGenerate = selectedBookIds.length >= 2;
+  const scopeKey = scopeBookIds?.join('|');
 
   useEffect(() => {
-    setSelectedBookIds(readyBooks.map((book) => book.id));
+    setSelectedBookIds(scopeBookIds ? scopeBookIds.filter((id) => readyBooks.some((book) => book.id === id)) : readyBooks.map((book) => book.id));
     setFocusNodeId('');
     setSelectedNodeId('');
-  }, [courseId, readyBookKey]);
+    setThemeQuery(initialTheme);
+  }, [courseId, readyBookKey, scopeKey, initialTheme]);
 
   const loadGraph = useCallback(async () => {
     if (selectedBookIds.length < 2) {
@@ -147,7 +152,7 @@ const AlignmentReviewPanel: React.FC<Props> = ({
 
   useEffect(() => {
     if (!focusNodeId || !nodeMap.has(focusNodeId)) {
-      const first = themes[0]?.id || '';
+      const first = (initialTheme ? themes.find((node) => cleanText(node.label).includes(initialTheme)) : themes[0])?.id || '';
       setFocusNodeId(first);
       setSelectedNodeId(first);
     }
