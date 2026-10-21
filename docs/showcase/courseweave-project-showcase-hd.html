@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=3840, initial-scale=1">
+  <title>CourseWeave · 项目展示</title>
+  <style>
+    /* Editable, native 3840 × 2160 composition. No downloaded or embedded fonts.
+       The single product visual is an unchanged, real application screenshot. */
+    :root { color-scheme: light; --paper: #fafaf5; --ink: #073f32; --muted: #657068; --rule: #c4cbbf; --brass: #a6844e; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 3840px; height: 2160px; overflow: hidden; background: var(--paper); }
+    body { font-family: "Microsoft YaHei", "Noto Sans CJK SC", sans-serif; }
+    .poster { position: relative; width: 3840px; height: 2160px; color: var(--ink); }
+    .brand { position: absolute; left: 140px; top: 208px; }
+    .wordmark { margin: 0; font: 700 112px/1.1 Georgia, "Times New Roman", serif; letter-spacing: -3px; }
+    .descriptor { margin: 30px 0 0; font-size: 49px; line-height: 1.4; color: var(--muted); letter-spacing: 2px; }
+    .accent { position: absolute; left: 144px; top: 568px; width: 136px; height: 5px; background: var(--brass); }
+    .message { position: absolute; left: 133px; top: 805px; width: 1400px; }
+    h1 { margin: 0; font: 600 121px/1.49 "Noto Serif CJK SC", "Source Han Serif SC", SimSun, serif; letter-spacing: -2px; }
+    h1 span { display: block; white-space: nowrap; }
+    .support { margin: 61px 0 0 8px; font: 400 51px/1.6 "Noto Serif CJK SC", SimSun, serif; color: #626e65; white-space: nowrap; letter-spacing: .4px; }
+    .product { position: absolute; left: 1578px; top: 363px; width: 2122px; margin: 0; border: 2px solid #c4cbbf; border-radius: 20px; overflow: hidden; background: #fafaf5; box-shadow: 0 22px 76px rgba(49, 65, 42, .065); }
+    .product img { display: block; width: 100%; height: auto; }
+    .footer-rule { position: absolute; left: 140px; right: 140px; top: 1929px; height: 2px; background: var(--rule); }
+    footer { position: absolute; left: 140px; right: 140px; top: 2002px; display: flex; align-items: center; justify-content: space-between; }
+    .flow { display: flex; align-items: center; gap: 39px; font: 400 49px/1.3 "Noto Serif CJK SC", SimSun, serif; color: #52645a; letter-spacing: 2px; }
+    .flow .arrow { font-family: Georgia, serif; font-size: 52px; color: #687b6c; }
+    .signature { display: flex; align-items: center; gap: 96px; color: #58675d; font: 400 43px/1.4 Georgia, "Times New Roman", serif; }
+    .signature::before { content: ""; display: block; width: 2px; height: 56px; background: var(--rule); }
+  </style>
+</head>
+<body>
+  <main class="poster" aria-label="CourseWeave 项目展示">
+    <header class="brand">
+      <p class="wordmark">CourseWeave</p>
+      <p class="descriptor">多教材知识连接与备课系统</p>
+    </header>
+    <div class="accent" aria-hidden="true"></div>
+    <section class="message">
+      <h1><span>从多本教材，</span><span>到一份有据可查的教案。</span></h1>
+      <p class="support">为教师连接知识，让备课回到原文证据。</p>
+    </section>
+    <figure class="product">
+      <img src="../screenshots/knowledge-distribution-20261020.png" width="1366" height="900" alt="CourseWeave 实际运行界面：两本教材的来源模块分布及教师确认关系">
+    </figure>
+    <div class="footer-rule" aria-hidden="true"></div>
+    <footer>
+      <div class="flow"><span>知识连接</span><span class="arrow">→</span><span>原文核验</span><span class="arrow">→</span><span>教案编排</span></div>
+      <div class="signature">React · FastAPI · RAG · Agent</div>
+    </footer>
+  </main>
+</body>
+</html>
