@@ -2,22 +2,32 @@
 
 All notable changes to CourseWeave are documented in this file.
 
-## [1.2.2.0] - 2026-09-24
+## [1.2.2.0] - 2026-10-21
 
 ### Added
 
+- Compare original passages across textbooks, collect lesson materials, record teaching relations with evidence on both sides, and restore saved lesson boards.
+- Explore topic → textbook → source-module distribution in nested rings, focus on one textbook, inspect original passages, and expand additional matches without treating search hits as semantic relations.
+- Read complete textbook sections, check PDF source pages, review chapter structure, and recover interrupted processing jobs.
+- Edit and restore evidence-linked lesson plans, present teaching segments, and export Markdown or a printable HTML document.
+- Keep recent textbook questions and collect cited evidence into lesson preparation while retaining the teacher's existing conditions.
+- Added a 3840 × 2160 project showcase with editable SVG/HTML sources and updated interface screenshots.
 - Expanded the fixed RAG benchmark to 420 questions, including two grounded questions for every one of the 137 parsed chapters, 41 cross-textbook comparisons, and 40 out-of-domain rejection checks.
 - Added a deterministic chapter-benchmark generator and stratified reports by suite group, question type, chapter hit, and chapter coverage without storing textbook paragraphs in Git.
 
 ### Changed
 
+- Organized the teacher interface around textbook reading, cross-textbook comparison, knowledge distribution, and lesson preparation, with explicit empty, waiting, failed, and offline evidence states.
+- Distinguished original-source positions from physical PDF pages in lesson exports and preserved teacher edits when collecting new evidence.
+- Updated the compatible follow-redirects dependency to 1.16.1 to address the published cross-origin header disclosure advisories.
 - Preserved quoted medical concepts during query cleanup and required mixed Chinese-English questions to have course evidence for their English topic.
 - Scoped chapter questions to the intended textbook and required citations to match the target chapter, expected knowledge, and a valid physical page.
 - Extended the benchmark request timeout for the 420-question run and exposed chapter coverage in the quality dashboard.
 
 ### Results
 
-- On the current 7-textbook, 137-chapter, 6,498-chunk corpus: Recall@8 100% (380/380), Precision@3 86.86% (985/1,134), cross-textbook coverage 100% (41/41), rejection 100% (40/40), chapter-question hit rate 100% (274/274), and chapter coverage 100% (137/137).
+- Local shipping validation: 223 offline backend tests and 64 frontend model regressions pass; frontend model tests and the production build are included in CI using Node 24. The new teacher workflow and presentation changes do not constitute a rerun of model-quality benchmarks.
+- Historical benchmark snapshot (2026-09-24), on 7 textbooks, 137 chapters and 6,498 chunks: Recall@8 100% (380/380), Precision@3 86.86% (985/1,134), cross-textbook coverage 100% (41/41), rejection 100% (40/40), chapter-question hit rate 100% (274/274), and chapter coverage 100% (137/137).
 
 ## [1.2.1.0] - 2026-09-24
 

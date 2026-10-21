@@ -37,4 +37,3 @@ Constraints: one main message, one screenshot, lots of deliberate whitespace. Do
 ## 输入素材
 
 - `../screenshots/knowledge-distribution-20261020.png`：真实知识分布界面。
-
