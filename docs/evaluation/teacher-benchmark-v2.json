@@ -1,0 +1,1198 @@
+{
+  "suite": {
+    "version": "medical-teacher-v2",
+    "description": "100 道医学基础课程教师问题，覆盖单教材检索、跨教材连接、引用核验和域外拒答；不包含教材原文。",
+    "question_count": 100,
+    "answerable_count": 80,
+    "compare_count": 15,
+    "rejection_count": 20,
+    "sha256": "a3d1128396e475ba3a790e3de937f6ce3384290fd6643e02b3c570bd5e773979"
+  },
+  "corpus": {
+    "course_id": "course_default",
+    "textbook_count": 7,
+    "chunk_count": 6498
+  },
+  "run": {
+    "date": "2026-09-24",
+    "duration_seconds": 44.82
+  },
+  "metrics": [
+    {
+      "metric": "检索召回率",
+      "score": 1.0,
+      "description": "前 8 条结果覆盖单概念全部、双概念全部或多项知识至少 60%（80/80）",
+      "numerator": 80,
+      "denominator": 80,
+      "category": "teacher_questions"
+    },
+    {
+      "metric": "引用准确率",
+      "score": 0.8583,
+      "description": "前 3 条引用中，单条含预期知识且具有有效页码的比例（206/240）",
+      "numerator": 206,
+      "denominator": 240,
+      "category": "teacher_questions"
+    },
+    {
+      "metric": "跨教材覆盖率",
+      "score": 1.0,
+      "description": "对比问题召回至少两本教材的相关证据（15/15）",
+      "numerator": 15,
+      "denominator": 15,
+      "category": "teacher_questions"
+    },
+    {
+      "metric": "无答案拒答率",
+      "score": 1.0,
+      "description": "超出课程范围的问题未返回伪相关证据（20/20）",
+      "numerator": 20,
+      "denominator": 20,
+      "category": "teacher_questions"
+    }
+  ],
+  "categories": [
+    {
+      "category": "传染病学",
+      "question_count": 6,
+      "answerable_count": 6,
+      "retrieval_hits": 6,
+      "citation_hits": 13,
+      "citation_count": 18,
+      "rejection_hits": 0,
+      "rejection_count": 0
+    },
+    {
+      "category": "局部解剖学",
+      "question_count": 6,
+      "answerable_count": 6,
+      "retrieval_hits": 6,
+      "citation_hits": 15,
+      "citation_count": 18,
+      "rejection_hits": 0,
+      "rejection_count": 0
+    },
+    {
+      "category": "微生物学",
+      "question_count": 9,
+      "answerable_count": 9,
+      "retrieval_hits": 9,
+      "citation_hits": 21,
+      "citation_count": 27,
+      "rejection_hits": 0,
+      "rejection_count": 0
+    },
+    {
+      "category": "拒答",
+      "question_count": 20,
+      "answerable_count": 0,
+      "retrieval_hits": 0,
+      "citation_hits": 0,
+      "citation_count": 0,
+      "rejection_hits": 20,
+      "rejection_count": 20
+    },
+    {
+      "category": "生理学",
+      "question_count": 12,
+      "answerable_count": 12,
+      "retrieval_hits": 12,
+      "citation_hits": 35,
+      "citation_count": 36,
+      "rejection_hits": 0,
+      "rejection_count": 0
+    },
+    {
+      "category": "病理学",
+      "question_count": 14,
+      "answerable_count": 14,
+      "retrieval_hits": 14,
+      "citation_hits": 29,
+      "citation_count": 42,
+      "rejection_hits": 0,
+      "rejection_count": 0
+    },
+    {
+      "category": "病理生理学",
+      "question_count": 7,
+      "answerable_count": 7,
+      "retrieval_hits": 7,
+      "citation_hits": 19,
+      "citation_count": 21,
+      "rejection_hits": 0,
+      "rejection_count": 0
+    },
+    {
+      "category": "组织学",
+      "question_count": 8,
+      "answerable_count": 8,
+      "retrieval_hits": 8,
+      "citation_hits": 22,
+      "citation_count": 24,
+      "rejection_hits": 0,
+      "rejection_count": 0
+    },
+    {
+      "category": "胚胎学",
+      "question_count": 3,
+      "answerable_count": 3,
+      "retrieval_hits": 3,
+      "citation_hits": 9,
+      "citation_count": 9,
+      "rejection_hits": 0,
+      "rejection_count": 0
+    },
+    {
+      "category": "跨教材",
+      "question_count": 15,
+      "answerable_count": 15,
+      "retrieval_hits": 15,
+      "citation_hits": 43,
+      "citation_count": 45,
+      "rejection_hits": 0,
+      "rejection_count": 0
+    }
+  ],
+  "details": [
+    {
+      "id": "T01",
+      "category": "病理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 1,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T02",
+      "category": "病理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T03",
+      "category": "病理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 2,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T04",
+      "category": "病理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T05",
+      "category": "病理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 1,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T06",
+      "category": "病理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 2,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T07",
+      "category": "病理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 2,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T08",
+      "category": "病理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T09",
+      "category": "病理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T10",
+      "category": "病理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T11",
+      "category": "组织学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 2,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T12",
+      "category": "组织学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T13",
+      "category": "组织学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T14",
+      "category": "组织学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T15",
+      "category": "组织学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T16",
+      "category": "胚胎学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T17",
+      "category": "生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T18",
+      "category": "生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T19",
+      "category": "生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T20",
+      "category": "生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T21",
+      "category": "生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T22",
+      "category": "生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T23",
+      "category": "微生物学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T24",
+      "category": "微生物学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T25",
+      "category": "微生物学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T26",
+      "category": "微生物学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 1,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T27",
+      "category": "传染病学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 1,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T28",
+      "category": "传染病学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T29",
+      "category": "传染病学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T30",
+      "category": "传染病学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T31",
+      "category": "病理生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T32",
+      "category": "病理生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 1,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T33",
+      "category": "病理生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T34",
+      "category": "病理生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T35",
+      "category": "病理生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T36",
+      "category": "跨教材",
+      "mode": "compare",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": true,
+      "returned_count": 8
+    },
+    {
+      "id": "T37",
+      "category": "跨教材",
+      "mode": "compare",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": true,
+      "returned_count": 8
+    },
+    {
+      "id": "T38",
+      "category": "跨教材",
+      "mode": "compare",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": true,
+      "returned_count": 8
+    },
+    {
+      "id": "T39",
+      "category": "跨教材",
+      "mode": "compare",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": true,
+      "returned_count": 8
+    },
+    {
+      "id": "T40",
+      "category": "跨教材",
+      "mode": "compare",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": true,
+      "returned_count": 8
+    },
+    {
+      "id": "T41",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T42",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T43",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T44",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T45",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T46",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T47",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T48",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T49",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T50",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T51",
+      "category": "局部解剖学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T52",
+      "category": "局部解剖学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 2,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T53",
+      "category": "局部解剖学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T54",
+      "category": "局部解剖学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T55",
+      "category": "局部解剖学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T56",
+      "category": "局部解剖学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 1,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 3
+    },
+    {
+      "id": "T57",
+      "category": "组织学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 2,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T58",
+      "category": "组织学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T59",
+      "category": "组织学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T60",
+      "category": "胚胎学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T61",
+      "category": "胚胎学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T62",
+      "category": "生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T63",
+      "category": "生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T64",
+      "category": "生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T65",
+      "category": "生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 2,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T66",
+      "category": "生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T67",
+      "category": "生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T68",
+      "category": "微生物学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T69",
+      "category": "微生物学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T70",
+      "category": "微生物学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 1,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 4
+    },
+    {
+      "id": "T71",
+      "category": "微生物学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T72",
+      "category": "微生物学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 1,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T73",
+      "category": "病理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 1,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T74",
+      "category": "病理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 2,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T75",
+      "category": "病理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 1,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T76",
+      "category": "病理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 2,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T77",
+      "category": "传染病学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 2,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T78",
+      "category": "传染病学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 1,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T79",
+      "category": "病理生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T80",
+      "category": "病理生理学",
+      "mode": "all",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": null,
+      "returned_count": 8
+    },
+    {
+      "id": "T81",
+      "category": "跨教材",
+      "mode": "compare",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": true,
+      "returned_count": 8
+    },
+    {
+      "id": "T82",
+      "category": "跨教材",
+      "mode": "compare",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": true,
+      "returned_count": 8
+    },
+    {
+      "id": "T83",
+      "category": "跨教材",
+      "mode": "compare",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": true,
+      "returned_count": 8
+    },
+    {
+      "id": "T84",
+      "category": "跨教材",
+      "mode": "compare",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": true,
+      "returned_count": 8
+    },
+    {
+      "id": "T85",
+      "category": "跨教材",
+      "mode": "compare",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": true,
+      "returned_count": 8
+    },
+    {
+      "id": "T86",
+      "category": "跨教材",
+      "mode": "compare",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": true,
+      "returned_count": 8
+    },
+    {
+      "id": "T87",
+      "category": "跨教材",
+      "mode": "compare",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": true,
+      "returned_count": 8
+    },
+    {
+      "id": "T88",
+      "category": "跨教材",
+      "mode": "compare",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": true,
+      "returned_count": 8
+    },
+    {
+      "id": "T89",
+      "category": "跨教材",
+      "mode": "compare",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 3,
+      "citation_count": 3,
+      "compare_hit": true,
+      "returned_count": 8
+    },
+    {
+      "id": "T90",
+      "category": "跨教材",
+      "mode": "compare",
+      "answerable": true,
+      "retrieval_hit": true,
+      "citation_hits": 1,
+      "citation_count": 3,
+      "compare_hit": true,
+      "returned_count": 8
+    },
+    {
+      "id": "T91",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T92",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T93",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T94",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T95",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T96",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T97",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T98",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T99",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    },
+    {
+      "id": "T100",
+      "category": "拒答",
+      "mode": "all",
+      "answerable": false,
+      "rejected": true,
+      "returned_count": 0
+    }
+  ]
+}

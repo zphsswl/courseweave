@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
+import re
+import shutil
 import subprocess
 import sys
 import time
@@ -17,6 +20,95 @@ RUNTIME_DIR = PROJECT_ROOT / ".runtime"
 PID_PATH = RUNTIME_DIR / "courseweave.pid"
 STDOUT_PATH = RUNTIME_DIR / "courseweave.out.log"
 STDERR_PATH = RUNTIME_DIR / "courseweave.err.log"
+
+
+def _probe(command: list[str], env: dict[str, str], code: str):
+    """Probe interpreters without importing the app, reading config or starting jobs."""
+    try:
+        return subprocess.run(
+            [*command, "-c", code], cwd=PROJECT_ROOT, env=env,
+            capture_output=True, text=True, encoding="utf-8", timeout=10,
+            creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0),
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+
+
+def select_python(project_root: Path = PROJECT_ROOT) -> tuple[list[str], dict[str, str], str] | None:
+    """Prefer a usable project environment, then installed Python with working dependencies.
+
+    Copied Windows venvs retain their original Python home. Reusing their package
+    directory is allowed only with the same Python major/minor and after actual
+    imports succeed, so incompatible binary extensions are never assumed usable.
+    """
+    environment = os.environ.copy()
+    environment["PYTHONIOENCODING"] = "utf-8"
+    venv = project_root / ".venv"
+    version = None
+    config = venv / "pyvenv.cfg"
+    if config.exists():
+        match = re.search(r"(?m)^version\s*=\s*(\d+)\.(\d+)", config.read_text(encoding="utf-8", errors="replace"))
+        if match:
+            version = tuple(map(int, match.groups()))
+    candidates = []
+    override = environment.get("COURSEWEAVE_PYTHON")
+    if override:
+        candidates.append(([override], "指定的 Python"))
+    candidates.extend([
+        ([str(venv / "Scripts" / "python.exe")], "项目虚拟环境"),
+        ([sys.executable], "当前 Python"),
+    ])
+    launcher = shutil.which("py")
+    if launcher:
+        if version:
+            candidates.append(([launcher, f"-{version[0]}.{version[1]}"], "系统 Python Launcher"))
+        candidates.append(([launcher, "-3"], "系统 Python Launcher"))
+    for name in ("python", "python3"):
+        executable = shutil.which(name)
+        if executable and "windowsapps" not in executable.lower():
+            candidates.append(([executable], "系统 Python"))
+
+    seen = set()
+    for command, label in candidates:
+        identity = tuple(value.lower() for value in command)
+        if identity in seen:
+            continue
+        seen.add(identity)
+        result = _probe(command, environment, "import json, sys; print(json.dumps({'executable': sys.executable, 'version': list(sys.version_info[:2])}))")
+        if result is None or result.returncode:
+            continue
+        try:
+            metadata = json.loads(result.stdout)
+            runtime_version = tuple(metadata["version"])
+            executable = metadata["executable"]
+        except (ValueError, KeyError, TypeError):
+            continue
+        if runtime_version < (3, 10):
+            continue
+        environments = [(environment, label)]
+        packages = venv / "Lib" / "site-packages"
+        if version == runtime_version and packages.is_dir() and label != "项目虚拟环境":
+            reused = environment.copy()
+            reused["PYTHONPATH"] = str(packages) + (os.pathsep + environment["PYTHONPATH"] if environment.get("PYTHONPATH") else "")
+            environments.append((reused, label + " + 兼容的项目依赖"))
+        for child_env, description in environments:
+            dependencies = _probe([executable], child_env,
+                                  "import fastapi, uvicorn, sqlalchemy, pydantic, pypdf, fitz, rank_bm25, openai, httpx, multipart, dotenv")
+            if dependencies is not None and dependencies.returncode == 0:
+                return [executable], child_env, description
+    return None
+
+
+def environment_help() -> str:
+    return (
+        "未找到可以运行本项目的 Python 与依赖。复制的 .venv 可能仍引用原电脑的 Python 路径。\n"
+        "请安装 Python 3.12，然后在项目目录新建环境（保留现有 .venv）：\n"
+        "  py -3.12 -m venv .venv-local\n"
+        "  .venv-local\\Scripts\\python.exe -m pip install -r requirements.txt\n"
+        '  set "COURSEWEAVE_PYTHON=%CD%\\.venv-local\\Scripts\\python.exe"\n'
+        "  start-courseweave.cmd\n"
+        "启动器不会自动安装依赖，也不会修改已有环境。"
+    )
 
 
 def is_healthy(port: int) -> bool:
@@ -36,10 +128,12 @@ def main() -> int:
         print(f"CourseWeave 已经在运行：{app_url}")
         return 0
 
-    python_path = PROJECT_ROOT / ".venv" / "Scripts" / "python.exe"
-    if not python_path.exists():
-        print(f"未找到项目 Python 环境：{python_path}", file=sys.stderr)
+    runtime = select_python()
+    if runtime is None:
+        print(environment_help(), file=sys.stderr)
         return 1
+    python_command, child_environment, description = runtime
+    print(f"使用 {description}：{python_command[0]}")
 
     RUNTIME_DIR.mkdir(exist_ok=True)
     creation_flags = (
@@ -48,7 +142,7 @@ def main() -> int:
         | subprocess.CREATE_NO_WINDOW
     )
     command = [
-        str(python_path),
+        *python_command,
         "-m",
         "uvicorn",
         "backend.main:app",
@@ -64,6 +158,7 @@ def main() -> int:
         process = subprocess.Popen(
             command,
             cwd=PROJECT_ROOT,
+            env=child_environment,
             stdin=subprocess.DEVNULL,
             stdout=stdout_file,
             stderr=stderr_file,

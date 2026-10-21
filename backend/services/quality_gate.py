@@ -124,7 +124,7 @@ def validate_node_candidate(candidate: dict, source_text: str) -> QualityResult:
 
     hard_failures = {
         "invalid_name_length", "noise_term", "sentence_as_name",
-        "front_matter", "broken_source_quote",
+        "front_matter", "broken_source_quote", "missing_source_quote", "source_quote_not_found",
     }
     accepted = not hard_failures.intersection(flags) and score >= 0.45
     return QualityResult(
@@ -172,9 +172,14 @@ def validate_edge_candidate(edge: dict, source_text: str, known_local_ids: set[s
 
 
 def find_source_chunk(source_quote: str, chunks):
+    """Return only a chunk that actually contains the complete quote.
+
+    A quote spanning chunks must be handled as a range by its caller. Selecting
+    the first chunk would invent a precise location that has not been checked.
+    """
     normalized_quote = normalize_evidence(source_quote)
     if normalized_quote:
         for chunk in chunks:
             if normalized_quote in normalize_evidence(chunk.content):
                 return chunk
-    return chunks[0] if chunks else None
+    return None

@@ -8,7 +8,7 @@ import {
   MessageOutlined,
   MinusOutlined,
 } from '@ant-design/icons';
-import type { RagStatus, Textbook } from '../types';
+import type { Citation, RagStatus, Textbook } from '../types';
 import RagPanel from './RagPanel';
 
 interface Props {
@@ -21,6 +21,8 @@ interface Props {
   onBuildIndex: () => void;
   isBuilding: boolean;
   readOnly?: boolean;
+  preferredTextbookIds?: string[];
+  onCollectEvidence?: (citation: Citation, question: string) => void;
 }
 
 interface Geometry { x: number; y: number; width: number; height: number }
@@ -41,6 +43,8 @@ const FloatingRagAssistant: React.FC<Props> = ({
   onBuildIndex,
   isBuilding,
   readOnly = false,
+  preferredTextbookIds,
+  onCollectEvidence,
 }) => {
   const [geometry, setGeometry] = useState<Geometry>(initialGeometry);
   const [minimized, setMinimized] = useState(false);
@@ -105,21 +109,13 @@ const FloatingRagAssistant: React.FC<Props> = ({
     setMaximized(true);
   };
 
-  if (!open) {
-    return (
-      <button className="rag-launcher" onClick={() => onOpenChange(true)} aria-label="打开教材问答">
-        <MessageOutlined />
-        <span><strong>向教材提问</strong><small>答案附带原文证据</small></span>
-      </button>
-    );
-  }
-
   const panelGeometry = mobile
     ? { left: 8, top: 72, width: window.innerWidth - 16, height: window.innerHeight - 80 }
     : { left: geometry.x, top: geometry.y, width: geometry.width, height: minimized ? 58 : geometry.height };
 
-  return (
-    <aside className={`floating-rag ${minimized ? 'minimized' : ''} ${maximized ? 'maximized' : ''}`} style={panelGeometry} aria-label="教材问答悬浮窗">
+  return <>
+    {!open && <button className="rag-launcher compact-launcher" onClick={() => { setMinimized(false); onOpenChange(true); }} aria-label="打开教材问答" title="向教材提问"><MessageOutlined /></button>}
+    <aside hidden={!open} className={`floating-rag ${minimized ? 'minimized' : ''} ${maximized ? 'maximized' : ''}`} style={{ ...panelGeometry, height: minimized ? 58 : panelGeometry.height }} aria-label="教材问答悬浮窗">
       <header
         className="floating-rag-header"
         onPointerDown={(event) => {
@@ -139,8 +135,7 @@ const FloatingRagAssistant: React.FC<Props> = ({
           <Button type="text" size="small" icon={<CloseOutlined />} aria-label="关闭问答窗" onClick={() => onOpenChange(false)} />
         </div>
       </header>
-      {!minimized && (
-        <div className="floating-rag-body">
+        <div className="floating-rag-body" hidden={minimized}>
           <RagPanel
             compact
             courseId={courseId}
@@ -149,9 +144,10 @@ const FloatingRagAssistant: React.FC<Props> = ({
             onBuildIndex={onBuildIndex}
             isBuilding={isBuilding}
             readOnly={readOnly}
+            preferredTextbookIds={preferredTextbookIds}
+            onCollectEvidence={onCollectEvidence}
           />
         </div>
-      )}
       {!mobile && !minimized && !maximized && (
         <button
           className="floating-resize-handle"
@@ -163,7 +159,7 @@ const FloatingRagAssistant: React.FC<Props> = ({
         />
       )}
     </aside>
-  );
+  </>;
 };
 
 export default FloatingRagAssistant;

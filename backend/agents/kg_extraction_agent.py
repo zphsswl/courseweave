@@ -388,8 +388,13 @@ def _layered_extract(db, book, progress_callback: Optional[ProgressCallback] = N
                 if not quality.accepted:
                     stats["rejected_nodes"] += 1
                     continue
-                cid = f"{book.id}_{ch.id}_c_{uuid.uuid4().hex[:6]}"
                 source_chunk = find_source_chunk(c.get("source_quote", ""), relevant_chunks)
+                if source_chunk is None:
+                    # The joined section may contain a quote across two chunks.
+                    # Do not claim a single-page location until a range is mapped.
+                    stats["rejected_nodes"] += 1
+                    continue
+                cid = f"{book.id}_{ch.id}_c_{uuid.uuid4().hex[:6]}"
                 concept_type = c.get("concept_type", "concept")
                 node = KnowledgeNode(
                     id=cid, name=c.get("name", ""),
@@ -448,7 +453,9 @@ def _layered_extract(db, book, progress_callback: Optional[ProgressCallback] = N
                     section_content,
                     set(local_to_id.keys()),
                 )
-                if src and tgt and rt in VALID_RELATION_TYPES and edge_quality.accepted:
+                evidence_chunk = find_source_chunk(e.get("source_quote", ""), relevant_chunks)
+                located = rt in {"contains", "part_of", "example_of"} or evidence_chunk is not None
+                if src and tgt and rt in VALID_RELATION_TYPES and edge_quality.accepted and located:
                     edge_id = f"edge_{uuid.uuid4().hex[:10]}"
                     db.add(KnowledgeEdge(
                         id=edge_id,
@@ -459,13 +466,14 @@ def _layered_extract(db, book, progress_callback: Optional[ProgressCallback] = N
                         source_quote=e.get("source_quote", ""),
                         confidence=min(float(e.get("confidence", 0.7)), edge_quality.score),
                         created_by="concept_extraction",
-                        review_status="auto_verified" if edge_quality.evidence_verified else "needs_review",
+                        # Exact quote matching does not verify causal or other
+                        # semantic relationships. Keep these for teacher review.
+                        review_status="auto_verified" if rt in {"contains", "part_of", "example_of"} else "needs_review",
                         model_version=LLM_MODEL if concept_method == "llm" else "",
                         prompt_version="concept_v2_generic",
                     ))
                     stats["edges"] += 1
                     if e.get("source_quote"):
-                        evidence_chunk = find_source_chunk(e.get("source_quote", ""), relevant_chunks)
                         if evidence_chunk:
                             db.add(RelationEvidence(
                                 id=f"evidence_{uuid.uuid4().hex[:12]}",

@@ -127,6 +127,59 @@ class GraphExtractionProgressTest(unittest.TestCase):
         self.assertIn('{"chapter_topic":', topic)
         self.assertIn('{"nodes":', concept)
 
+    def test_extraction_rejects_unlocated_cross_chunk_quotes_and_keeps_semantics_pending(self):
+        source_a = "甲机制是教材中需要讨论的一种基础过程。"
+        source_b = "乙机制是教材中需要另外核对的一种过程。"
+        part_a = source_a + "这一段补充说明用于课堂阅读。" * 12
+        part_b = source_b + "另一段补充说明用于证据核对。" * 12
+        cross_quote = part_a[-16:] + part_b[:16]
+        db = SessionLocal()
+        try:
+            db.add(Textbook(id="trust_graph_book", course_id=DEFAULT_COURSE_ID,
+                            filename="trust.txt", title="测试教材", format="txt", structure_status="confirmed"))
+            db.flush()
+            db.add(Chapter(id="trust_graph_chapter", textbook_id="trust_graph_book", title="机制概览",
+                           content=part_a + "\n" + part_b, char_count=len(part_a + part_b)))
+            db.flush()
+            for index, (content, page) in enumerate(((part_a, 65), (part_b, 66))):
+                db.add(Chunk(id=f"trust_graph_chunk_{index}", textbook_id="trust_graph_book",
+                             chapter_id="trust_graph_chapter", content=content,
+                             page_start=page, page_end=page, chunk_index=index))
+            db.commit()
+        finally:
+            db.close()
+        topics = {
+            "chapter_topic": {"name": "机制概览", "definition": "介绍两种教材基础过程", "source_quote": source_a},
+            "section_topics": [{"local_id": "s1", "name": "机制关系", "scope": "核对基础过程的相互联系", "source_quote": source_a}],
+            "_meta": {"method": "llm"},
+        }
+        concepts = {
+            "nodes": [
+                {"local_id": "n1", "name": "甲机制", "definition": "教材中需要讨论的基础过程", "source_quote": source_a},
+                {"local_id": "n2", "name": "乙机制", "definition": "教材中需要另外核对的过程", "source_quote": source_b},
+                {"local_id": "n3", "name": "跨段概念", "definition": "跨越知识块边界的未定位原文", "source_quote": cross_quote},
+            ],
+            "edges": [
+                {"source": "n1", "target": "n2", "relation_type": "causes", "source_quote": source_a},
+                {"source": "n1", "target": "n2", "relation_type": "supports", "source_quote": cross_quote},
+            ], "_meta": {"method": "llm"},
+        }
+        with patch("backend.agents.kg_extraction_agent._call_llm_topic", return_value=topics), \
+             patch("backend.agents.kg_extraction_agent._call_llm_concept", return_value=concepts):
+            result = extract_textbook_graph("trust_graph_book")
+        self.assertGreaterEqual(result["rejected_nodes"], 1)
+        self.assertGreaterEqual(result["rejected_edges"], 1)
+        db = SessionLocal()
+        try:
+            self.assertIsNone(db.query(KnowledgeNode).filter(KnowledgeNode.name == "跨段概念").first())
+            node_b = db.query(KnowledgeNode).filter(KnowledgeNode.name == "乙机制").one()
+            self.assertEqual(node_b.page_start, 66)
+            edge = db.query(KnowledgeEdge).filter(KnowledgeEdge.relation_type == "causes").one()
+            self.assertEqual(edge.review_status, "needs_review")
+            self.assertEqual(db.query(KnowledgeEdge).filter(KnowledgeEdge.relation_type == "supports").count(), 0)
+        finally:
+            db.close()
+
     def test_interrupted_graph_resumes_without_duplicating_completed_chapter(self):
         source = "肺泡通气量是每分钟进入肺泡并参与气体交换的新鲜气体量。"
         content = source * 12

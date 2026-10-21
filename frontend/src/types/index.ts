@@ -16,6 +16,8 @@ export interface Textbook {
   index_status: string;
   structure_status?: 'pending' | 'review' | 'confirmed';
   parse_warnings?: string[];
+  chapter_range_editable?: boolean;
+  chapter_range_edit_reason?: string;
 }
 
 export interface Course {
@@ -379,6 +381,9 @@ export interface BenchmarkSuite {
   answerable_count: number;
   compare_count: number;
   rejection_count: number;
+  chapter_count: number;
+  chapter_question_count: number;
+  question_type_counts: Record<string, number>;
   questions: Array<{
     id: string;
     category: string;

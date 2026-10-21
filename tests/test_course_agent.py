@@ -77,8 +77,11 @@ class CourseAgentTests(unittest.TestCase):
             ],
         }
         quality = verify_artifact(artifact, ["agent_book_a", "agent_book_b"])
-        self.assertEqual(quality["status"], "passed")
-        self.assertEqual(quality["score"], 100)
+        self.assertEqual(quality["status"], "needs_review")
+        self.assertEqual(quality["source_check"]["status"], "checked")
+        self.assertEqual(quality["score"], 0)
+        self.assertFalse(quality["semantic_reviewed"])
+        self.assertEqual(quality["task_completion"]["status"], "needs_work")
         self.assertEqual(quality["covered_textbook_ids"], ["agent_book_a", "agent_book_b"])
 
     def test_agent_run_reuses_the_durable_job_queue(self):
