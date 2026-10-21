@@ -12,6 +12,7 @@ from backend.database import (
     KnowledgeEdge,
     KnowledgeNode,
     ReviewEvent,
+    RelationEvidence,
     Textbook,
 )
 from backend.services.alignment_service import (

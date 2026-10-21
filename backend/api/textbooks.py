@@ -30,6 +30,8 @@ class ChapterStructureItem(BaseModel):
     order_index: int = Field(ge=0)
     parent_id: str = Field(default="", max_length=160)
     level: int = Field(default=1, ge=1, le=6)
+    page_start: int | None = Field(default=None, ge=1, strict=True)
+    page_end: int | None = Field(default=None, ge=1, strict=True)
 
 
 class ChapterStructureUpdate(BaseModel):
@@ -145,8 +147,10 @@ def list_textbooks(course_id: str | None = Query(default=None)):
             query = query.filter(Textbook.course_id == course_id)
         books = query.order_by(Textbook.created_at.desc()).all()
         results = []
+        from backend.services.chapter_review import range_capability
         for b in books:
             ch_count = db.query(Chapter).filter(Chapter.textbook_id == b.id).count()
+            editable, reason = range_capability(db, b)
             results.append({
                 "id": b.id,
                 "course_id": b.course_id,
@@ -163,6 +167,8 @@ def list_textbooks(course_id: str | None = Query(default=None)):
                 "index_status": b.index_status,
                 "structure_status": b.structure_status,
                 "parse_warnings": b.parse_warnings or [],
+                "chapter_range_editable": editable,
+                "chapter_range_edit_reason": reason,
             })
         return results
     finally:
@@ -241,29 +247,15 @@ def update_chapter_structure(textbook_id: str, payload: ChapterStructureUpdate):
         book = db.query(Textbook).filter(Textbook.id == textbook_id).first()
         if book is None:
             raise HTTPException(404, "教材不存在")
-        chapter_ids = [item.id for item in payload.chapters]
-        if len(chapter_ids) != len(set(chapter_ids)):
-            raise HTTPException(400, "章节列表包含重复 ID")
-        chapters = db.query(Chapter).filter(
-            Chapter.textbook_id == textbook_id,
-            Chapter.id.in_(chapter_ids),
-        ).all() if chapter_ids else []
-        if len(chapters) != len(chapter_ids):
-            raise HTTPException(400, "章节列表包含不属于当前教材的章节")
-        updates = {item.id: item for item in payload.chapters}
-        for chapter in chapters:
-            item = updates[chapter.id]
-            chapter.title = item.title.strip()
-            chapter.order_index = item.order_index
-            chapter.parent_id = item.parent_id
-            chapter.level = item.level
-            chapter.review_status = "confirmed" if payload.confirmed else "unreviewed"
-        book.structure_status = "confirmed" if payload.confirmed else "review"
+        from backend.services.chapter_review import apply_structure
+        count = apply_structure(db, book, payload.chapters, payload.confirmed)
         db.commit()
+        from backend.services.retrieval_service import invalidate_course_cache
+        invalidate_course_cache(book.course_id)
         return {
             "textbook_id": textbook_id,
             "structure_status": book.structure_status,
-            "chapter_count": len(chapters),
+            "chapter_count": count,
         }
     finally:
         db.close()

@@ -3,6 +3,8 @@ import json
 import os
 import unittest
 from unittest.mock import AsyncMock, patch
+from types import SimpleNamespace
+from unittest.mock import MagicMock
 
 
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
@@ -10,7 +12,7 @@ os.environ["DATABASE_URL"] = "sqlite:///:memory:"
 from fastapi.responses import JSONResponse  # noqa: E402
 from starlette.requests import Request  # noqa: E402
 
-from backend.agents.rag_agent import query_rag  # noqa: E402
+from backend.agents.rag_agent import _has_valid_source_citations, query_node_rag, query_rag  # noqa: E402
 from backend.database import (  # noqa: E402
     AlignmentCandidate,
     CanonicalConcept,
@@ -65,6 +67,80 @@ class PublicDemoProtectionTest(unittest.TestCase):
 
 
 class RagAnswerTest(unittest.TestCase):
+    def test_each_fact_sentence_and_list_item_needs_a_known_citation(self):
+        for answer in (
+            "无引用的结论。第二条结论 [S1]。",
+            "- 第一条结论\n- 第二条结论 [S1]",
+            "结论 [S0]。",
+            "结论 [N1]。",
+            "An uncited fact. Another fact [S1].",
+        ):
+            with self.subTest(answer=answer):
+                self.assertFalse(_has_valid_source_citations(answer, 1))
+        for answer in (
+            "结论 [S1]。第二条结论。[S2]",
+            "## 共同结论\n- 第一条 [S1]\n- 第二条 [S2]",
+            "The value is 3.5 [S1]. Another fact.[S2]",
+        ):
+            with self.subTest(answer=answer):
+                self.assertTrue(_has_valid_source_citations(answer, 2))
+        self.assertTrue(_has_valid_source_citations("节点原文 [N1]。", 0, allow_node=True))
+
+    def test_uncited_fact_forces_evidence_fallback_without_claiming_semantic_review(self):
+        items = [{"id": "c1", "content": "可核对的教材原文。", "page_start": 1}]
+        with (
+            patch("backend.agents.rag_agent.retrieve", return_value=_retrieval(items)),
+            patch("backend.agents.rag_agent._call_llm", return_value="第一条没有引用。第二条有引用 [S1]。"),
+        ):
+            result = query_rag("教材问题")
+        self.assertEqual(result["answer_method"], "evidence_fallback")
+        self.assertFalse(result["semantic_reviewed"])
+
+    def test_covered_model_answer_still_requires_teacher_semantic_review(self):
+        items = [{"id": "c1", "content": "教材原文。", "page_start": 1}]
+        with (
+            patch("backend.agents.rag_agent.retrieve", return_value=_retrieval(items)),
+            patch("backend.agents.rag_agent._call_llm", return_value="教材结论 [S1]。"),
+        ):
+            result = query_rag("教材问题")
+        self.assertEqual(result["answer_method"], "llm_grounded")
+        self.assertFalse(result["citation_check"]["semantic_reviewed"])
+
+    def test_node_answer_rejects_unknown_citations_and_falls_back_to_quote_not_generated_definition(self):
+        node = SimpleNamespace(id="node1", course_id="course1", name="测试概念", evidence_status="verified",
+                               source_paragraph="这是真实教材的原句。", definition="未经语义审核的模型定义。",
+                               textbook_id="book1", textbook_title="教材", chapter_title="章节", page=5, page_start=5)
+        db = MagicMock()
+        db.query.return_value.filter.return_value.filter.return_value = db.query.return_value.filter.return_value
+        db.query.return_value.filter.return_value.first.return_value = node
+        db.query.return_value.filter.return_value.limit.return_value.all.return_value = []
+        with (
+            patch("backend.agents.rag_agent.SessionLocal", return_value=db),
+            patch("backend.agents.rag_agent.retrieve", return_value=_retrieval([])),
+            patch("backend.agents.rag_agent._call_llm", return_value="引用不存在的来源 [S1]。"),
+        ):
+            result = query_node_rag("node1", "请解释", "course1")
+        self.assertEqual(result["answer_method"], "evidence_fallback")
+        self.assertIn(node.source_paragraph, result["answer"])
+        self.assertNotIn(node.definition, result["answer"])
+        self.assertFalse(result["semantic_reviewed"])
+
+    def test_unverified_node_without_retrieved_evidence_does_not_call_model(self):
+        node = SimpleNamespace(id="node1", course_id="course1", name="测试概念", evidence_status="invalid",
+                               source_paragraph="未核验的引文", definition="未核验定义")
+        db = MagicMock()
+        db.query.return_value.filter.return_value.filter.return_value = db.query.return_value.filter.return_value
+        db.query.return_value.filter.return_value.first.return_value = node
+        db.query.return_value.filter.return_value.limit.return_value.all.return_value = []
+        with (
+            patch("backend.agents.rag_agent.SessionLocal", return_value=db),
+            patch("backend.agents.rag_agent.retrieve", return_value=_retrieval([])),
+            patch("backend.agents.rag_agent._call_llm") as call_model,
+        ):
+            result = query_node_rag("node1", "请解释", "course1")
+        self.assertEqual(result["answer_method"], "no_evidence")
+        call_model.assert_not_called()
+
     def test_query_refuses_to_answer_without_course_evidence(self):
         with patch("backend.agents.rag_agent.retrieve", return_value=_retrieval([])):
             result = query_rag("教材没有覆盖的问题")

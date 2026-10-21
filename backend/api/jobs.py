@@ -1,9 +1,26 @@
 from fastapi import APIRouter, HTTPException
 from backend.agents.orchestrator import create_job, get_job, process_textbook, process_graph_extraction, process_integration, process_rag_index
-from backend.database import SessionLocal, Textbook
+from backend.database import SessionLocal, Textbook, Job
 from backend.services.job_queue import enqueue_job, retry_job
 
 router = APIRouter(prefix="/api/jobs", tags=["jobs"])
+
+
+@router.get("")
+def list_textbook_jobs(course_id: str = "course_default"):
+    """Latest processing attempt per book, including jobs created before course IDs existed."""
+    db = SessionLocal()
+    try:
+        books = {row[0] for row in db.query(Textbook.id).filter(Textbook.course_id == course_id).all()}
+        latest = {}
+        for job in db.query(Job).filter(Job.type.in_(("parse", "extract_graph"))).order_by(Job.created_at.desc()).all():
+            book_id = (job.payload or {}).get("textbook_id")
+            if book_id in books and book_id not in latest:
+                latest[book_id] = job.id
+        ids = list(latest.values())
+    finally:
+        db.close()
+    return [get_job(job_id) for job_id in ids]
 
 @router.post("/parse")
 def start_parse(payload: dict):

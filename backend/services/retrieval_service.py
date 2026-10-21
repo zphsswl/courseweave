@@ -88,9 +88,78 @@ _CHINESE_QUERY_FRAME_PATTERNS = (
 )
 
 
+_QUERY_OUTPUT_CONSTRAINTS = (
+    r"(?:请)?(?:给出|提供|标注|注明|附上|列出)(?:相关|对应)?(?:教材|本书)?原文(?:依据|证据)?",
+    r"(?:请)?(?:不要|不得|不能)(?:编造|猜测|推测|自行补充)(?:答案|内容|信息|结论)?",
+    r"(?:请)?(?:不要|不得|不能)(?:补充|添加|编造)"
+    r"(?:教材|原文|本书|书|资料)(?:中没有(?:依据|证据)|之外|以外|中未提及|中没有提及)"
+    r"的(?:内容|信息|结论)",
+    r"(?:请)?(?:给出|提供|标注|注明|附上|列出)?(?:相关|对应)?(?:教材)?"
+    r"(?:页码|出处|引用)(?:[和与及](?:相关|对应)?(?:页码|出处|引用))*(?:依据|信息)?",
+)
+_RESTRICTIVE_BOOK_SCOPE = re.compile(
+    r"(?:^|(?<=[，,；;。！？!?\n]))\s*(?:请)?(?:仅|只)(?:依据|根据|基于|参考|使用|从)\s*"
+    r"(?P<books>《[^》]+》(?:\s*[和与及、]\s*《[^》]+》)*)"
+    r"(?:中的原文|的原文|原文|中)?"
+)
+
+
+def _strip_query_constraints(question: str) -> str:
+    """Separate recognised answer instructions from the requested subject.
+
+    Only complete, known output clauses and leading task verbs are removed.
+    Unknown words remain subjects, so a mixed in/out-of-domain request still
+    has to pass the existing all-topics scope check.
+    """
+    subjects = []
+    for clause in re.split(r"[，,；;。！？!?、\n]+", question or ""):
+        clause = clause.strip()
+        clause = re.sub(r"^(?:并且|同时|还请|并|且)\s*", "", clause)
+        clause = re.sub(
+            r"^(?:请)?(?:仅|只)(?:依据|根据|基于|参考|使用)"
+            r"(?:所选教材|本书原文|教材原文|本书|教材|原文)(?:的)?(?:内容|证据)?",
+            "", clause,
+        ).strip()
+        if not clause or any(re.fullmatch(pattern, clause) for pattern in _QUERY_OUTPUT_CONSTRAINTS):
+            continue
+        clause = re.sub(
+            r"^(?:请)?(?:用|以)(?:表格|列表|要点|分点)(?:的)?(?:形式|方式)?",
+            "", clause,
+        ).strip()
+        clause = re.sub(
+            r"^(?:请(?:帮我)?|帮我)?(?:列出|概括|总结|梳理|说明|解释|介绍|比较|对比|分析|阐述|回答)\s*",
+            "", clause,
+        )
+        clause = re.sub(
+            r"(?:[和与及]|并(?:给出|提供|标注|注明|附上))\s*"
+            r"(?:相关|对应)?(?:教材)?(?:页码|出处|引用)(?:依据|信息)?$",
+            "", clause,
+        ).strip()
+        if clause:
+            subjects.append(clause)
+    return "，".join(subjects)
+
+
+def _explicit_textbook_scope(question: str, textbooks: list[tuple[str, str]]):
+    """Resolve an explicit 'only use these books' instruction inside the course."""
+    requests = list(_RESTRICTIVE_BOOK_SCOPE.finditer(question or ""))
+    if not requests:
+        return question, None, []
+    requested_ids = []
+    unavailable_titles = []
+    for request in requests:
+        for title in re.findall(r"《([^》]+)》", request.group("books")):
+            normalized = re.sub(r"\s+", "", title.lower())
+            matches = [book_id for book_id, book_title in textbooks if normalized in _textbook_aliases(book_title)]
+            if not matches:
+                unavailable_titles.append(title)
+            requested_ids.extend(book_id for book_id in matches if book_id not in requested_ids)
+    return _RESTRICTIVE_BOOK_SCOPE.sub(" ", question), requested_ids, unavailable_titles
+
+
 def _clean_chinese_query_text(value: str) -> str:
     """Remove question scaffolding while retaining the medical subject terms."""
-    cleaned = (value or "").lower()
+    cleaned = _strip_query_constraints(value).lower()
     protected = []
 
     def protect_quoted(match):
@@ -101,6 +170,9 @@ def _clean_chinese_query_text(value: str) -> str:
     # that phrase intact even when it contains words such as “发生” or “结构”
     # that are otherwise treated as question scaffolding.
     cleaned = re.sub(r"[“「]([^”」]{1,80})[”」]", protect_quoted, cleaned)
+    # Location questions are syntax around the subject, not an extra concept
+    # such as “甲状腺在”. Keep the requested dimension available for ranking.
+    cleaned = re.sub(r"在什么位置|位于哪里|在哪里|位于何处|在何处", " 位置 ", cleaned)
     # Textbooks and questions vary between 血-睾、血 - 睾 and 血睾. Treat
     # punctuation inside a Chinese term as typography rather than semantics.
     cleaned = re.sub(r"(?<=[一-鿿])[\s\-‐‑–—·]+(?=[一-鿿])", "", cleaned)
@@ -781,6 +853,27 @@ def retrieve(
 ):
     db = SessionLocal()
     try:
+        course_textbooks = [
+            (row[0], row[1])
+            for row in db.query(Textbook.id, Textbook.title).filter(Textbook.course_id == course_id).all()
+        ]
+        search_question, requested_scope, unavailable_titles = _explicit_textbook_scope(question, course_textbooks)
+        if unavailable_titles:
+            return {"results": [], "trace": {
+                "course_id": course_id,
+                "reason": "requested_textbook_not_available",
+                "requested_textbook_titles": unavailable_titles,
+            }}
+        if requested_scope is not None:
+            allowed_ids = set(textbook_ids) if textbook_ids else {book_id for book_id, _ in course_textbooks}
+            textbook_ids = [book_id for book_id in requested_scope if book_id in allowed_ids]
+            if not textbook_ids:
+                return {"results": [], "trace": {
+                    "course_id": course_id,
+                    "reason": "requested_textbooks_outside_scope",
+                    "requested_textbook_ids": requested_scope,
+                }}
+        question = _strip_query_constraints(search_question)
         cache_key = _scope_key(course_id, textbook_ids)
         chunks = _cached_scoped_chunks(db, course_id, textbook_ids)
         if not chunks:
@@ -803,6 +896,8 @@ def retrieve(
             ).all()
         ]
         query_features = _prepare_query(question, textbook_rows)
+        if requested_scope is not None:
+            query_features["requested_books"] = list(textbook_ids)
         lexical_ranking = _lexical_results(
             question,
             chunks,
@@ -934,6 +1029,8 @@ def retrieve(
                 "graph_expansions": len(graph_ids),
                 "query_anchors": query_features["anchors"],
                 "requested_textbook_ids": query_features["requested_books"],
+                "effective_textbook_ids": sorted({chunk.textbook_id for chunk in chunks}),
+                "retrieval_question": question,
                 "retrievers": ["bm25"] + (["vector"] if vector_used else []) + (["graph"] if graph_used else []),
             },
         }

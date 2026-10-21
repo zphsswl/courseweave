@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from backend.database import init_db
 from backend.api import textbooks, jobs, graph, rag, chat, report, benchmark, model_status, system, integration, courses, alignment, agent
+from backend.api import teaching, teaching_bridge, teaching_board
 from backend.config import get_model_status, CORS_ORIGINS, PUBLIC_DEMO_READ_ONLY, SEED_DEMO_DATA
 import os
 
@@ -47,6 +48,9 @@ app.include_router(integration.router)
 app.include_router(courses.router)
 app.include_router(alignment.router)
 app.include_router(agent.router)
+app.include_router(teaching.router)
+app.include_router(teaching_bridge.router)
+app.include_router(teaching_board.router)
 
 @app.on_event("startup")
 def startup():

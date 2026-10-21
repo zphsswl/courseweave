@@ -1,5 +1,6 @@
 import os
 import unittest
+from types import SimpleNamespace
 from unittest.mock import patch
 
 
@@ -24,6 +25,7 @@ from backend.services.quality_gate import (  # noqa: E402
     validate_node_candidate,
     validate_edge_candidate,
     has_broken_text,
+    find_source_chunk,
 )
 from backend.services.alignment_service import (  # noqa: E402
     _parse_json,
@@ -154,7 +156,16 @@ class QualityAndAlignmentTest(unittest.TestCase):
         self.assertTrue(valid.accepted)
         self.assertTrue(valid.evidence_verified)
         self.assertFalse(invalid.evidence_verified)
+        self.assertFalse(invalid.accepted)
         self.assertIn("source_quote_not_found", invalid.flags)
+
+    def test_unmatched_or_cross_chunk_quote_does_not_invent_a_chunk_location(self):
+        chunks = [SimpleNamespace(id="one", content="这是第一段教材原文"),
+                  SimpleNamespace(id="two", content="这是第二段教材原文")]
+        self.assertIsNone(find_source_chunk("不存在的引文", chunks))
+        self.assertIsNone(find_source_chunk("", chunks))
+        self.assertIsNone(find_source_chunk("第一段教材原文这是第二段", chunks))
+        self.assertEqual(find_source_chunk("这是第二段教材原文", chunks).id, "two")
 
     def test_semantic_edge_without_evidence_is_rejected(self):
         result = validate_edge_candidate({
