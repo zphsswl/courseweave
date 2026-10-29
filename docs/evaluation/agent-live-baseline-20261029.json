@@ -1,0 +1,1023 @@
+{
+  "evaluation_version": 1,
+  "mode": "live",
+  "label": "baseline",
+  "evaluation_run_id": "e0f95238df96fcdf",
+  "agent_model": "deepseek-flash",
+  "judge_model": "deepseek-flash",
+  "same_model": true,
+  "same_provider": true,
+  "judge_independence_note": "独立评分请求；同一服务商或模型家族仍可能产生相关偏差。",
+  "case_set_sha256": "e7ed7a2c2f9272002b5e8f9982cefda80d38c163272eaed82db511f1213395c0",
+  "agent_code_sha256": {
+    "backend/agents/lesson_policy.py": "219ba4d4cbafe7a84aaed9bf73fbd55d7d2ead8871c8f322910b8e2543288005",
+    "backend/agents/lesson_runtime.py": "92b7bdbab3692cb794d888a397c54e803da985db719a2b5b2afee6fed58b7065",
+    "backend/agents/lesson_contracts.py": "66dcfd0043ddbb8796e41e02468902dbadff4e725dffdc7db50ab47462d6e1da",
+    "backend/agents/course_agent.py": "20c2465656967528a4469645e0221299caa0e11000ee4864c01ca2a499eebb22"
+  },
+  "evaluator_sha256": {
+    "backend/evaluation/agent_eval.py": "b81646c3b790d22595284411a2efab9f1714fbf2ff8f3187e95714e6d55e1e8c",
+    "scripts/run_agent_evaluation.py": "a25138e59e61234b9cf49963c077bbf36a25df98f86693a2a18f313c28f50c49"
+  },
+  "rag_code_sha256": {
+    "backend/agents/rag_agent.py": "41bf771406fc45c8c5442aa0f0b5199b706a0fcf9069df2f1f55f0bdbee057a3",
+    "backend/services/retrieval_service.py": "0ebb0b97b73e643c66cba957d7b88331741b2d030d29e2cab72622f68faefbc4",
+    "backend/api/rag.py": "94e78d4bb4b23f3ff74069464c6e90f516fa913deabc2b65dd1242409d511f80"
+  },
+  "source_scope_sha256": "c832e29f831990acc6af92473c469eebe5dd3487c87bf746bbf38151c9ddc4b4",
+  "source_chunk_count": 2406,
+  "isolated_database": true,
+  "isolated_vector_copy": false,
+  "budgets": {
+    "max_steps": 12,
+    "max_runtime_seconds": 300,
+    "max_cases": 4,
+    "repeat": 1
+  },
+  "pricing_cost": "not_collected",
+  "runs": [
+    {
+      "case_id": "thyroid_anatomy_histology_compare",
+      "repetition": 1,
+      "request_sha256": "0b1f8cef3c6dc34f2d6d71c221a9ce1e6cb3b888d67f94822d458b168fb8d01c",
+      "expected_outcome": "draft_ready",
+      "status": "waiting_user",
+      "stop_reason": null,
+      "error_code": null,
+      "elapsed_seconds": 93.312,
+      "hard": {
+        "passed": false,
+        "expectation_met": false,
+        "normal_finish": false,
+        "artifact_ready": false,
+        "safe_refusal": false,
+        "empty_query_observed": false,
+        "checks": [
+          {
+            "id": "normal_finish",
+            "passed": false
+          },
+          {
+            "id": "bounded_calls",
+            "passed": true
+          },
+          {
+            "id": "canonical_citations",
+            "passed": true
+          },
+          {
+            "id": "artifact:book_coverage",
+            "passed": true
+          },
+          {
+            "id": "artifact:source_scope",
+            "passed": true
+          },
+          {
+            "id": "artifact:page_trace",
+            "passed": true
+          },
+          {
+            "id": "artifact:grounding",
+            "passed": true
+          },
+          {
+            "id": "artifact:attribution",
+            "passed": false
+          },
+          {
+            "id": "artifact:common_ground_sources",
+            "passed": true
+          },
+          {
+            "id": "artifact:duration_minutes",
+            "passed": true
+          },
+          {
+            "id": "artifact:question_count",
+            "passed": true
+          },
+          {
+            "id": "artifact:structure",
+            "passed": true
+          },
+          {
+            "id": "artifact:requirement_9",
+            "passed": true
+          },
+          {
+            "id": "artifact:requirement_10",
+            "passed": true
+          }
+        ],
+        "failed_checks": [
+          "normal_finish",
+          "artifact:attribution"
+        ]
+      },
+      "judge": {
+        "status": "graded",
+        "passed": false,
+        "claim_count": 36,
+        "claim_labels": {
+          "supported": 34,
+          "insufficient": 2
+        },
+        "unsupported_claim_ids": [
+          "knowledge_sequence:7",
+          "knowledge_sequence:8"
+        ],
+        "rubric": {
+          "goal_alignment": "pass",
+          "audience_fit": "pass",
+          "teaching_sequence": "pass",
+          "question_quality": "pass"
+        },
+        "usage": {
+          "prompt_tokens": 10858,
+          "completion_tokens": 2558,
+          "total_tokens": 13416
+        },
+        "request_attempted": true,
+        "elapsed_seconds": 11.391
+      },
+      "budget": {
+        "max_steps": 12,
+        "steps_used": 10,
+        "max_rag_queries": 6,
+        "rag_queries_used": 2,
+        "max_drafts": 3,
+        "drafts_used": 3,
+        "max_runtime_seconds": 300,
+        "elapsed_seconds": 93.312
+      },
+      "generation_method": "llm_grounded",
+      "source_count": 16,
+      "actions": [
+        {
+          "action": "query_rag",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "query_rag",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "write_draft",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "validate_draft",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "write_draft",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "validate_draft",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "read_source",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "write_draft",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "validate_draft",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "ask_teacher",
+          "status": "completed",
+          "error_code": null
+        }
+      ],
+      "model_calls": [
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 1125,
+            "completion_tokens": 87,
+            "total_tokens": 1212
+          },
+          "elapsed_seconds": 1.344
+        },
+        {
+          "role": "rag_answer",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "length",
+          "usage": {
+            "prompt_tokens": 3767,
+            "completion_tokens": 1600,
+            "total_tokens": 5367
+          },
+          "elapsed_seconds": 10.969
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 5351,
+            "completion_tokens": 100,
+            "total_tokens": 5451
+          },
+          "elapsed_seconds": 1.141
+        },
+        {
+          "role": "rag_answer",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "length",
+          "usage": {
+            "prompt_tokens": 3343,
+            "completion_tokens": 1603,
+            "total_tokens": 4946
+          },
+          "elapsed_seconds": 10.266
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 8887,
+            "completion_tokens": 785,
+            "total_tokens": 9672
+          },
+          "elapsed_seconds": 5.813
+        },
+        {
+          "role": "draft",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 7994,
+            "completion_tokens": 3500,
+            "total_tokens": 11494
+          },
+          "elapsed_seconds": 17.921
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 12489,
+            "completion_tokens": 39,
+            "total_tokens": 12528
+          },
+          "elapsed_seconds": 1.719
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 13520,
+            "completion_tokens": 338,
+            "total_tokens": 13858
+          },
+          "elapsed_seconds": 3.297
+        },
+        {
+          "role": "draft",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 11361,
+            "completion_tokens": 3554,
+            "total_tokens": 14915
+          },
+          "elapsed_seconds": 14.031
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 13267,
+            "completion_tokens": 44,
+            "total_tokens": 13311
+          },
+          "elapsed_seconds": 1.609
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 14305,
+            "completion_tokens": 56,
+            "total_tokens": 14361
+          },
+          "elapsed_seconds": 2.14
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 14753,
+            "completion_tokens": 399,
+            "total_tokens": 15152
+          },
+          "elapsed_seconds": 3.297
+        },
+        {
+          "role": "draft",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 11433,
+            "completion_tokens": 3554,
+            "total_tokens": 14987
+          },
+          "elapsed_seconds": 13.859
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 14226,
+            "completion_tokens": 39,
+            "total_tokens": 14265
+          },
+          "elapsed_seconds": 1.703
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 14274,
+            "completion_tokens": 163,
+            "total_tokens": 14437
+          },
+          "elapsed_seconds": 3.078
+        }
+      ]
+    },
+    {
+      "case_id": "thyroid_histology_physiology_compare",
+      "repetition": 1,
+      "request_sha256": "623278b010b8bcbff7cdc05d9960465f6b77df2386e43c08f447359db5867bac",
+      "expected_outcome": "draft_ready",
+      "status": "completed",
+      "stop_reason": "delivery_ready",
+      "error_code": null,
+      "elapsed_seconds": 49.312,
+      "hard": {
+        "passed": true,
+        "expectation_met": true,
+        "normal_finish": true,
+        "artifact_ready": true,
+        "safe_refusal": false,
+        "empty_query_observed": false,
+        "checks": [
+          {
+            "id": "normal_finish",
+            "passed": true
+          },
+          {
+            "id": "bounded_calls",
+            "passed": true
+          },
+          {
+            "id": "canonical_citations",
+            "passed": true
+          },
+          {
+            "id": "artifact:book_coverage",
+            "passed": true
+          },
+          {
+            "id": "artifact:source_scope",
+            "passed": true
+          },
+          {
+            "id": "artifact:page_trace",
+            "passed": true
+          },
+          {
+            "id": "artifact:grounding",
+            "passed": true
+          },
+          {
+            "id": "artifact:attribution",
+            "passed": true
+          },
+          {
+            "id": "artifact:common_ground_sources",
+            "passed": true
+          },
+          {
+            "id": "artifact:duration_minutes",
+            "passed": true
+          },
+          {
+            "id": "artifact:question_count",
+            "passed": true
+          },
+          {
+            "id": "artifact:structure",
+            "passed": true
+          },
+          {
+            "id": "artifact:requirement_9",
+            "passed": true
+          },
+          {
+            "id": "artifact:requirement_10",
+            "passed": true
+          }
+        ],
+        "failed_checks": []
+      },
+      "judge": {
+        "status": "graded",
+        "passed": true,
+        "claim_count": 27,
+        "claim_labels": {
+          "supported": 27
+        },
+        "unsupported_claim_ids": [],
+        "rubric": {
+          "goal_alignment": "pass",
+          "audience_fit": "pass",
+          "teaching_sequence": "pass",
+          "question_quality": "pass"
+        },
+        "usage": {
+          "prompt_tokens": 10422,
+          "completion_tokens": 1990,
+          "total_tokens": 12412
+        },
+        "request_attempted": true,
+        "elapsed_seconds": 9.125
+      },
+      "budget": {
+        "max_steps": 12,
+        "steps_used": 5,
+        "max_rag_queries": 6,
+        "rag_queries_used": 2,
+        "max_drafts": 3,
+        "drafts_used": 1,
+        "max_runtime_seconds": 300,
+        "elapsed_seconds": 49.312
+      },
+      "generation_method": "llm_grounded",
+      "source_count": 16,
+      "actions": [
+        {
+          "action": "query_rag",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "query_rag",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "write_draft",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "validate_draft",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "finish",
+          "status": "completed",
+          "error_code": null
+        }
+      ],
+      "model_calls": [
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 1134,
+            "completion_tokens": 74,
+            "total_tokens": 1208
+          },
+          "elapsed_seconds": 1.485
+        },
+        {
+          "role": "rag_answer",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "length",
+          "usage": {
+            "prompt_tokens": 3525,
+            "completion_tokens": 1600,
+            "total_tokens": 5125
+          },
+          "elapsed_seconds": 11.062
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 5213,
+            "completion_tokens": 103,
+            "total_tokens": 5316
+          },
+          "elapsed_seconds": 2.953
+        },
+        {
+          "role": "rag_answer",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "length",
+          "usage": {
+            "prompt_tokens": 3634,
+            "completion_tokens": 1604,
+            "total_tokens": 5238
+          },
+          "elapsed_seconds": 9.828
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 8898,
+            "completion_tokens": 610,
+            "total_tokens": 9508
+          },
+          "elapsed_seconds": 4.766
+        },
+        {
+          "role": "draft",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 7894,
+            "completion_tokens": 2947,
+            "total_tokens": 10841
+          },
+          "elapsed_seconds": 15.343
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 12311,
+            "completion_tokens": 34,
+            "total_tokens": 12345
+          },
+          "elapsed_seconds": 0.875
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 13298,
+            "completion_tokens": 75,
+            "total_tokens": 13373
+          },
+          "elapsed_seconds": 1.5
+        }
+      ]
+    },
+    {
+      "case_id": "cardiac_cycle_physiology_zero_questions",
+      "repetition": 1,
+      "request_sha256": "cd20784c51601b67335a232c31895c9d0847f038eb05a66b0ebb2b4aab9abfda",
+      "expected_outcome": "draft_ready",
+      "status": "completed",
+      "stop_reason": "delivery_ready",
+      "error_code": null,
+      "elapsed_seconds": 39.89,
+      "hard": {
+        "passed": true,
+        "expectation_met": true,
+        "normal_finish": true,
+        "artifact_ready": true,
+        "safe_refusal": false,
+        "empty_query_observed": false,
+        "checks": [
+          {
+            "id": "normal_finish",
+            "passed": true
+          },
+          {
+            "id": "bounded_calls",
+            "passed": true
+          },
+          {
+            "id": "canonical_citations",
+            "passed": true
+          },
+          {
+            "id": "artifact:book_coverage",
+            "passed": true
+          },
+          {
+            "id": "artifact:source_scope",
+            "passed": true
+          },
+          {
+            "id": "artifact:page_trace",
+            "passed": true
+          },
+          {
+            "id": "artifact:grounding",
+            "passed": true
+          },
+          {
+            "id": "artifact:attribution",
+            "passed": true
+          },
+          {
+            "id": "artifact:common_ground_sources",
+            "passed": true
+          },
+          {
+            "id": "artifact:duration_minutes",
+            "passed": true
+          },
+          {
+            "id": "artifact:question_count",
+            "passed": true
+          },
+          {
+            "id": "artifact:structure",
+            "passed": true
+          },
+          {
+            "id": "artifact:requirement_9",
+            "passed": true
+          }
+        ],
+        "failed_checks": []
+      },
+      "judge": {
+        "status": "graded",
+        "passed": false,
+        "claim_count": 24,
+        "claim_labels": {
+          "supported": 23,
+          "insufficient": 1
+        },
+        "unsupported_claim_ids": [
+          "teaching_objectives:0"
+        ],
+        "rubric": {
+          "goal_alignment": "pass",
+          "audience_fit": "pass",
+          "teaching_sequence": "pass",
+          "question_quality": "pass"
+        },
+        "usage": {
+          "prompt_tokens": 6642,
+          "completion_tokens": 1639,
+          "total_tokens": 8281
+        },
+        "request_attempted": true,
+        "elapsed_seconds": 9.36
+      },
+      "budget": {
+        "max_steps": 12,
+        "steps_used": 4,
+        "max_rag_queries": 6,
+        "rag_queries_used": 1,
+        "max_drafts": 3,
+        "drafts_used": 1,
+        "max_runtime_seconds": 300,
+        "elapsed_seconds": 39.875
+      },
+      "generation_method": "llm_grounded",
+      "source_count": 8,
+      "actions": [
+        {
+          "action": "query_rag",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "write_draft",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "validate_draft",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "finish",
+          "status": "completed",
+          "error_code": null
+        }
+      ],
+      "model_calls": [
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 1087,
+            "completion_tokens": 108,
+            "total_tokens": 1195
+          },
+          "elapsed_seconds": 1.172
+        },
+        {
+          "role": "rag_answer",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "length",
+          "usage": {
+            "prompt_tokens": 3594,
+            "completion_tokens": 1600,
+            "total_tokens": 5194
+          },
+          "elapsed_seconds": 11.406
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 5040,
+            "completion_tokens": 338,
+            "total_tokens": 5378
+          },
+          "elapsed_seconds": 3.703
+        },
+        {
+          "role": "draft",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 4384,
+            "completion_tokens": 2614,
+            "total_tokens": 6998
+          },
+          "elapsed_seconds": 13.266
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 7845,
+            "completion_tokens": 37,
+            "total_tokens": 7882
+          },
+          "elapsed_seconds": 6.141
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 8791,
+            "completion_tokens": 42,
+            "total_tokens": 8833
+          },
+          "elapsed_seconds": 3.985
+        }
+      ]
+    },
+    {
+      "case_id": "out_of_corpus_honest_stop",
+      "repetition": 1,
+      "request_sha256": "b02401c581fa4acfa12dff0018c495cccd873b148bd133df12462fe30782a305",
+      "expected_outcome": "insufficient_evidence",
+      "status": "waiting_user",
+      "stop_reason": null,
+      "error_code": null,
+      "elapsed_seconds": 8.032,
+      "hard": {
+        "passed": false,
+        "expectation_met": true,
+        "normal_finish": false,
+        "artifact_ready": false,
+        "safe_refusal": true,
+        "empty_query_observed": true,
+        "checks": [
+          {
+            "id": "normal_finish",
+            "passed": false
+          },
+          {
+            "id": "bounded_calls",
+            "passed": true
+          },
+          {
+            "id": "canonical_citations",
+            "passed": false
+          },
+          {
+            "id": "artifact_present",
+            "passed": false
+          }
+        ],
+        "failed_checks": [
+          "normal_finish",
+          "canonical_citations",
+          "artifact_present"
+        ]
+      },
+      "judge": {
+        "status": "not_applicable",
+        "passed": false,
+        "error_code": "no_artifact"
+      },
+      "budget": {
+        "max_steps": 12,
+        "steps_used": 3,
+        "max_rag_queries": 6,
+        "rag_queries_used": 2,
+        "max_drafts": 3,
+        "drafts_used": 0,
+        "max_runtime_seconds": 300,
+        "elapsed_seconds": 8.032
+      },
+      "generation_method": null,
+      "source_count": 0,
+      "actions": [
+        {
+          "action": "query_rag",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "query_rag",
+          "status": "completed",
+          "error_code": null
+        },
+        {
+          "action": "ask_teacher",
+          "status": "completed",
+          "error_code": null
+        }
+      ],
+      "model_calls": [
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 1093,
+            "completion_tokens": 76,
+            "total_tokens": 1169
+          },
+          "elapsed_seconds": 2.407
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 1472,
+            "completion_tokens": 105,
+            "total_tokens": 1577
+          },
+          "elapsed_seconds": 1.329
+        },
+        {
+          "role": "policy",
+          "model": "deepseek-flash",
+          "status": "completed",
+          "finish_reason": "stop",
+          "usage": {
+            "prompt_tokens": 1805,
+            "completion_tokens": 131,
+            "total_tokens": 1936
+          },
+          "elapsed_seconds": 4.157
+        }
+      ]
+    }
+  ],
+  "judge_controls": {
+    "status": "graded",
+    "passed": true,
+    "checks": [
+      {
+        "id": "supported_order",
+        "expected": "supported",
+        "actual": "supported",
+        "passed": true
+      },
+      {
+        "id": "supported_common",
+        "expected": "supported",
+        "actual": "supported",
+        "passed": true
+      },
+      {
+        "id": "reversed_order",
+        "expected": "contradicted",
+        "actual": "contradicted",
+        "passed": true
+      },
+      {
+        "id": "absence_claim",
+        "expected": "insufficient",
+        "actual": "insufficient",
+        "passed": true
+      }
+    ],
+    "usage": {
+      "prompt_tokens": 772,
+      "completion_tokens": 184,
+      "total_tokens": 956
+    },
+    "elapsed_seconds": 1.579,
+    "request_attempted": true
+  },
+  "summary": {
+    "run_count": 4,
+    "normal_task_count": 3,
+    "normal_finish_rate": 0.6667,
+    "hard_pass_rate": 0.6667,
+    "expectation_met_rate": 0.75,
+    "judge_graded_count": 3,
+    "judge_pass_rate_all_normal_tasks": 0.3333,
+    "judge_pass_rate_graded_only": 0.3333,
+    "joint_pass_rate": 0.3333,
+    "graded_claim_groups": 87,
+    "claim_group_labels": {
+      "supported": 84,
+      "insufficient": 3
+    },
+    "claim_group_support_rate_graded_only": 0.9655,
+    "rubric_pass_rate_all_normal_tasks": {
+      "goal_alignment": 1.0,
+      "audience_fit": 1.0,
+      "teaching_sequence": 1.0,
+      "question_quality": 1.0
+    },
+    "rejected_action_count": 0,
+    "draft_revision_attempts": 2,
+    "stop_reasons": {
+      "waiting_user": 2,
+      "delivery_ready": 2
+    },
+    "mean_agent_seconds": 47.636,
+    "note": "Judge标签是自动质量估计；受控反例不能代替领域专家校准或实际课堂学习效果。"
+  },
+  "usage": {
+    "agent_model_calls": 32,
+    "agent_tokens_reported": 269072,
+    "agent_calls_without_usage": 0,
+    "judge_request_attempts": 4,
+    "judge_tokens_reported": 35065,
+    "judge_calls_without_usage": 0
+  }
+}

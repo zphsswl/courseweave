@@ -6,6 +6,7 @@ All notable changes to CourseWeave are documented in this file.
 
 ### Added
 
+- A disposable-database Agent evaluation CLI with fixed cases, deterministic gates, source-grounded model judging, controlled grader cases, token usage and public/private reports.
 - A bounded, model-directed lesson Agent with seven strict actions, persisted observations, targeted RAG queries, draft revision, teacher questions and a server-owned delivery check.
 - An internal/HTTP tool adapter for the existing RAG system. Returned source IDs are reloaded from the local course, textbook, chapter and chunk records before entering lesson evidence; the existing retrieval and answer methods remain unchanged.
 - Durable step/query/draft budgets, source snapshots, restart recovery, teacher-answer checkpoints and cancellation with protection against late result writes.
@@ -14,16 +15,20 @@ All notable changes to CourseWeave are documented in this file.
 
 ### Fixed
 
+- Count genuinely new observations rather than repeated course/source/check calls as progress; preserve latest feedback and current validation state in bounded context.
+- Normalize cosmetic book-title brackets against uniquely matching cited metadata, preventing valid drafts from exhausting revision budgets without weakening attribution checks.
+- Supply canonical section paths to the evaluator and keep unknown grading outcomes, protocol-only loops and private free-text values out of passing/public results.
 - Preserve saved teacher work when model configuration disappears; reject blank or cross-book chapter sources and use current chapter titles instead of stale chunk metadata.
 - Protect answer, resume and cancellation updates with snapshot comparisons, and requeue quick teacher responses/retries that arrive during worker handoff.
 - Keep safe action-validation codes and field locations in feedback without exposing model values; display cancelled in-flight trace rows as no longer accepting results.
 
 ### Validation and limits
 
-- 313 offline backend tests, 84 frontend regressions and the production build pass. The existing large main-bundle warning remains.
+- 353 offline backend tests, 84 frontend regressions and the production build pass. The existing large main-bundle warning remains.
 - Independent review and fault-injection regressions cover scope, saved drafts, source drift, interrupted actions, cancellation races and queue handoff.
-- The documented real run produced a structurally complete draft, then stopped after four invalid decisions. New diagnostic feedback does not establish the missing original error field or prove that the online protocol issue is fixed. Structure checks are not a semantic teaching-quality assessment.
-- The 2026-09-24 fixed RAG benchmark is historical and was not rerun for this Agent release. No additional model replay was performed.
+- The earlier documented run stopped after four invalid decisions; its missing original error field remains unknown. This iteration separately ran four baseline and four candidate tasks with deepseek-flash: normal completion remained 2/3, and the out-of-corpus case stopped honestly in both versions.
+- Live evaluation exposed book-title formatting rejection and grader false negatives. Final fixes passed saved-output replay and offline regression; the original live labels are preserved and no final-patch model rerun or classroom-effectiveness claim is made.
+- The 2026-09-24 fixed RAG benchmark is historical and was not rerun. RAG retrieval, fusion, answer and citation methods remain unchanged; model configuration follows the user's deepseek-flash choice.
 
 ## [1.2.2.0] - 2026-10-21
 

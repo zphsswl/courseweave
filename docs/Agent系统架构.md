@@ -15,6 +15,7 @@
 | [`course_agent.py`](../backend/agents/course_agent.py) | 版本分流、既有证据工作流、教案生成与来源/交付检查 |
 | [`agent.py`](../backend/api/agent.py) | 创建、读取、回答、停止、章节确认、教师修订与导出 API |
 | [`AgentWorkbench.tsx`](../frontend/src/components/AgentWorkbench.tsx) | 执行模式、实际动作记录、预算、教师输入和可恢复的教案编辑 |
+| [`agent_eval.py`](../backend/evaluation/agent_eval.py) / [`run_agent_evaluation.py`](../scripts/run_agent_evaluation.py) | 开发时自动评测：隔离教材快照，分开检查硬要求和原文/教学语义，不属于生产工具 |
 
 ```mermaid
 flowchart LR
@@ -36,6 +37,8 @@ flowchart LR
 
 模型接收到的是有长度限制的请求、材料摘录、草稿、检查结果、最近六条动作和预算。教材与工具文本被标记为不可信数据；它们不能创建新的工具权限。公开 `summary` 只描述将执行的动作，前端不展示思维链或原始模型响应。
 
+最新工具结果和交付摘要单独保留在 `latest_result` / `completion`，以免长旧观察遮蔽纠错信息；全部 JSON 状态输入还有 60000 字符总上限。`completion.current_draft_checked` 要求当前稿/证据签名匹配，不能用旧签名代表已检；实际结束仍由 finish 重新读取来源并检查。
+
 ## 2. 七个工具及执行边界
 
 | 动作 | 模型可提交的主要参数 | 服务端行为 |
@@ -49,6 +52,8 @@ flowchart LR
 | `finish` | 公开交付摘要 | 由服务端再次检查当前材料与草稿，满足交付条件才结束 |
 
 契约拒绝额外参数、未知动作和类型强制转换。模型不能添加其他课程、任意 URL、文件或代码执行权限，也不能通过提交 `passed=true` 或 `semantic_reviewed=true` 把检查结果改为通过。任务最多选择 12 本教材，运行时最多保留 48 段原文；`query_rag` 的 Agent 参数要求 `top_k` 为 3–15。
+
+差异条目的教材展示名允许规范一层外部《》与排版空白，但只在该条实际引用名称中唯一匹配；相似版次、错书和歧义仍拒绝，引用 ID 与严格归属门禁不变。
 
 “交付检查通过”表示来源和结构检查符合当前规则，仍需教师审核内容与教学适用性。
 
@@ -110,6 +115,8 @@ HTTP 路径最多读取 1 MiB 响应，socket 各阶段超时配置不超过 30 
 
 轮次在请求决策前计入，检索和起草在调用前计入；失败尝试不会自动退还预算。运行器还检查重复动作与无进展情况。耗尽预算、执行异常、模型决策不可用和教师取消分别保留 `stop_reason`，并尽量保留当前材料及明确缺项。
 
+同教材状态、同一段原文、同一稿的检查只有首次观察算新进展；对应 `progress_token` 和 `progress_made` 保存在完成轨迹，恢复后保留去重依据。交替重复观察不能无限重置计数，四轮无进展保留当前成果并停止。模型动作无效而当前稿确已检查通过时，服务端可返回合法 finish 格式示例；这是纠错反馈，仍由模型选择，不会自动交付。
+
 `completed` 只表示这次执行已结束。是否形成可用草稿由 `delivery.status` 区分：`draft_ready`、`needs_work` 或 `evidence_only`。前端展示实际用量，预算使用比例不作为课程完成百分比。运行时限用于调度和调用超时控制，不是操作系统级的强制终止保证。
 
 ## 6. 历史任务与无模型降级
@@ -142,4 +149,28 @@ Pop-Location
 
 运行器测试使用脚本策略替代真实模型选择，并替代 RAG 传输和草稿模型；范围、来源、预算、检查点与交付检查执行真实生产逻辑。策略层使用模拟模型响应，HTTP RAG 测试使用模拟传输。前端回归核对显示模型、接口身份、重复点击、冲突和迟到响应等行为。
 
-这些测试能验证控制流和工程约束，不能证明在线模型会稳定选择正确工具、检索证据充分、生成内容语义正确或教师效率提升。模型实际效果仍需独立的在线运行记录、人工教学评审和明确评测集；系统不会以模型自评或引用存在来代替这些证据。
+这些测试能验证控制流和工程约束，不能证明在线模型会稳定选择正确工具、检索证据充分、生成内容语义正确或教师效率提升。本轮新增下面的全自动评测入口，真实结果与离线断言分开记录；系统不会以模型自评或引用存在来代替这些证据。
+
+## 8. 全自动 Agent 评测
+
+评测分为两层：程序重新检查正常 finish、预算、来源和交付结构；独立 Judge 请求读取原始要求、规范教材原文与稿件条目，给出原文支持/矛盾/证据不足，以及目标、学情、讲授顺序、问题质量四项标签。硬要求失败不能被模型评分抵消；未评分、不确定、超时均不算通过。Judge 不改变生产 `semantic_reviewed=false` 或 finish 权限。
+
+固定任务集位于 [`tests/fixtures/agent_eval_cases.json`](../tests/fixtures/agent_eval_cases.json)，初版四例不是专业金标准。真实运行使用教材库的只读备份，在临时库生成评测任务，不修改原始任务和教师稿。若课程已有 ready 向量索引，需传入 `--source-chroma` 复制现有索引，避免改变 RAG 条件。
+
+```powershell
+# 零模型请求，仅检查评测协议；不能当作真实模型效果
+python scripts/run_agent_evaluation.py --offline --output .gstack/agent-eval-self-check.json
+
+# 本轮使用用户指定且已授权的 deepseek-flash；生成/决策/RAG回答也由 LLM_MODEL 配置为同一模型
+python scripts/run_agent_evaluation.py --live --source-db data/medessence.db --course-id course_default --max-cases 4 --repeat 1 --judge-model deepseek-flash --judge-controls --label candidate --output .gstack/agent-eval-public.json --private-output .gstack/agent-eval-private.json
+```
+
+`--live` 才会请求真实模型。`--judge-controls` 额外请求四个构造的正确/错误关系，验证裁判能否识别这些错误；`--offline` 只是已知标签的协议自检，两者应分别报告。`--judge-model` 未给时依次采用 `AGENT_JUDGE_MODEL` 或生成模型；报告会明确同模型/同服务商，不能把独立请求说成跨服务商独立校准。
+
+本次基线、优化版与 Judge 均为用户指定的 `deepseek-flash`，目的地为已授权的 `https://api.deepseek.com`；报告的 `same_model=true`、`same_provider=true` 必须保留。评分使用单独请求与固定标准，不代表不同模型互评。本地 `.env` 的模型调整不提交密钥或配置文件到仓库。
+
+公开 JSON 保存版本/来源哈希、动作和标签计数、耗时、API 返回 token usage；没有实际价格则费用为 not_collected。私有 JSON 含教材、完整稿件和评分理由，应只保留在被忽略的 `.gstack/`。正常完成率、硬规则通过率、Judge 已评分率与通过率分别看；内容标签是自动质量估计，不能据此宣称已证明真实课堂学习收益。
+
+本轮真实结果与失败分析见 [Agent 自动评测与优化记录](./evaluation/agent-evaluation-20261029.md)。评测后发现的小节定位遗漏与量词误读说明 Judge 本身也会误判：现已补规范 `section_path` / 页码区间与范围约束，但修后只做离线回归，原始线上预测保留，没有重评后改写旧标签，也不将前后评分变化当作已证明的质量提升。
+
+最终完整回归为后端 353 项、前端 84 项，生产构建通过；真实八项任务发生在最后书名/评分上下文补丁之前。三份候选保存稿经最后补丁确定性重验满足结构要求，历史真实正常 finish 仍为 2/3，最终版本没有新增模型重跑，二者必须分开说明。
