@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Alert, Button, Input, InputNumber, Modal, Select, Spin, message } from 'antd';
-import { BookOutlined, CheckOutlined, CopyOutlined, DownOutlined, EditOutlined, ExportOutlined, FileSearchOutlined, PlusOutlined, PrinterOutlined, ReloadOutlined, SaveOutlined } from '@ant-design/icons';
+import { BookOutlined, CheckOutlined, CopyOutlined, DownOutlined, EditOutlined, ExportOutlined, FileSearchOutlined, PlusOutlined, PrinterOutlined, ReloadOutlined, SaveOutlined, SendOutlined, StopOutlined } from '@ant-design/icons';
 import type { AgentArtifactRow, AgentCitation, ModelStatus, Textbook } from '../types';
-import { createLessonRun, exportLessonMarkdown, exportLessonPrint, getLessonRun, getLessonRuns, lessonDelivery, normalizedArtifact, resumeLessonRun, retryLessonRun, saveLessonDraft } from '../api/lessonAgent';
+import { cancelLessonRun, createLessonRun, exportLessonMarkdown, exportLessonPrint, getLessonRun, getLessonRuns, lessonDelivery, lessonExecution, normalizedArtifact, parseLessonTimestamp, respondLessonRun, resumeLessonRun, retryLessonRun, saveLessonDraft } from '../api/lessonAgent';
 import type { AgentLessonContext, LessonArtifact, LessonBlock, LessonRequest, LessonRun } from '../api/lessonAgent';
 import SourcePageViewer from './SourcePageViewer';
 import './AgentWorkbench.css';
@@ -31,7 +31,7 @@ type EditableRow = AgentArtifactRow & Partial<LessonBlock>;
 type StringKey = 'teaching_objectives' | 'classroom_questions' | 'unresolved_questions';
 const OPTIONS = ['核心概念', '教材差异', '重点难点', '易混淆点', '课堂提问'];
 const ACTIVE = new Set(['pending', 'processing']);
-const labels: Record<string, string> = { pending: '任务排队中', processing: '正在整理与生成', waiting_user: '需要确认章节', completed: '本次处理已结束', failed: '本次处理失败' };
+const labels: Record<string, string> = { pending: '任务排队中', processing: '正在执行备课任务', waiting_user: '等待教师处理', completed: '本次处理已结束', failed: '本次处理失败', cancelled: '本次执行已停止' };
 const briefKey = (course: string) => `courseweave:lesson-brief:${course}`;
 const draftKey = (course: string, run: string) => `courseweave:lesson-edit:${course}:${run}`;
 const readLocal = <T,>(key: string): T | null => { try { return JSON.parse(localStorage.getItem(key) || 'null'); } catch { return null; } };
@@ -139,10 +139,24 @@ const restoreBrief = (courseId: string, books: Textbook[], context?: AgentLesson
   return stored ? { ...stored, value: { ...initialBrief(books), ...stored.value }, courseId } : freshBrief(courseId, books, context);
 };
 const timeLabel = (value?: string) => {
-  if (!value) return '';
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? '' : new Intl.DateTimeFormat('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).format(date);
+  const date = parseLessonTimestamp(value);
+  return date ? new Intl.DateTimeFormat('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).format(date) : '';
 };
+
+const LegacyExecutionTrace: React.FC<{ steps: ReturnType<typeof lessonExecution>['legacyPlan']; title: string; hint: string; active?: boolean }> = ({ steps, title, hint, active }) => <details className="la-trace" open={active}><summary>{title} <small>{steps.filter((step) => ['completed', 'skipped'].includes(step.status)).length} / {steps.length} 步</small></summary><p className="la-evidence-note">{hint}</p><ol>{steps.map((step, index) => <li key={`${step.id}:${index}`} className={step.status}><strong>{step.title}</strong><span>{step.summary}</span><small>{step.statusLabel}</small></li>)}</ol></details>;
+
+const AgentExecutionPanel: React.FC<{ run: LessonRun; execution: ReturnType<typeof lessonExecution>; busy: string; readOnly: boolean; onCancel: () => void }> = ({ run, execution, busy, readOnly, onCancel }) => <section className={`la-execution la-execution-${execution.mode}`} aria-label="Agent 执行记录">
+  <header><div><span className="la-execution-mode">{execution.modeLabel}</span><p>{execution.modeDescription}</p></div>{execution.canCancel && !readOnly && <Button icon={<StopOutlined />} loading={busy === 'cancel'} disabled={Boolean(busy)} onClick={onCancel}>停止本次执行</Button>}</header>
+  {(execution.budget.length > 0 || execution.elapsed !== null) && <dl className="la-budget" aria-label="本次执行预算">
+    {execution.budget.map((item) => <div key={item.id} className={item.max !== null && item.used !== null && item.used >= item.max ? 'at-limit' : ''}><dt>{item.label}</dt><dd>{item.used ?? '—'} <span>/ {item.max ?? '未提供'}</span></dd></div>)}
+    {execution.elapsed !== null && <div><dt>已运行</dt><dd>{Math.floor(execution.elapsed)} <span>{execution.runtimeLimit !== null ? `/ ${execution.runtimeLimit} 秒` : '秒'}</span></dd></div>}
+  </dl>}
+  {execution.stopReason && <p className="la-stop-reason" role="status"><strong>{run.status === 'waiting_user' ? '暂停说明' : ACTIVE.has(run.status) ? '执行说明' : '结束说明'}</strong>{execution.stopReason}</p>}
+  {execution.mode === 'evidence_workflow' && !execution.trajectory.length ? <LegacyExecutionTrace steps={execution.legacyPlan} title="证据工作流记录" hint="本次使用固定证据整理流程。以下步骤不代表模型自主选择的动作。" active={ACTIVE.has(run.status) || run.status === 'waiting_user'} /> : <details className="la-trace la-loop-trace" open={ACTIVE.has(run.status) || run.status === 'waiting_user'}><summary>实际动作记录 <small>{execution.trajectory.length} 条记录</small></summary>
+    {execution.trajectory.length ? <ol>{execution.trajectory.map((entry, index) => <li key={`${entry.id}:${index}`} className={entry.status}><span className="la-loop-number">{entry.step !== null ? `第 ${entry.step} 步` : `记录 ${index + 1}`}</span><div className="la-loop-entry"><header><strong>{entry.title}</strong><span className="la-loop-status">{entry.statusLabel}</span></header><p>{entry.summary || '尚未提供动作摘要。'}</p>{entry.observation.length > 0 && <p className="la-loop-observation"><b>调用结果</b>{entry.observation.join('；')}</p>}{entry.error && <p className="la-loop-error">{entry.error}</p>}{(entry.startedAt || entry.finishedAt) && <time>{timeLabel(entry.startedAt)}{entry.finishedAt ? ` → ${timeLabel(entry.finishedAt)}` : entry.status === 'running' ? ' · 执行中' : ''}</time>}</div></li>)}</ol> : <p className="la-loop-empty">服务端尚未返回实际动作记录。等待与刷新不会补造步骤。</p>}
+  </details>}
+  {execution.teacherAnswers.length > 0 && <details className="la-teacher-answers"><summary>教师已补充的条件 · {execution.teacherAnswers.length} 次</summary>{execution.teacherAnswers.map((item, index) => <article key={index}><strong>{item.question || '教师补充条件'}</strong><p>{item.answer || '未提供回答内容'}</p>{item.answeredAt && <small>{timeLabel(item.answeredAt)}</small>}</article>)}</details>}
+</section>;
 
 const AgentWorkbench: React.FC<Props> = ({ courseId, courseTitle, textbooks, modelStatus, onGoLibrary, readOnly = false, context, onOpenLesson, initialRunId, onSelectedRunChange, onCollectedEvidenceConsumed }) => {
   const availableBooks = textbooks.filter((book) => !book.course_id || book.course_id === courseId);
@@ -156,7 +170,8 @@ const AgentWorkbench: React.FC<Props> = ({ courseId, courseTitle, textbooks, mod
   const [runLoading, setRunLoading] = useState(false);
   const [pollError, setPollError] = useState('');
   const [refresh, setRefresh] = useState(0);
-  const [busy, setBusy] = useState<'create' | 'save' | 'retry' | 'resume' | 'export' | ''>('');
+  const [busy, setBusy] = useState<'create' | 'save' | 'retry' | 'resume' | 'respond' | 'cancel' | 'export' | ''>('');
+  const [answerDraft, setAnswerDraft] = useState<{ key: string; value: string } | null>(null);
   const [editor, setEditor] = useState<Editor | null>(null);
   const [editing, setEditing] = useState(false);
   const [evidenceOpen, setEvidenceOpen] = useState(false);
@@ -183,7 +198,7 @@ const AgentWorkbench: React.FC<Props> = ({ courseId, courseTitle, textbooks, mod
     }
     epochRef.current += 1; mutationRef.current?.abort(); mutationRef.current = null; stopReadRef.current?.();
     selectedRef.current = id; setSelectedId(id); setRun(id ? runs.find((item) => item.id === id && item.course_id === courseId) || null : null);
-    setEditor(null); setEditing(false); setBusy(''); setPollError(''); setEvidenceOpen(false); setSourcePage(null); setCoverageOpen(false);
+    setEditor(null); setEditing(false); setBusy(''); setAnswerDraft(null); setPollError(''); setEvidenceOpen(false); setSourcePage(null); setCoverageOpen(false);
     onSelectedRunChange?.(id || ''); return true;
   };
   const consumeCollection = (intentId: string, owner: BriefState) => {
@@ -194,7 +209,7 @@ const AgentWorkbench: React.FC<Props> = ({ courseId, courseTitle, textbooks, mod
   useEffect(() => {
     const controller = new AbortController(); let live = true;
     epochRef.current += 1; mutationRef.current?.abort(); mutationRef.current = null; stopReadRef.current?.();
-    selectedRef.current = null; setSelectedId(null); setRun(null); setEditor(null); setEditing(false); setBusy('');
+    selectedRef.current = null; setSelectedId(null); setRun(null); setEditor(null); setEditing(false); setBusy(''); setAnswerDraft(null);
     setRuns([]); setHistoryLoading(true); setPollError(''); setEvidenceOpen(false); setSourcePage(null);
     setBriefState(restoreBrief(courseId, availableBooks, context, initialRunId));
     setBriefBackupAvailable(Boolean(readLocal(`${briefKey(courseId)}:backup`)));
@@ -314,6 +329,11 @@ const AgentWorkbench: React.FC<Props> = ({ courseId, courseTitle, textbooks, mod
   };
   const scopeIds = brief.bookIds.filter((id) => availableBooks.some((book) => book.id === id));
   const taskActive = Boolean(run && ACTIVE.has(run.status));
+  const execution = run ? lessonExecution(run) : null;
+  const answerKey = run && execution?.approval.requestId ? `courseweave:lesson-answer:${courseId}:${run.id}:${execution.approval.requestId}` : '';
+  const cachedAnswer = answerKey ? readLocal<unknown>(answerKey) : null;
+  const teacherAnswer = answerDraft?.key === answerKey ? answerDraft.value : typeof cachedAnswer === 'string' ? cachedAnswer.slice(0, 2000) : '';
+  const changeTeacherAnswer = (value: string) => { if (!answerKey) return; const next = value.slice(0, 2000); setAnswerDraft({ key: answerKey, value: next }); writeLocal(answerKey, next); };
   const activeCourseRun = runs.find((item) => ACTIVE.has(item.status));
   const artifact = run && editor?.runId === run.id ? editor.artifact : serverArtifact(run);
   const delivery = run ? lessonDelivery(run) : null;
@@ -339,7 +359,7 @@ const AgentWorkbench: React.FC<Props> = ({ courseId, courseTitle, textbooks, mod
     return { controller, type, valid: () => mounted.current && courseRef.current === courseId && epochRef.current === epoch && !controller.signal.aborted };
   };
   const finishMutation = (operation: NonNullable<ReturnType<typeof beginMutation>>) => {
-    if (mutationRef.current === operation.controller) { mutationRef.current = null; if (mounted.current) { setBusy(''); if (operation.valid() && ['save', 'retry', 'resume'].includes(operation.type)) setRefresh((value) => value + 1); } }
+    if (mutationRef.current === operation.controller) { mutationRef.current = null; if (mounted.current) { setBusy(''); if (operation.valid() && ['save', 'retry', 'resume', 'respond', 'cancel'].includes(operation.type)) setRefresh((value) => value + 1); } }
   };
   const acceptRun = (next: LessonRun, expectedId?: string) => {
     if (next.course_id !== courseId || (expectedId && next.id !== expectedId)) { message.error('任务响应与当前课程不一致，已停止展示与修改'); return false; }
@@ -367,9 +387,27 @@ const AgentWorkbench: React.FC<Props> = ({ courseId, courseTitle, textbooks, mod
     finally { finishMutation(operation); }
   };
   const continueRun = async (action: 'resume' | 'retry') => {
-    if (!run || readOnly) return; const operation = beginMutation(action); if (!operation) return;
+    if (!run || readOnly || (action === 'resume' && !execution?.canResume)) return; const operation = beginMutation(action); if (!operation) return;
     try { const { data } = await (action === 'resume' ? resumeLessonRun : retryLessonRun)(run.id, operation.controller.signal); if (operation.valid()) acceptRun(data, run.id); }
     catch (error) { if (operation.valid() && !cancelled(error)) message.error(errorText(error, '操作失败，请检查任务状态后重试')); }
+    finally { finishMutation(operation); }
+  };
+  const respondToTeacherQuestion = async () => {
+    if (!run || readOnly || !execution?.canRespond) return;
+    const answer = teacherAnswer.trim(); if (!answer) return message.warning('请先填写你的教学选择或补充条件');
+    const operation = beginMutation('respond'); if (!operation) return;
+    try {
+      const { data } = await respondLessonRun(run.id, answer, execution.approval.requestId, operation.controller.signal);
+      if (!operation.valid() || !acceptRun(data, run.id)) return;
+      removeLocal(answerKey); setAnswerDraft({ key: answerKey, value: '' }); message.success('回答已提交，继续执行本次任务');
+    } catch (error: any) { if (operation.valid() && !cancelled(error)) message.error(error.response?.status === 409 ? '这个问题已更新或已处理。回答仍保留，请刷新任务后核对当前问题。' : errorText(error, '回答提交失败，输入仍保留，请刷新状态后重试')); }
+    finally { finishMutation(operation); }
+  };
+  const cancelRun = async () => {
+    if (!run || readOnly || !execution?.canCancel) return;
+    const operation = beginMutation('cancel'); if (!operation) return;
+    try { const { data } = await cancelLessonRun(run.id, operation.controller.signal); if (operation.valid() && acceptRun(data, run.id)) message.info(data.status === 'cancelled' ? '本次执行已停止，已有材料继续保留' : '任务状态已更新，请以最新执行状态为准'); }
+    catch (error) { if (operation.valid() && !cancelled(error)) message.error(errorText(error, '停止请求未确认，请刷新状态后重试')); }
     finally { finishMutation(operation); }
   };
   const validateDraft = (draft: LessonArtifact): string | null => {
@@ -481,7 +519,7 @@ const AgentWorkbench: React.FC<Props> = ({ courseId, courseTitle, textbooks, mod
         <div className="la-book-choices">{availableBooks.map((book) => <button key={book.id} aria-pressed={scopeIds.includes(book.id)} className={scopeIds.includes(book.id) ? 'selected' : ''} disabled={readOnly || Boolean(busy)} onClick={() => changeBrief({ bookIds: scopeIds.includes(book.id) ? scopeIds.filter((id) => id !== book.id) : [...scopeIds, book.id] })}><span>{scopeIds.includes(book.id) ? <CheckOutlined /> : <BookOutlined />}</span>{book.title}</button>)}</div>
         {!availableBooks.length && <p className="la-column-gap">课程中还没有教材。<button onClick={onGoLibrary}>前往教材库</button></p>}
         <footer><div className="la-requirements">{OPTIONS.map((item) => <button key={item} aria-pressed={brief.requirements.includes(item)} className={brief.requirements.includes(item) ? 'selected' : ''} disabled={readOnly || Boolean(busy)} onClick={() => changeBrief({ requirements: brief.requirements.includes(item) ? brief.requirements.filter((value) => value !== item) : [...brief.requirements, item], questions: item === '课堂提问' && brief.questions === 0 ? 3 : brief.questions })}>{brief.requirements.includes(item) && <CheckOutlined />} {item}</button>)}</div><Button type="primary" size="large" loading={busy === 'create'} disabled={readOnly || historyLoading || Boolean(activeCourseRun) || !availableBooks.length || Boolean(busy)} onClick={startRun}>{readOnly ? '在线示例不执行任务' : '检索教材并生成草稿'}</Button></footer>
-        <p className="la-brief-note">模型生成会使用已配置的服务；不可用时保留原文证据，并明确列出未完成内容。</p>
+        <p className="la-brief-note">模型可在预算内选择后续动作，必要时等待教师补充条件；不可用时明确降级为证据工作流。</p>
       </section>
       {activeCourseRun && <Alert type="info" showIcon message="当前课程已有任务进行中" action={<Button size="small" onClick={() => chooseRun(activeCourseRun.id)}>查看任务</Button>} />}
       <div className="la-start-guide"><FileSearchOutlined /><h2>先明确一段课，再让系统整理材料</h2><p>填写或复用条件不会自动执行。教案历史中的证据和修改继续保留。</p>{runs.length > 0 && <button onClick={() => chooseRun(runs[0].id)}>继续最近一份：{runTitle(runs[0])} →</button>}</div>
@@ -489,10 +527,14 @@ const AgentWorkbench: React.FC<Props> = ({ courseId, courseTitle, textbooks, mod
       {runLoading && !run && <div className="la-loading"><Spin /> 正在读取任务…</div>}
       {pollError && <Alert type="warning" showIcon message={pollError} action={<Button size="small" onClick={() => setRefresh((value) => value + 1)}>刷新状态</Button>} />}
       {run && <>
-        <section className="la-run-brief"><div><small>{labels[run.status] || run.status}</small><h2>{runTitle(run)}</h2><p>{requestedMinutes} 分钟 · {requestedQuestions} 个课堂问题 · {run.result.textbook_ids.length} 本教材</p></div><details><summary>查看备课条件 <DownOutlined /></summary><p>{run.result.goal}</p><p>教学对象：{run.result.request?.audience || run.payload?.audience || '未填写'}</p><p>先修知识：{run.result.request?.prior_knowledge || run.payload?.prior_knowledge || '未填写'}</p><p>{run.result.requirements.join(' · ')}</p><p>{run.result.request?.focus_terms?.join(' / ')}</p></details><Button icon={<CopyOutlined />} disabled={readOnly || Boolean(busy)} onClick={copyLessonConditions}>复用条件新建</Button><Button type="text" icon={<ReloadOutlined />} disabled={Boolean(busy)} onClick={() => setRefresh((value) => value + 1)}>刷新</Button></section>
-        {run.status === 'waiting_user' && run.result.approval && <Alert type="warning" showIcon message={run.result.approval.title} description={<>{run.result.approval.message}<p>{run.result.approval.textbooks.map((book) => book.title).join('、')}</p><Button onClick={onGoLibrary}>去核对章节</Button> {!readOnly && <Button loading={busy === 'resume'} disabled={Boolean(busy)} onClick={() => continueRun('resume')}>已确认，继续</Button>}</>} />}
+        <section className="la-run-brief"><div><small>{labels[run.status] || run.status}</small><h2>{runTitle(run)}</h2><p>{requestedMinutes} 分钟 · {requestedQuestions} 个课堂问题 · {requestedBookIds.length} 本教材</p></div><details><summary>查看备课条件 <DownOutlined /></summary><p>{run.result.goal}</p><p>教学对象：{run.result.request?.audience || run.payload?.audience || '未填写'}</p><p>先修知识：{run.result.request?.prior_knowledge || run.payload?.prior_knowledge || '未填写'}</p><p>{(run.result.requirements || []).join(' · ')}</p><p>{run.result.request?.focus_terms?.join(' / ')}</p></details><Button icon={<CopyOutlined />} disabled={readOnly || Boolean(busy)} onClick={copyLessonConditions}>复用条件新建</Button><Button type="text" icon={<ReloadOutlined />} disabled={Boolean(busy)} onClick={() => setRefresh((value) => value + 1)}>刷新</Button></section>
+        {execution?.isV3 && <AgentExecutionPanel run={run} execution={execution} busy={busy} readOnly={readOnly} onCancel={cancelRun} />}
+        {run.status === 'waiting_user' && execution?.approval.kind === 'teacher_question' && <section className="la-teacher-question" aria-label="等待教师补充条件"><header><small>等待你的教学判断</small><h3>{execution.approval.title || '请补充一个备课条件'}</h3></header>{execution.approval.message && <p>{execution.approval.message}</p>}<p className="la-teacher-prompt">{execution.approval.question || '问题内容尚未返回，请刷新任务。'}</p>{execution.approval.options.length > 0 && <div className="la-answer-options" aria-label="回答建议">{execution.approval.options.map((option, index) => <Button key={index} disabled={readOnly || Boolean(busy) || !execution.canRespond} onClick={() => changeTeacherAnswer(option)}>{option}</Button>)}</div>}<Input.TextArea aria-label="回答 Agent 的教学问题" value={teacherAnswer} maxLength={2000} showCount autoSize={{ minRows: 3, maxRows: 8 }} placeholder="填写你的选择，也可以补充适用条件" disabled={readOnly || Boolean(busy) || !execution.canRespond} onChange={(event) => changeTeacherAnswer(event.target.value)} /><footer><span>{readOnly ? '当前为只读示例，不能提交回答。' : !execution.canRespond ? '缺少有效问题编号或内容，请刷新后核对；不会代用继续章节操作。' : '提交后继续同一任务；建议选项只会填入输入框。'}</span>{!readOnly && <Button type="primary" icon={<SendOutlined />} loading={busy === 'respond'} disabled={Boolean(busy) || !execution.canRespond || !teacherAnswer.trim()} onClick={respondToTeacherQuestion}>提交回答并继续</Button>}</footer></section>}
+        {run.status === 'waiting_user' && execution?.approval.kind === 'chapter_review' && <Alert type="warning" showIcon message={execution.approval.title || '请先核对教材章节'} description={<>{execution.approval.message}<p>{execution.approval.textbooks.map((book) => book.title).join('、')}</p><Button onClick={onGoLibrary}>去核对章节</Button> {!readOnly && <Button loading={busy === 'resume'} disabled={Boolean(busy)} onClick={() => continueRun('resume')}>已确认，继续</Button>}</>} />}
+        {run.status === 'waiting_user' && execution?.approval.kind !== 'teacher_question' && execution?.approval.kind !== 'chapter_review' && <Alert type="warning" showIcon message="任务正在等待教师处理" description="当前等待类型暂无法识别，请刷新状态并核对执行记录。不会自动提交或重启任务。" />}
         {run.status === 'failed' && <Alert type="error" showIcon message="本次任务未能结束" description={<>{run.error || run.message || '请处理问题后再试。'}{!readOnly && <div><Button loading={busy === 'retry'} disabled={Boolean(busy)} onClick={() => continueRun('retry')}>重新执行（可能调用模型）</Button></div>}</>} />}
-        {taskActive && <div className="la-active-status"><Spin size="small" /><span>{run.message || '正在处理所选教材；完成后会区分教案草稿与证据材料。'}</span><small>{Math.round(run.progress || 0)}%</small></div>}
+        {run.status === 'cancelled' && <Alert type="info" showIcon message="本次执行已停止" description="已有材料和教师修改继续保留。可核对当前成果，或复用条件手动新建任务；刷新不会自动重启。" />}
+        {taskActive && <div className="la-active-status"><Spin size="small" /><span>{run.message || '正在处理所选教材；完成后会区分教案草稿与证据材料。'}</span>{!execution?.isV3 && <small>{Math.round(run.progress || 0)}%</small>}</div>}
         {artifact ? <article className={`la-document ${editing ? 'is-editing' : ''}`}>
           <header className="la-document-heading"><div><span className={`la-delivery ${delivery?.status}`}>{delivery?.status === 'draft_ready' ? '教案草稿 · 待教师核对' : delivery?.status === 'evidence_only' ? '证据已整理 · 教案待补' : '目标未齐全'}</span>{editing ? <Input disabled={Boolean(busy)} aria-label="教案标题" value={artifact.title} onChange={(event) => updateArtifact((current) => ({ ...current, title: event.target.value }))} /> : <h2>{artifact.title || '备课材料'}</h2>}<p>{artifact.citations.length} 条教材引用 · {run.result.draft_revision ? `教师修订稿 · 第 ${run.result.draft_revision} 版` : '生成原稿'}{dirty ? ' · 有未保存修改' : ''}</p></div><div className="la-document-actions">{!readOnly && <Button icon={editing ? <SaveOutlined /> : <EditOutlined />} loading={busy === 'save'} disabled={Boolean(busy) || taskActive || run.status === 'waiting_user' || (editing && !dirty)} onClick={() => editing ? saveDraft() : setEditing(true)}>{editing ? dirty ? '保存修改' : '尚未修改' : '编辑草稿'}</Button>}{editing && <Button disabled={Boolean(busy)} onClick={() => setEditing(false)}>阅读模式</Button>}<Button icon={<PrinterOutlined />} loading={busy === 'export'} disabled={Boolean(busy) || dirty || taskActive} onClick={printDraft}>打印 / PDF</Button><Button icon={<ExportOutlined />} disabled={Boolean(busy) || dirty || taskActive} onClick={exportDraft}>Markdown</Button>{onOpenLesson && <Button type="primary" disabled={Boolean(busy) || dirty || taskActive} onClick={() => onOpenLesson(run.id)}>预览教案</Button>}</div></header>
           {dirty && <p className="la-local-note">修改暂存于此浏览器，点击“保存修改”后才会同步到课程。来源原文保持不变。</p>}
@@ -514,7 +556,7 @@ const AgentWorkbench: React.FC<Props> = ({ courseId, courseTitle, textbooks, mod
           {renderStrings('unresolved_questions', '教师核对事项', '尚无单列核对事项；所有生成结论仍需教师核对。')}
           <footer className="la-document-footer"><p>自动检查仅核对来源、覆盖和目标结构；尚未替代教师对结论与课堂适用性的审核。</p>{!!delivery?.checks.length && <details><summary>查看自动检查项</summary><ul>{delivery.checks.map((check) => <li key={check.id}><span>{check.passed ? '通过' : '待补'}</span> {check.label} · {check.value}</li>)}</ul></details>}</footer>
         </article> : !taskActive && <div className="la-start-guide"><FileSearchOutlined /><h2>尚无可展示的成果</h2><p>查看下方处理过程，或返回新建任务。刷新只读取状态，不会重新执行。</p></div>}
-        <details className="la-trace"><summary>查看处理过程 <small>{run.result.plan?.filter((step) => ['completed', 'skipped'].includes(step.status)).length || 0} / {run.result.plan?.length || 0} 步</small></summary><ol>{(run.result.plan || []).map((step) => <li key={step.id} className={step.status}><strong>{step.title}</strong><span>{step.message || step.description}</span><small>{step.status === 'skipped' ? '已复用' : step.status === 'completed' ? '已处理' : step.status === 'running' ? '处理中' : step.status === 'waiting' ? '待确认' : step.status === 'failed' ? '未成功' : '未开始'}</small></li>)}</ol></details>
+        {execution && !execution.isV3 && <LegacyExecutionTrace steps={execution.legacyPlan} title="查看历史流程记录" hint="固定步骤保留用于查看历史任务，不代表模型自主选择的执行轨迹。" />}
       </>}
     </>}
     <Modal open={coverageOpen} onCancel={() => setCoverageOpen(false)} title="核对各教材的使用情况" footer={null} width={650}>

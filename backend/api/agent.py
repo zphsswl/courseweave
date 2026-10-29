@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import copy
+from datetime import datetime, timezone
 from fastapi import APIRouter, HTTPException, Query, Response
 from pydantic import BaseModel, Field
 from sqlalchemy import func
@@ -40,6 +42,11 @@ class AgentRunCreate(BaseModel):
 class LessonDraftUpdate(BaseModel):
     expected_revision: int = Field(ge=0, strict=True)
     artifact: dict
+
+
+class AgentTeacherResponse(BaseModel):
+    request_id: str = Field(min_length=1, max_length=160)
+    answer: str = Field(min_length=1, max_length=2000)
 
 
 def _validate_scope(payload: AgentRunCreate) -> list[str]:
@@ -226,7 +233,9 @@ def resume_agent_run(job_id: str):
             return
         found = True
         if job.status != "waiting_user":
-            return
+            raise HTTPException(409, "当前任务不在等待教师确认状态")
+        if ((job.result or {}).get('approval') or {}).get('type') == 'teacher_question':
+            raise HTTPException(409, '请提交教师补充回答后继续')
         textbook_ids = list((job.payload or {}).get("textbook_ids") or [])
         blocked_books = [
             book.title
@@ -235,10 +244,11 @@ def resume_agent_run(job_id: str):
         ]
         if blocked_books:
             return
-        job.status = "pending"
-        job.stage = "pending"
-        job.message = "教师确认已收到，Agent 正在继续"
-        job.error = ""
+        changed = db.query(Job).filter(Job.id == job_id, Job.status == 'waiting_user', Job.result == job.result).update({
+            'status': 'pending', 'stage': 'pending', 'message': '教师确认已收到，Agent 正在继续',
+            'error': '', 'updated_at': datetime.now(timezone.utc)}, synchronize_session=False)
+        if not changed:
+            raise HTTPException(409, '任务状态已变化，请刷新后重试')
 
     _write_with_retry(resume)
     if not found:
@@ -249,6 +259,60 @@ def resume_agent_run(job_id: str):
     if job["status"] != "pending":
         raise HTTPException(409, "当前任务不在等待教师确认状态")
     enqueue_job(job_id)
+    return get_job(job_id)
+
+
+@router.post('/runs/{job_id}/respond')
+def respond_to_agent(job_id: str, payload: AgentTeacherResponse):
+    answer = payload.answer.strip()
+    if not answer:
+        raise HTTPException(422, '回答不能为空白')
+    def respond(db):
+        job = db.query(Job).filter(Job.id == job_id, Job.type == 'course_agent').first()
+        if not job:
+            raise HTTPException(404, 'Agent任务不存在')
+        state = copy.deepcopy(job.result or {})
+        approval = state.get('approval') or {}
+        if job.status != 'waiting_user' or approval.get('type') != 'teacher_question' or approval.get('request_id') != payload.request_id:
+            raise HTTPException(409, '待回答的问题已变化，请刷新当前任务')
+        answers = state.get('teacher_answers') or []
+        if len(answers) >= 4:
+            raise HTTPException(409, '本次任务已达到教师补充次数上限')
+        state['teacher_answers'] = [*answers, {'request_id': payload.request_id, 'question': approval['question'],
+                                              'answer': answer, 'answered_at': datetime.now(timezone.utc).isoformat()}]
+        state['approval'] = None
+        changed = db.query(Job).filter(Job.id == job_id, Job.status == 'waiting_user', Job.result == job.result).update({
+            'result': state, 'status': 'pending', 'stage': 'pending', 'message': '已收到教师补充，Agent将继续决策',
+            'error': '', 'updated_at': datetime.now(timezone.utc)}, synchronize_session=False)
+        if not changed:
+            raise HTTPException(409, '任务状态已变化，请刷新后重试')
+    _write_with_retry(respond)
+    enqueue_job(job_id)
+    return get_job(job_id)
+
+
+@router.post('/runs/{job_id}/cancel')
+def cancel_agent_run(job_id: str):
+    def cancel(db):
+        job = db.query(Job).filter(Job.id == job_id, Job.type == 'course_agent').first()
+        if not job:
+            raise HTTPException(404, 'Agent任务不存在')
+        state = copy.deepcopy(job.result or {})
+        if state.get('agent_version') != 'lesson_agent_v3':
+            raise HTTPException(409, '历史流程不支持此停止操作')
+        if job.status == 'cancelled':
+            return
+        if job.status not in {'pending', 'processing', 'waiting_user'}:
+            raise HTTPException(409, '当前任务已经结束')
+        state['stop_reason'] = 'user_cancelled'
+        state['approval'] = None
+        changed = db.query(Job).filter(Job.id == job_id, Job.status.in_(['pending', 'processing', 'waiting_user']), Job.result == job.result).update({
+            'result': state, 'status': 'cancelled', 'stage': 'cancelled',
+            'message': '任务已停止，已完成的原文与草稿保留', 'error': '',
+            'updated_at': datetime.now(timezone.utc)}, synchronize_session=False)
+        if not changed:
+            raise HTTPException(409, '任务状态已变化，请刷新')
+    _write_with_retry(cancel)
     return get_job(job_id)
 
 
