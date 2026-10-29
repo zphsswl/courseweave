@@ -256,6 +256,64 @@ class LessonPolicyTests(unittest.TestCase):
         self.assertIn("最新草稿已经通过服务端 validate_draft", system)
         self.assertIn("验证失败时先修订草稿或补查询", system)
 
+    def test_latest_rejection_and_delivery_survive_large_earlier_observations(self):
+        state = {
+            "observations": {
+                "textbooks": [{"title": "旧" * 2000, "status": "confirmed"} for _ in range(48)],
+                "last_tool_result": {"error_code": "invalid_schema", "validation_issues": [
+                    {"field": "summary", "type": "string_type"}], "correction": "summary必须是字符串"},
+            },
+            "artifact": {"title": "当前稿", "lesson_blocks": [{"content": "稿" * 20000}]},
+            "quality": {"checks": [{"value": "检" * 2000} for _ in range(48)],
+                        "task_completion": {"status": "draft_ready", "missing_items": []}},
+            "delivery": {"status": "draft_ready", "missing_items": []},
+        }
+        state["validated_signature"] = policy.state_signature(state)
+        self.model_returns(json.dumps(action("finish")))
+        policy.decide_next_action(self.payload, state)
+        context = self.context()
+        self.assertEqual(context.get("latest_result", {}).get("error_code"), "invalid_schema")
+        self.assertEqual(context.get("completion", {}).get("status"), "draft_ready")
+        self.assertTrue(context["completion"]["current_draft_checked"])
+        self.assertLessEqual(len(json.dumps(context, ensure_ascii=False, separators=(",", ":"))),
+                             policy.MAX_CONTEXT_CHARS)
+
+    def test_stale_saved_validation_is_not_presented_as_a_current_draft_check(self):
+        state = {"artifact": {"title": "已校验稿"}, "evidence": [{"id": "chunk_a", "source_hash": "original"}],
+                 "delivery": {"status": "draft_ready", "missing_items": []}}
+        state["validated_signature"] = policy.state_signature(state)
+        self.model_returns(json.dumps(action("validate_draft")))
+        for changed in ("artifact", "evidence", "lesson_draft"):
+            candidate = copy.deepcopy(state)
+            if changed == "artifact":
+                candidate["artifact"]["title"] = "未经校验的修订稿"
+            elif changed == "evidence":
+                candidate["evidence"][0]["source_hash"] = "changed"
+            else:
+                candidate["lesson_draft"] = {"title": "教师刚保存的新稿"}
+            with self.subTest(changed=changed):
+                policy.decide_next_action(self.payload, candidate)
+                self.assertFalse(self.context()["completion"]["current_draft_checked"])
+
+    def test_global_serialized_limit_preserves_feedback_when_multiple_parts_are_large(self):
+        state = {
+            "observations": {"textbooks": [{"title": '"\\\n' * 2000} for _ in range(48)],
+                             "last_tool_result": {"error_code": "invalid_arguments", "correction": "只返回白名单参数"}},
+            "evidence": [{"id": f"chunk_{index}", "textbook_id": "book_a", "content": '"\\\n' * 2000}
+                         for index in range(48)],
+            "artifact": {"lesson_blocks": [{"content": "稿" * 2000} for _ in range(30)]},
+            "trajectory": [{"summary": "动作" * 2000} for _ in range(6)],
+            "delivery": {"status": "needs_work", "missing_items": ["补足45分钟"]},
+        }
+        self.model_returns(json.dumps(action("write_draft")))
+        with patch.object(policy, "MAX_CONTEXT_CHARS", 12000):
+            policy.decide_next_action(self.payload, state)
+        context = self.context()
+        self.assertLessEqual(len(json.dumps(context, ensure_ascii=False, separators=(",", ":"))), 12000)
+        self.assertEqual(context["latest_result"]["error_code"], "invalid_arguments")
+        self.assertEqual(context["completion"]["missing_items"], ["补足45分钟"])
+        self.assertEqual(context["request"]["textbook_ids"], self.payload["textbook_ids"])
+
 
 if __name__ == "__main__":
     unittest.main()

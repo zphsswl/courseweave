@@ -17,7 +17,7 @@ from typing import Callable
 
 from backend.database import Chapter, Chunk, Job, SessionLocal, Textbook
 from backend.agents.orchestrator import _write_with_retry
-from backend.agents.lesson_contracts import DecisionValidationError, decision_fingerprint, validate_decision
+from backend.agents.lesson_contracts import DecisionValidationError, decision_fingerprint, state_signature, validate_decision
 from backend.agents.lesson_policy import DecisionUnavailable, decide_next_action
 from backend.agents.rag_tool import query_rag_tool
 
@@ -144,9 +144,26 @@ def _add_evidence(payload: dict, state: dict, chunk_ids: list[str]) -> int:
 
 
 def _signature(state: dict) -> str:
-    value = {'evidence': [(item.get('id'), item.get('source_hash')) for item in state.get('evidence') or []],
-             'artifact': state.get('lesson_draft') or state.get('artifact')}
-    return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+    return state_signature(state)
+
+
+def _observation_progress_token(action: str, state: dict) -> str | None:
+    """A first useful observation counts; re-reading it cannot reset the loop guard.
+
+    Tokens live on completed trajectory entries, so recovery preserves what was
+    already observed. Timestamps, call budgets and public wording are excluded.
+    """
+    if action == 'inspect_course':
+        value = (state.get('observations') or {}).get('textbooks')
+    elif action == 'read_source':
+        source = (state.get('observations') or {}).get('last_read') or {}
+        value = {'id': source.get('id'), 'source_hash': source.get('source_hash')}
+    elif action == 'validate_draft':
+        value = _signature(state)
+    else:
+        return None
+    encoded = json.dumps({'action': action, 'value': value}, sort_keys=True, ensure_ascii=False)
+    return hashlib.sha256(encoded.encode()).hexdigest()
 
 
 def _observation(state: dict, value: dict) -> None:
@@ -392,13 +409,22 @@ def process_agent_loop(job_id: str, *, policy: Callable | None = None) -> None:
                     return
                 observation, terminal = _execute(payload, state, decision, remaining)
                 _ensure_active(job_id)
-                entry.update(status='completed', finished_at=now(), observation=observation)
+                progress_token = _observation_progress_token(decision.action, state)
+                first_observation = bool(progress_token) and not any(
+                    row.get('status') == 'completed' and row.get('progress_token') == progress_token
+                    for row in state['trajectory']
+                )
+                progressed = before != _signature(state) or first_observation
+                state['no_progress_count'] = 0 if progressed else state.get('no_progress_count', 0) + 1
+                observation['progress_made'] = progressed
+                entry.update(status='completed', finished_at=now(), observation=observation,
+                             progress_made=progressed)
+                if progress_token:
+                    entry['progress_token'] = progress_token
                 _observation(state, observation)
                 state['plan'][-1].update(status='completed', message=observation['summary'])
                 if decision.action not in state.setdefault('tools_used', []):
                     state['tools_used'].append(decision.action)
-                progressed = before != _signature(state) or decision.action in {'read_source', 'validate_draft', 'inspect_course'}
-                state['no_progress_count'] = 0 if progressed else state.get('no_progress_count', 0) + 1
                 if terminal == 'waiting_user':
                     checkpoint(status='waiting_user', stage='approval', message='等待教师补充备课条件')
                     return
@@ -421,6 +447,14 @@ def process_agent_loop(job_id: str, *, policy: Callable | None = None) -> None:
                     failure.update(error_code=exc.code, validation_issues=exc.issues,
                                    correction='只返回 action、arguments、summary；按白名单动作的参数格式修正，不能输出教案代替动作。',
                                    allowed_actions=TOOLS[:])
+                    if ((state.get('delivery') or {}).get('status') == 'draft_ready'
+                            and state.get('validated_signature') == _signature(state)):
+                        # An example helps repair the wire protocol; it is not an
+                        # automatic finish or permission to bypass fresh checks.
+                        failure['decision_example'] = {
+                            'action': 'finish', 'arguments': {},
+                            'summary': '提交已检查的草稿供教师审核',
+                        }
                 error = failure['summary']
                 entry.update(status='rejected', finished_at=now(), error=error, observation=failure)
                 if state['plan'] and state['plan'][-1]['id'] == entry['id']:

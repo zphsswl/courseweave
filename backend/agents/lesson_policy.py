@@ -7,7 +7,7 @@ from typing import Any
 
 import openai
 
-from backend.agents.lesson_contracts import Decision, validate_decision
+from backend.agents.lesson_contracts import Decision, state_signature, validate_decision
 from backend.config import LLM_API_KEY, LLM_MODEL
 from backend.services.llm_client import create_openai_client
 
@@ -37,12 +37,13 @@ summary 是给教师看的 1 至 300 字动作摘要，只写将执行什么；�
 4. 有现成原文时复用；需要完整上下文时 read_source；缺少某本教材或某个维度的证据时，针对缺口改写查询或限定当前范围内的教材补检索。检索无结果不能证明教材没有相关知识。
 
 反馈与结束：
-5. 根据最新 observations、quality 和最近动作继续决策；被拒绝时读取 error_code 和 validation_issues 的字段位置与类型，按 correction 修正，不能原样重复。验证失败时先修订草稿或补查询，再 validate_draft，不要直接 finish。
+5. 优先读取 latest_result 和 completion，再结合 observations、quality 和最近动作继续决策；被拒绝时读取 error_code 和 validation_issues 的字段位置与类型，按 correction 修正，不能原样重复。decision_example 仅是合法格式示例，仍须根据当前状态自行选择动作。验证失败时先修订草稿或补查询，再 validate_draft，不要直接 finish。
 6. 只有已有草稿，并且该最新草稿已经通过服务端 validate_draft（quality.task_completion.status 为 draft_ready），才能 finish。写稿或来源变化后需要重新校验；服务端仍将核对签名与完成条件。
 7. ask_teacher 仅用于无法从已有材料解决的必要任务信息、真正阻碍继续的选择或范围调整。能检索或修订解决的缺项先自主处理，不反复询问已经给出的条件。
 8. 遵守 budget。接近预算且确实缺证据时说明具体缺口并请求必要决定，不能编造内容或假装任务完成。服务器决定硬停止。
 9. 上下文可能带 truncated/omitted_count 标记；摘要未包含的内容不等于不存在，可用允许的工具读取。不要自行恢复被裁剪的原文。
 10. 当前稿检查通过时可返回 {"action":"finish","arguments":{},"summary":"提交已检查的草稿供教师审核"}。顶层summary必须是非空字符串；不要把教案正文或检查结果作为arguments，也不能增加其他顶层字段。
+11. progress_made=false 表示该动作没有带来新材料或新检查结果。不要交替重复 inspect_course、read_source、validate_draft 消耗轮数；需要改变检索、修订稿子、提出必要问题或完成交付。
 """
 
 
@@ -148,10 +149,24 @@ def _policy_context(payload: dict, state: dict) -> dict:
     trajectory = trajectory[-_RECENT_ACTIONS:] if isinstance(trajectory, list) else []
     answers = state.get("teacher_answers") or []
     answers = answers[-6:] if isinstance(answers, list) else answers
-    return {
+    observations = state.get('observations') or {}
+    observations = observations if isinstance(observations, dict) else {}
+    quality = state.get('quality') or {}
+    quality = quality if isinstance(quality, dict) else {}
+    delivery = state.get('delivery') or quality.get('task_completion') or {}
+    delivery = delivery if isinstance(delivery, dict) else {}
+    context = {
         "goal": _text(payload.get("goal") or state.get("goal"), 500),
         "request": _bounded_data(request, 6000),
-        "observations": _bounded_data(state.get("observations") or {}, 5000),
+        # Critical control feedback has its own budget: a long textbook list or
+        # earlier RAG answer must not hide the latest protocol rejection/pass.
+        "latest_result": _bounded_data(observations.get('last_tool_result') or {}, 2000),
+        "completion": {
+            'status': _text(delivery.get('status'), 40),
+            'missing_items': _bounded_data(delivery.get('missing_items') or [], 1200),
+            'current_draft_checked': bool(artifact and state.get('validated_signature') == state_signature(state)),
+        },
+        "observations": _bounded_data(observations, 3500),
         "evidence": _bounded_data({"total_count": len(evidence), "items": sources,
                                    "omitted_count": len(evidence) - len(sources)}, MAX_EVIDENCE_CHARS),
         "artifact": _bounded_data(artifact, 5000),
@@ -160,6 +175,15 @@ def _policy_context(payload: dict, state: dict) -> dict:
         "teacher_answers": _bounded_data(answers, 4000),
         "budget": _bounded_data(state.get("budget") or {}, 1000),
     }
+    # Enforce the serialized budget as well as per-part limits. Escaped control
+    # characters and JSON wrappers otherwise make the sum an unsafe estimate.
+    for field in ('evidence', 'artifact', 'observations', 'trajectory'):
+        size = len(json.dumps(context, ensure_ascii=False, separators=(',', ':'), allow_nan=False))
+        if size <= MAX_CONTEXT_CHARS:
+            break
+        current = len(json.dumps(context[field], ensure_ascii=False, separators=(',', ':'), allow_nan=False))
+        context[field] = _bounded_data(context[field], max(200, current - (size - MAX_CONTEXT_CHARS) - 64))
+    return context
 
 
 def decide_next_action(payload: dict, state: dict, *, timeout: float = 45) -> Decision:

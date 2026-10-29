@@ -300,6 +300,68 @@ class AgentRuntimeTests(unittest.TestCase):
         self.assertEqual(state["delivery"]["status"], "evidence_only")
         self.assertEqual(state["evidence"][0]["id"], "chunk_a")
 
+    def test_alternating_unchanged_observation_tools_cannot_reset_no_progress_forever(self):
+        sources = self.sources()
+        job_id = self.make_job(selected=True, state={"artifact": self.good_draft(self.payload, [], sources)})
+        script = ScriptedPolicy(
+            choose("inspect_course"), choose("read_source", chunk_id="chunk_a"), choose("validate_draft"),
+            choose("inspect_course"), choose("read_source", chunk_id="chunk_a"), choose("validate_draft"),
+            choose("inspect_course"),
+        )
+        runtime.process_agent_loop(job_id, policy=script)
+        saved = self.saved(job_id)
+        self.assertEqual(saved["result"]["stop_reason"], "no_progress")
+        self.assertEqual(saved["result"]["budget"]["steps_used"], 7)
+        self.assertEqual(saved["result"]["no_progress_count"], 4)
+        self.assertEqual([row["progress_made"] for row in saved["result"]["trajectory"][:6]],
+                         [True, True, True, False, False, False])
+        self.assertEqual(saved["result"]["delivery"]["status"], "draft_ready")
+        self.assertNotEqual(saved["result"]["stop_reason"], "delivery_ready")
+
+    def test_validated_draft_schema_rejection_supplies_a_legal_finish_example(self):
+        job_id = self.make_job(selected=True)
+        invalid = {"action": "finish", "arguments": {}, "summary": {"private": "PRIVATE_VALUE"}}
+        script = ScriptedPolicy(choose("write_draft"), choose("validate_draft"), invalid, choose("finish"))
+        runtime.process_agent_loop(job_id, policy=script)
+        self.assert_ready(job_id)
+        feedback = script.observed_states[3]["observations"]["last_tool_result"]
+        self.assertEqual(feedback["decision_example"]["action"], "finish")
+        self.assertEqual(feedback["decision_example"]["arguments"], {})
+        self.assertIsInstance(feedback["decision_example"]["summary"], str)
+        self.assertNotIn("PRIVATE_VALUE", str(feedback))
+
+    def test_progress_observation_tokens_survive_process_recovery(self):
+        sources = self.sources()
+        job_id = self.make_job(selected=True, state={"artifact": self.good_draft(self.payload, [], sources)})
+        with self.assertRaises(KeyboardInterrupt):
+            runtime.process_agent_loop(job_id, policy=ScriptedPolicy(
+                choose("inspect_course"), choose("read_source", chunk_id="chunk_a"), choose("validate_draft"),
+                KeyboardInterrupt("process interrupted before next decision"),
+            ))
+        checkpoint = self.saved(job_id)["result"]
+        tokens = [row["progress_token"] for row in checkpoint["trajectory"]]
+        self.assertEqual(len(set(tokens)), 3)
+        runtime.process_agent_loop(job_id, policy=ScriptedPolicy(
+            choose("inspect_course"), choose("read_source", chunk_id="chunk_a"), choose("validate_draft"),
+            choose("inspect_course"),
+        ))
+        state = self.saved(job_id)["result"]
+        self.assertEqual(state["stop_reason"], "no_progress")
+        self.assertEqual([row["progress_token"] for row in state["trajectory"][:3]], tokens)
+        self.assertEqual(state["no_progress_count"], 4)
+
+    def test_validation_of_a_changed_draft_is_new_progress(self):
+        sources = self.sources()
+        job_id = self.make_job(selected=True, state={"artifact": self.good_draft(self.payload, [], sources, minutes=40)})
+        runtime.process_agent_loop(job_id, policy=ScriptedPolicy(
+            choose("validate_draft"), choose("write_draft", instructions="修订为45分钟"),
+            choose("validate_draft"), choose("finish"),
+        ))
+        state = self.assert_ready(job_id)
+        checks = [row for row in state["trajectory"] if row["action"] == "validate_draft"]
+        self.assertEqual([row["progress_made"] for row in checks], [True, True])
+        self.assertNotEqual(checks[0]["progress_token"], checks[1]["progress_token"])
+
     def test_rag_budget_rejects_an_extra_call_but_allows_completion_from_existing_sources(self):
         job_id = self.make_job(budget={"max_rag_queries": 1})
         self.rag.return_value = {"items": [{"id": "chunk_a"}]}

@@ -152,3 +152,14 @@ def decision_fingerprint(decision: Decision) -> str:
     encoded = json.dumps({"action": decision.action, "arguments": arguments},
                          ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
+
+
+def state_signature(state: dict) -> str:
+    """Identify the current evidence/draft with the existing checkpoint algorithm.
+
+    This is deliberately database-free so policy context and execution share the
+    same definition. Matching a snapshot never replaces fresh source DB checks.
+    """
+    value = {'evidence': [(item.get('id'), item.get('source_hash')) for item in state.get('evidence') or []],
+             'artifact': state.get('lesson_draft') or state.get('artifact')}
+    return hashlib.sha256(json.dumps(value, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
