@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+<rect x="0" y="0" width="1600" height="1000" rx="0" fill="#F5F6F1" stroke="none" stroke-width="1"/>
+<text x="50" y="39.68" font-family="Microsoft YaHei" font-size="12" font-weight="700" fill="#237E6C">COURSEWEAVE  /  FIVE BUILDING BLOCKS</text>
+<text x="50" y="93.82" font-family="SimSun" font-size="38" font-weight="400" fill="#183B34">一个 Agent，五个部分怎样配合</text>
+<text x="50" y="133.69" font-family="Microsoft YaHei" font-size="21" font-weight="700" fill="#237E6C">主循环：状态 → 上下文 → LLM → 工具 → 更新状态</text>
+<rect x="1290" y="48" width="260" height="32" rx="6" fill="#153D34" stroke="none" stroke-width="1"/>
+<text x="1302" y="69.24" font-family="Microsoft YaHei" font-size="16" font-weight="700" fill="#FFFFFF">本项目 · 简明架构</text>
+<rect x="50" y="170" width="710" height="61" rx="12" fill="#FFFFFF" stroke="#CDD8D0" stroke-width="1"/>
+<text x="70" y="203.8" font-family="Microsoft YaHei" font-size="20" font-weight="700" fill="#183B34">用户输入：主题、教材、课时、教学要求</text>
+<polyline points="215,231 215,320" fill="none" stroke="#237E6C" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="215,320 211.30576659566813,312.9040406177657 218.69423340433187,312.9040406177657" fill="#237E6C"/>
+<text x="228" y="277.46" font-family="Microsoft YaHei" font-size="14" font-weight="400" fill="#65746B">保存为任务条件</text>
+<rect x="50" y="320" width="330" height="250" rx="12" fill="#FFFFFF" stroke="#CDD8D0" stroke-width="1"/>
+<text x="70" y="362.25" font-family="Microsoft YaHei" font-size="25" font-weight="700" fill="#183B34">01  状态</text>
+<text x="70" y="395.13" font-family="Microsoft YaHei" font-size="17" font-weight="700" fill="#183B34">当前任务的“账本”</text>
+<text x="70" y="435.13" font-family="Microsoft YaHei" font-size="17" font-weight="400" fill="#65746B">任务条件、教材证据、当前稿</text>
+<text x="70" y="463.13" font-family="Microsoft YaHei" font-size="17" font-weight="400" fill="#65746B">工具结果、检查反馈</text>
+<text x="70" y="491.13" font-family="Microsoft YaHei" font-size="17" font-weight="400" fill="#65746B">执行记录、剩余预算</text>
+<text x="70" y="547.748" font-family="Microsoft YaHei" font-size="13.2" font-weight="400" fill="#65746B">SQLite / Job：每步前后保存</text>
+<rect x="440" y="320" width="330" height="250" rx="12" fill="#FFFFFF" stroke="#CDD8D0" stroke-width="1"/>
+<text x="460" y="362.25" font-family="Microsoft YaHei" font-size="25" font-weight="700" fill="#183B34">02  上下文</text>
+<text x="460" y="395.13" font-family="Microsoft YaHei" font-size="17" font-weight="700" fill="#183B34">这一轮交给模型的内容</text>
+<text x="460" y="435.13" font-family="Microsoft YaHei" font-size="17" font-weight="400" fill="#65746B">目标、证据摘要、当前稿与反馈</text>
+<text x="460" y="463.13" font-family="Microsoft YaHei" font-size="17" font-weight="400" fill="#65746B">最近 6 步动作、剩余预算</text>
+<text x="460" y="491.13" font-family="Microsoft YaHei" font-size="17" font-weight="400" fill="#65746B">按长度限制选取和裁剪</text>
+<text x="460" y="547.748" font-family="Microsoft YaHei" font-size="13.2" font-weight="400" fill="#65746B">每轮重新组装有限输入</text>
+<rect x="830" y="320" width="330" height="250" rx="12" fill="#153D34" stroke="none" stroke-width="1"/>
+<text x="850" y="362.25" font-family="Microsoft YaHei" font-size="25" font-weight="700" fill="#FFFFFF">03  LLM</text>
+<text x="850" y="395.13" font-family="Microsoft YaHei" font-size="17" font-weight="700" fill="#FFFFFF">决定下一步，按需生成内容</text>
+<text x="850" y="435.13" font-family="Microsoft YaHei" font-size="17" font-weight="400" fill="#FFFFFF">决策：选择一个动作及参数</text>
+<text x="850" y="463.13" font-family="Microsoft YaHei" font-size="17" font-weight="400" fill="#FFFFFF">生成：根据原文写或修改教案</text>
+<text x="850" y="491.13" font-family="Microsoft YaHei" font-size="17" font-weight="400" fill="#FFFFFF">同一模型配置，不同调用</text>
+<text x="850" y="547.748" font-family="Microsoft YaHei" font-size="13.2" font-weight="400" fill="#FFFFFF">输出动作 JSON，交给程序执行</text>
+<rect x="1220" y="320" width="330" height="250" rx="12" fill="#FFFFFF" stroke="#CDD8D0" stroke-width="1"/>
+<text x="1240" y="362.25" font-family="Microsoft YaHei" font-size="25" font-weight="700" fill="#183B34">04  工具</text>
+<text x="1240" y="395.13" font-family="Microsoft YaHei" font-size="17" font-weight="700" fill="#183B34">程序提供的七种能力</text>
+<text x="1240" y="435.13" font-family="Microsoft YaHei" font-size="17" font-weight="400" fill="#65746B">查看课程 · RAG 检索 · 读原文</text>
+<text x="1240" y="463.13" font-family="Microsoft YaHei" font-size="17" font-weight="400" fill="#65746B">起草 / 修订 · 检查草稿</text>
+<text x="1240" y="491.13" font-family="Microsoft YaHei" font-size="17" font-weight="400" fill="#65746B">询问教师 · 结束检查</text>
+<text x="1240" y="547.748" font-family="Microsoft YaHei" font-size="13.2" font-weight="400" fill="#65746B">执行前校验：参数、范围、预算</text>
+<polyline points="380,448 440,448" fill="none" stroke="#237E6C" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="440,448 432.9040406177657,451.69423340433184 432.9040406177657,444.30576659566816" fill="#237E6C"/>
+<text x="383" y="431.68" font-family="Microsoft YaHei" font-size="12" font-weight="700" fill="#237E6C">选取裁剪</text>
+<polyline points="770,448 830,448" fill="none" stroke="#237E6C" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="830,448 822.9040406177658,451.69423340433184 822.9040406177658,444.30576659566816" fill="#237E6C"/>
+<text x="773" y="431.68" font-family="Microsoft YaHei" font-size="12" font-weight="700" fill="#237E6C">本轮输入</text>
+<polyline points="1160,448 1220,448" fill="none" stroke="#237E6C" stroke-width="2" stroke-linejoin="round"/>
+<polygon points="1220,448 1212.9040406177658,451.69423340433184 1212.9040406177658,444.30576659566816" fill="#237E6C"/>
+<text x="1163" y="431.68" font-family="Microsoft YaHei" font-size="12" font-weight="700" fill="#237E6C">动作</text>
+<polyline points="1385,320 1385,268 995,268 995,320" fill="none" stroke="#536C95" stroke-width="1.7" stroke-linejoin="round" stroke-dasharray="5 5"/>
+<polygon points="995,320 991.3057665956682,312.9040406177657 998.6942334043318,312.9040406177657" fill="#536C95"/>
+<text x="952" y="251.46" font-family="Microsoft YaHei" font-size="14" font-weight="700" fill="#536C95">写稿 / 整理回答时，工具按需另调 LLM 生成内容</text>
+<polyline points="1385,570 1385,627 215,627 215,570" fill="none" stroke="#237E6C" stroke-width="2.5" stroke-linejoin="round"/>
+<polygon points="215,570 218.69423340433187,577.0959593822342 211.30576659566813,577.0959593822342" fill="#237E6C"/>
+<rect x="492" y="607" width="610" height="38" rx="0" fill="#F5F6F1" stroke="none" stroke-width="1"/>
+<text x="516" y="629.91" font-family="Microsoft YaHei" font-size="19" font-weight="700" fill="#237E6C">把结果、稿件与检查反馈写回状态，进入下一轮</text>
+<rect x="50" y="714" width="1500" height="190" rx="12" fill="#E7F1E9" stroke="none" stroke-width="1"/>
+<text x="72" y="753.25" font-family="Microsoft YaHei" font-size="25" font-weight="700" fill="#183B34">05  记忆</text>
+<text x="240" y="753.13" font-family="Microsoft YaHei" font-size="17" font-weight="400" fill="#65746B">本项目通过已有存储，保留与复用信息</text>
+<text x="74" y="803.91" font-family="Microsoft YaHei" font-size="19" font-weight="700" fill="#183B34">任务级记忆</text>
+<text x="74" y="837.24" font-family="Microsoft YaHei" font-size="16" font-weight="400" fill="#65746B">同一任务的状态已落库，可继续与恢复</text>
+<text x="572" y="803.91" font-family="Microsoft YaHei" font-size="19" font-weight="700" fill="#183B34">教材知识库</text>
+<text x="572" y="837.24" font-family="Microsoft YaHei" font-size="16" font-weight="400" fill="#65746B">原文长期保留，经 RAG / 原文工具取用</text>
+<text x="1068" y="803.91" font-family="Microsoft YaHei" font-size="19" font-weight="700" fill="#183B34">本机暂存</text>
+<text x="1068" y="837.24" font-family="Microsoft YaHei" font-size="16" font-weight="400" fill="#65746B">表单、未保存编辑、待提交回答</text>
+<text x="74" y="883.24" font-family="Microsoft YaHei" font-size="16" font-weight="700" fill="#237E6C">当前没有“跨任务自动总结经验、自学习”的长期记忆。</text>
+<polyline points="100,714 100,570" fill="none" stroke="#65746B" stroke-width="1.5" stroke-linejoin="round" stroke-dasharray="5 5"/>
+<polygon points="100,570 103.69423340433187,577.0959593822342 96.30576659566813,577.0959593822342" fill="#65746B"/>
+<text x="112" y="687.57" font-family="Microsoft YaHei" font-size="13" font-weight="400" fill="#65746B">重启后恢复</text>
+<polyline points="1500,714 1500,570" fill="none" stroke="#65746B" stroke-width="1.5" stroke-linejoin="round" stroke-dasharray="5 5"/>
+<polygon points="1500,570 1503.694233404332,577.0959593822342 1496.305766595668,577.0959593822342" fill="#65746B"/>
+<text x="1418" y="687.57" font-family="Microsoft YaHei" font-size="13" font-weight="400" fill="#65746B">按需取用</text>
+<text x="50" y="949.24" font-family="Microsoft YaHei" font-size="16" font-weight="400" fill="#183B34">循环出口：缺证据就查，缺内容就改，需要条件就问；finish 重新检查通过后，交付已有稿件供教师审核。</text>
+<polyline points="50,967 1550,967" fill="none" stroke="#CDD8D0" stroke-width="1" stroke-linejoin="round"/>
+<text x="50" y="988.79" font-family="Microsoft YaHei" font-size="11" font-weight="400" fill="#65746B">默认内置 RAG 路径：有限动作、持久状态、每轮重建上下文。虚线表示生成调用或信息恢复 / 取用。</text>
+<text x="1423" y="988.68" font-family="Microsoft YaHei" font-size="12" font-weight="700" fill="#237E6C">2026-10-29</text>
+</svg>

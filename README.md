@@ -300,6 +300,7 @@ docker run --rm -p 7860:7860 \
 
 ## 延伸文档
 
+- [五模块架构简图：LLM、工具、状态、上下文与记忆](./docs/showcase/courseweave-agent-five-blocks.png)
 - [Agent 系统实现详解与真实案例报告](./docs/Agent系统实现详解与真实案例报告.md)
 - [详细报告 PDF](./output/pdf/courseweave-agent-implementation-report-20261029.pdf)
 - [用户操作与技术链路：一堂 45 分钟课如何贯穿前端、Agent、RAG 与数据库](./docs/Agent用户操作与技术链路.md)
