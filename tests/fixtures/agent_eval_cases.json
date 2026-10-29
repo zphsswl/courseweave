@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "note": "固定中文教学任务，使用本地既有教材。case顺序与请求保持稳定用于版本对照；不是专家标注教学金标准。",
+  "cases": [
+    {
+      "id": "thyroid_anatomy_histology_compare",
+      "expected_outcome": "draft_ready",
+      "request": {
+        "topic": "甲状腺功能",
+        "goal": "围绕甲状腺功能组织45分钟课堂，结合两本教材说明与功能有关的结构基础，准备3个检查理解的问题；不足以证明的教材差异请说明证据缺口。",
+        "textbook_ids": ["book_01", "book_02"],
+        "duration_minutes": 45,
+        "question_count": 3,
+        "requirements": ["核心概念", "重点难点"]
+      }
+    },
+    {
+      "id": "thyroid_histology_physiology_compare",
+      "expected_outcome": "draft_ready",
+      "request": {
+        "topic": "甲状腺激素",
+        "goal": "结合组织结构与生理调节安排45分钟教学，说明甲状腺激素合成分泌与调节的联系，准备3个有教材依据的课堂问题；仅在两本教材都有证据时总结共同点。",
+        "textbook_ids": ["book_02", "book_03"],
+        "duration_minutes": 45,
+        "question_count": 3,
+        "requirements": ["核心概念", "重点难点"]
+      }
+    },
+    {
+      "id": "cardiac_cycle_physiology_zero_questions",
+      "expected_outcome": "draft_ready",
+      "request": {
+        "topic": "心动周期与心脏泵血功能",
+        "goal": "依据本教材用20分钟解释心动周期中各阶段与心脏泵血功能的联系，本次只安排讲授与总结，不生成课堂问题，不比较其他教材。",
+        "textbook_ids": ["book_03"],
+        "duration_minutes": 20,
+        "question_count": 0,
+        "requirements": ["核心概念"]
+      }
+    },
+    {
+      "id": "out_of_corpus_honest_stop",
+      "expected_outcome": "insufficient_evidence",
+      "request": {
+        "topic": "量子纠缠与贝尔不等式",
+        "goal": "只依据所选教材组织20分钟量子纠缠与贝尔不等式课堂，准备2个问题；若教材无足够相关证据则明确说明不足，不能补写外部知识或伪造教案。",
+        "textbook_ids": ["book_03"],
+        "duration_minutes": 20,
+        "question_count": 2,
+        "requirements": ["核心概念"]
+      }
+    }
+  ]
+}

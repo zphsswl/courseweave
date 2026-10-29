@@ -66,7 +66,18 @@ def _worker_loop() -> None:
         finally:
             with _state_lock:
                 _enqueued.discard(job_id)
-            _job_ids.task_done()
+            # A teacher may respond/retry immediately after the worker saves its
+            # waiting/failed checkpoint, while this ID is still deduplicated.
+            # Release the old ownership first, then hand any new pending state
+            # back to the queue. Concurrent enqueue remains idempotent.
+            try:
+                with SessionLocal() as db:
+                    job = db.get(Job, job_id)
+                    pending_again = bool(job and job.status == 'pending')
+                if pending_again:
+                    enqueue_job(job_id)
+            finally:
+                _job_ids.task_done()
 
 
 def start_job_worker() -> int:

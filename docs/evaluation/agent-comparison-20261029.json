@@ -1,0 +1,137 @@
+{
+  "mode": "measured_runs_plus_offline_replay",
+  "baseline_commit": "5cdcd7e",
+  "live_tasks": 8,
+  "live_model": "deepseek-flash",
+  "same_model_judge": true,
+  "baseline_summary": {
+    "run_count": 4,
+    "normal_task_count": 3,
+    "normal_finish_rate": 0.6667,
+    "hard_pass_rate": 0.6667,
+    "expectation_met_rate": 0.75,
+    "judge_graded_count": 3,
+    "judge_pass_rate_all_normal_tasks": 0.3333,
+    "judge_pass_rate_graded_only": 0.3333,
+    "joint_pass_rate": 0.3333,
+    "graded_claim_groups": 87,
+    "claim_group_labels": {
+      "supported": 84,
+      "insufficient": 3
+    },
+    "claim_group_support_rate_graded_only": 0.9655,
+    "rubric_pass_rate_all_normal_tasks": {
+      "goal_alignment": 1.0,
+      "audience_fit": 1.0,
+      "teaching_sequence": 1.0,
+      "question_quality": 1.0
+    },
+    "rejected_action_count": 0,
+    "draft_revision_attempts": 2,
+    "stop_reasons": {
+      "waiting_user": 2,
+      "delivery_ready": 2
+    },
+    "mean_agent_seconds": 47.636,
+    "note": "Judge标签是自动质量估计；受控反例不能代替领域专家校准或实际课堂学习效果。"
+  },
+  "candidate_initial_summary": {
+    "run_count": 4,
+    "normal_task_count": 3,
+    "normal_finish_rate": 0.6667,
+    "hard_pass_rate": 0.6667,
+    "expectation_met_rate": 0.75,
+    "judge_graded_count": 3,
+    "judge_pass_rate_all_normal_tasks": 0.6667,
+    "judge_pass_rate_graded_only": 0.6667,
+    "joint_pass_rate": 0.3333,
+    "graded_claim_groups": 86,
+    "claim_group_labels": {
+      "supported": 85,
+      "insufficient": 1
+    },
+    "claim_group_support_rate_graded_only": 0.9884,
+    "rubric_pass_rate_all_normal_tasks": {
+      "goal_alignment": 1.0,
+      "audience_fit": 1.0,
+      "teaching_sequence": 1.0,
+      "question_quality": 1.0
+    },
+    "rejected_action_count": 1,
+    "draft_revision_attempts": 2,
+    "stop_reasons": {
+      "waiting_user": 2,
+      "delivery_ready": 2
+    },
+    "mean_agent_seconds": 41.015,
+    "note": "Judge标签是自动质量估计；受控反例不能代替领域专家校准或实际课堂学习效果。"
+  },
+  "rag": {
+    "backend/agents/rag_agent.py": {
+      "normalized_lf_sha256": "982881293478ace06d6926e2144996ce36d246e001d0aca17ffabf9c23981e47",
+      "unchanged": true,
+      "raw_bytes_equal": false
+    },
+    "backend/agents/rag_tool.py": {
+      "normalized_lf_sha256": "9fd9a39843483261192fe492ae4c2e97068aaeb32f28c9025890360bfa4fe93a",
+      "unchanged": true,
+      "raw_bytes_equal": false
+    },
+    "backend/services/retrieval_service.py": {
+      "normalized_lf_sha256": "fc3ee2b6a99500c4df1d746611eeb7bd80f1efa8511def07d6f765c3054a8c50",
+      "unchanged": true,
+      "raw_bytes_equal": false
+    },
+    "backend/api/rag.py": {
+      "normalized_lf_sha256": "53932641ad4d299db30c405ea4feebad3fba2e75aa5f18da80c1ec216f71aea1",
+      "unchanged": true,
+      "raw_bytes_equal": false
+    }
+  },
+  "original_database_job_count_before": 39,
+  "original_database_job_count_after": 39,
+  "final_patch_replays": [
+    {
+      "case_id": "thyroid_anatomy_histology_compare",
+      "stored_draft_check_before": "needs_work",
+      "stored_draft_check_after_normalization": "draft_ready",
+      "citations_unchanged": true,
+      "source_ids_unchanged": true,
+      "historical_normal_finish": false,
+      "old_judge_sources_with_section_path": 0,
+      "new_judge_sources_with_section_path": 10,
+      "source_count": 10,
+      "new_model_requests": 0
+    },
+    {
+      "case_id": "thyroid_histology_physiology_compare",
+      "stored_draft_check_before": "draft_ready",
+      "stored_draft_check_after_normalization": "draft_ready",
+      "citations_unchanged": true,
+      "source_ids_unchanged": true,
+      "historical_normal_finish": true,
+      "old_judge_sources_with_section_path": 0,
+      "new_judge_sources_with_section_path": 10,
+      "source_count": 10,
+      "new_model_requests": 0
+    },
+    {
+      "case_id": "cardiac_cycle_physiology_zero_questions",
+      "stored_draft_check_before": "draft_ready",
+      "stored_draft_check_after_normalization": "draft_ready",
+      "citations_unchanged": true,
+      "source_ids_unchanged": true,
+      "historical_normal_finish": true,
+      "old_judge_sources_with_section_path": 0,
+      "new_judge_sources_with_section_path": 10,
+      "source_count": 10,
+      "new_model_requests": 0
+    }
+  ],
+  "final_patch_real_model_reruns": 0,
+  "judge_false_negative_findings": [
+    "candidate cardiac summary lost canonical section_path in grader input",
+    "baseline cardiac objective explicit duration subset was read as all phases"
+  ],
+  "note": "Original live labels are retained. Final patches have deterministic replay evidence only; no new live success is inferred."
+}

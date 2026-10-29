@@ -1,5 +1,7 @@
 # Agent 编排与开发计划
 
+> 历史黑客松开发编排计划：此处的并行开发 agent 指协作开发分工，不代表当前产品运行时的多个自治 Agent。当前实际架构与取舍见 [系统架构](./Agent系统架构.md) 和 [技术复盘](./Agent架构技术复盘.md)。
+
 ## 1. 编排原则
 
 5 小时黑客松采用 **Orchestrator + 专职 Agent + Skill Registry** 模式。借鉴 gstack skill 思想，每个能力声明为独立 skill，包含输入/输出 schema、Prompt 模板、质量检查规则。

@@ -8,7 +8,7 @@ from backend.api import teaching, teaching_bridge, teaching_board
 from backend.config import get_model_status, CORS_ORIGINS, PUBLIC_DEMO_READ_ONLY, SEED_DEMO_DATA
 import os
 
-app = FastAPI(title="CourseWeave - 教材知识网络", version="1.2.0")
+app = FastAPI(title="CourseWeave - 教材知识网络", version="1.3.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -68,7 +68,7 @@ def health():
     return {
         "status": "ok",
         "name": "CourseWeave",
-        "version": "1.2.0",
+        "version": "1.3.0",
         "public_demo_read_only": PUBLIC_DEMO_READ_ONLY,
         "model": {
             "provider": status["provider"],

@@ -1,0 +1,56 @@
+{
+  "evaluation_version": 1,
+  "mode": "offline_evaluator_self_check",
+  "real_model_calls": 0,
+  "passed": true,
+  "checks": [
+    {
+      "id": "valid_protocol_accepted",
+      "passed": true
+    },
+    {
+      "id": "known_bad_claims_do_not_pass",
+      "passed": true
+    },
+    {
+      "id": "missing_claim_rejected",
+      "passed": true
+    },
+    {
+      "id": "extra_field_rejected",
+      "passed": true
+    },
+    {
+      "id": "duplicate_claim_rejected",
+      "passed": true
+    }
+  ],
+  "prelabelled_protocol_examples": [
+    {
+      "id": "supported_order",
+      "label": "supported",
+      "model_executed": false
+    },
+    {
+      "id": "supported_common",
+      "label": "supported",
+      "model_executed": false
+    },
+    {
+      "id": "reversed_order",
+      "label": "contradicted",
+      "model_executed": false
+    },
+    {
+      "id": "absence_claim",
+      "label": "insufficient",
+      "model_executed": false
+    },
+    {
+      "id": "mixed_sources_group",
+      "label": "insufficient",
+      "model_executed": false
+    }
+  ],
+  "note": "仅验证评测器协议，未运行真实Agent或真实Judge，不是模型效果评测。"
+}

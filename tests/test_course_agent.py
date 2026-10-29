@@ -46,7 +46,7 @@ class CourseAgentTests(unittest.TestCase):
         finally:
             db.close()
 
-    def test_initial_result_exposes_a_goal_driven_tool_plan(self):
+    def test_initial_result_exposes_actions_without_a_fabricated_fixed_plan(self):
         state = initial_agent_result({
             "topic": "炎症",
             "goal": "生成炎症备课知识包",
@@ -54,9 +54,12 @@ class CourseAgentTests(unittest.TestCase):
             "requirements": ["教材差异"],
         })
         self.assertEqual(state["topic"], "炎症")
-        self.assertEqual(state["plan"][0]["tool"], "inspect_course")
-        self.assertEqual(state["plan"][-1]["tool"], "verify_result")
-        self.assertGreaterEqual(len(state["plan"]), 7)
+        self.assertEqual(state['agent_version'], 'lesson_agent_v3')
+        self.assertEqual(state['plan'], [])
+        self.assertEqual(state['trajectory'], [])
+        self.assertIn('query_rag', state['available_tools'])
+        self.assertIn('finish', state['available_tools'])
+        self.assertEqual(state['budget']['steps_used'], 0)
 
     def test_verifier_checks_book_page_grounding_and_structure(self):
         artifact = {
