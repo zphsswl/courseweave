@@ -2,6 +2,29 @@
 
 All notable changes to CourseWeave are documented in this file.
 
+## [1.3.0.0] - 2026-10-29
+
+### Added
+
+- A bounded, model-directed lesson Agent with seven strict actions, persisted observations, targeted RAG queries, draft revision, teacher questions and a server-owned delivery check.
+- An internal/HTTP tool adapter for the existing RAG system. Returned source IDs are reloaded from the local course, textbook, chapter and chunk records before entering lesson evidence; the existing retrieval and answer methods remain unchanged.
+- Durable step/query/draft budgets, source snapshots, restart recovery, teacher-answer checkpoints and cancellation with protection against late result writes.
+- Actual execution traces and budgets in the workbench, explicit offline evidence-workflow mode, and compatibility with historical v2 tasks and saved teacher drafts.
+- A detailed implementation report covering tool schemas, SQLite writes, bounded context, memory, human-designed generation templates and a real thyroid lesson run, plus editable diagrams and high-resolution architecture/validation figures.
+
+### Fixed
+
+- Preserve saved teacher work when model configuration disappears; reject blank or cross-book chapter sources and use current chapter titles instead of stale chunk metadata.
+- Protect answer, resume and cancellation updates with snapshot comparisons, and requeue quick teacher responses/retries that arrive during worker handoff.
+- Keep safe action-validation codes and field locations in feedback without exposing model values; display cancelled in-flight trace rows as no longer accepting results.
+
+### Validation and limits
+
+- 313 offline backend tests, 84 frontend regressions and the production build pass. The existing large main-bundle warning remains.
+- Independent review and fault-injection regressions cover scope, saved drafts, source drift, interrupted actions, cancellation races and queue handoff.
+- The documented real run produced a structurally complete draft, then stopped after four invalid decisions. New diagnostic feedback does not establish the missing original error field or prove that the online protocol issue is fixed. Structure checks are not a semantic teaching-quality assessment.
+- The 2026-09-24 fixed RAG benchmark is historical and was not rerun for this Agent release. No additional model replay was performed.
+
 ## [1.2.2.0] - 2026-10-21
 
 ### Added

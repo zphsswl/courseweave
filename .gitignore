@@ -28,3 +28,9 @@ artifacts/
 report/*.png
 !report/courseweave-demo.png
 !report/agent-workbench.png
+
+# Share the reviewed reports; keep render previews and local manifests out of Git.
+!output/pdf/courseweave-agent-rag-architecture-20261029.pdf
+!output/pdf/courseweave-agent-implementation-report-20261029.pdf
+output/pdf/*-preview.png
+output/pdf/*-manifest.json
